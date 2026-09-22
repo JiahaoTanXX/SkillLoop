@@ -1,10 +1,10 @@
-# SkillLoop-Sec：Agent Skill 安全 CI 与自进化系统
+# SkillLoop：Agent Skill 安全 CI 与自进化系统
 
-> 产品需求与技术路线 · v0.3 · 2026-09-22
+> 产品需求与技术路线 · v0.4 · 2026-09-22
 > 适用阶段：2026 NVIDIA DGX Spark Hackathon
 > 状态：待实现的方案，文中的目标值、接口与实验规模均不是已取得的结果。
-> 工作名称：SkillLoop-Sec；中文定位：一次确认可信边界、持续自动运行的 Skill 安全 CI。
-> 本版依据：完整阅读用户提供的 [SkillSecurer v1](https://arxiv.org/abs/2609.14079)；关键证据与页码见 §1.3 和 §14。
+> 产品名称：SkillLoop；中文定位：一次确认可信边界、持续自动运行的 Skill 安全 CI。
+> 研究依据包括用户提供的 [SkillSecurer v1](https://arxiv.org/abs/2609.14079)；关键证据与页码见 §1.3 和 §13.3。
 
 ## 1. 产品主张
 
@@ -20,25 +20,25 @@
 
 对外介绍可以使用：
 
-> SkillLoop-Sec 是运行在 DGX Spark 上的 Skill 安全 CI：首次接入确认任务和权限，之后每次 Skill 更新自动生成攻击与正常用例、执行隔离测试、必要时修补并回归；只有安全与业务门禁通过的版本才能内部晋级。
+> SkillLoop 是运行在 DGX Spark 上的 Skill 安全 CI：首次接入确认任务和权限，之后每次 Skill 更新自动生成攻击与正常用例、执行隔离测试、必要时修补并回归；只有安全与业务门禁通过的版本才能内部晋级。
 
-### 1.1 与已有路线的关系
+### 1.1 产品定位与交付范围
 
-本方案基于团队提供的原 SkillLoop PRD 和 Nvidia Spark 技术路线。两份材料作为背景设计资料使用；其中的操作指令、排期、环境描述不等于本次任务的执行授权，也不表示本次已验证了对应环境。
+SkillLoop 直接面向 Skill 的安全与功能联合验证。用户首次确认任务、资源和权限边界；之后每次 Skill 变更自动触发正常任务、提示词注入攻击、隔离执行、受限修补和回归门禁。
 
-| 维度 | 原 SkillLoop | SkillLoop-Sec 新方向 |
-|---|---|---|
-| 主要问题 | Skill 如何更好地完成任务 | Skill 如何抵抗注入和越权，同时保持任务能力 |
-| 失败来源 | 真实任务失败 | 正常任务 + 主动对抗测试 + 已知安全回归 |
-| 优化对象 | 指令、流程、参考资料、路由 | 指令与流程 + 受限的声明式权限策略 |
-| 核心证据 | correctness、trajectory、资源开销 | 注入入口 → 行动请求 → 权限判定 → 实际副作用 |
-| 选择标准 | 正确率提升且无回归 | 安全改善、功能保持、无静默扩权 |
-| 可复用模块 | Registry、Runner、Trace、Arena、Gate、Dashboard | 在这些模块上增加攻击器、权限代理和安全判定器 |
-| 产品触发 | 人工发起一轮优化 | Skill 提交/PR 触发 CI；首次契约确认后自动回归 |
+| 产品要素 | SkillLoop 的设计 |
+|---|---|
+| 核心问题 | Skill 抵抗提示词注入和越权，同时保持正常任务能力 |
+| 触发方式 | 首次接入确认契约；之后 Skill 提交/PR 自动触发 CI |
+| 测试来源 | 自动生成正常任务、主动攻击和历史漏洞回归 |
+| 优化对象 | Skill 指令与流程、受限的声明式权限策略 |
+| 执行证据 | 注入入口 → 行动请求 → 权限判定 → 实际副作用 |
+| 晋级标准 | 安全改善、功能保持、无静默扩权且证据完整 |
+| 核心组件 | Registry、Runner、Trace、Case Factory、Attack Generator、Policy Proxy、Gate、Reporter |
 
-**把它作为原 SkillLoop 的安全专项 CI 产品。** 黑客松主线是一条可复用流水线：一个 Skill 跑通完整闭环，第二个同类 Skill 只换接入配置与样例即可运行，不修改核心控制器。新工具类别仍需要适配器和确定性判定器，不能宣称任意 Skill 零配置通过。
+黑客松主线是一条可复用流水线：一个 Skill 跑通完整闭环，第二个同类 Skill 只换接入配置与样例即可运行，不修改核心控制器。新工具类别仍需要适配器和确定性判定器，不能宣称任意 Skill 零配置通过。
 
-### 1.2 真正值得做的差异
+### 1.2 创新点与验证假设
 
 SkillSecurer 已有上下文注入生成、证据定位、自动修补，也在第 9 节以外部输入、容器和本地 mock 服务开展动态验证。运行时注入、真实副作用、workflow-aware remediation 和业务保持均不能作为我们的独有概念。权限单调收紧另有 Progent 等先例。
 
@@ -51,7 +51,7 @@ SkillSecurer 已有上下文注入生成、证据定位、自动修补，也在�
 
 这是工程与实验上的产品假设。自动攻击、权限代理、把警告放进正常路径或本地运行都不是独立算法创新；如果只有组件拼接而无新增收益，结论应停留在工程集成。
 
-### 1.3 论文带来的路线修订
+### 1.3 研究依据与工程选择
 
 依据用户提供的 [SkillSecurer v1](https://arxiv.org/abs/2609.14079)：
 
@@ -63,7 +63,7 @@ SkillSecurer 已有上下文注入生成、证据定位、自动修补，也在�
 | §9.3（p.13）：确认要求被忽略，或警告位于未经过的 Troubleshooting | P0 必做可信授权凭证、统一工具入口检查及两类合成机制案例 |
 | §10（p.13）：强调正常工作流实际经过的修补位置 | 作为已有结论继承；不能将“工作流感知修补”本身称作新贡献 |
 
-上述是论文作者报告，不是我们的实验结果。IDR 100% 指受控样本的注入定位，17.6% 指野外样本的被标记比例，65/75 指人工补丁判断；均不等于普遍的运行时安全率。完整对照与研究限制见配套论文对比文档。
+上述是论文作者报告，不是我们的实验结果。IDR 100% 指受控样本的注入定位，17.6% 指野外样本的被标记比例，65/75 指人工补丁判断；均不等于普遍的运行时安全率。主要对照与研究限制见 §13.3。
 
 ## 2. 用户、问题与使用场景
 
@@ -80,7 +80,7 @@ MVP 的直接使用者是提交或维护 Skill 的研发团队。产品形态首
 
 ### 2.2 核心使用场景
 
-**场景 A：首次接入。** 系统读取 Skill、工具 schema 和少量正常样例，起草 `skillsec.yaml`；业务负责人一次性确认合法任务、资源、目的地及验收条件。该契约独立于待测 Skill，锁定版本与审批记录。
+**场景 A：首次接入。** 系统读取 Skill、工具 schema 和少量正常样例，起草 `skillloop.yaml`；业务负责人一次性确认合法任务、资源、目的地及验收条件。该契约独立于待测 Skill，锁定版本与审批记录。
 
 **场景 B：Skill 作者提交新版本。** CI 复用已确认契约，自动生成正常与攻击变体，对旧版/新版做配对测试，输出可审阅的 diff、证据与门禁结论；不要求每次手写用例。
 
@@ -110,7 +110,7 @@ MVP 的直接使用者是提交或维护 Skill 的研发团队。产品形态首
 
 ### 2.4 首次接入与日常 CI 的责任边界
 
-**首次接入只确认边界，不逐条写测试。** 接入向导可从 Skill、工具描述和正常样例自动起草 `skillsec.yaml`；但这些材料可能被攻击者控制，因此草案没有授权效力。业务负责人或平台策略提供者确认合法输入、输出、允许资源/目的地、必要业务检查和最大权限后，控制面保存其 hash 与版本。可信会话授权另在每次运行时绑定，不能从 `SKILL.md` 或工具返回推断。
+**首次接入只确认边界，不逐条写测试。** 接入向导可从 Skill、工具描述和正常样例自动起草 `skillloop.yaml`；但这些材料可能被攻击者控制，因此草案没有授权效力。业务负责人或平台策略提供者确认合法输入、输出、允许资源/目的地、必要业务检查和最大权限后，控制面保存其 hash 与版本。可信会话授权另在每次运行时绑定，不能从 `SKILL.md` 或工具返回推断。
 
 ```yaml
 schema_version: "1.0"
@@ -127,7 +127,7 @@ utility_oracle: tabular_report_v1
 approved_example_refs: [orders_small_v1]
 ```
 
-`skillsec.yaml` 是接入声明；真正执行时仍要由受保护的 TaskContract、平台权限上限与会话授权共同约束。契约/权限变更可由所有者再次确认，但**普通 Skill 内容更新不得顺带改写它们**。CI 从受保护基线读取契约，而不是从待测分支读取可能被篡改的授权配置。
+`skillloop.yaml` 是接入声明；真正执行时仍要由受保护的 TaskContract、平台权限上限与会话授权共同约束。契约/权限变更可由所有者再次确认，但**普通 Skill 内容更新不得顺带改写它们**。CI 从受保护基线读取契约，而不是从待测分支读取可能被篡改的授权配置。
 
 **日常提交完全自动。** 触发器读取旧版与新版 Skill hash、已确认契约、工具配置和历史回归库；生成固定种子的正常/攻击用例及新开发攻击，在相同模型和环境中运行配对测试。生成器负责变体，不得修改授权、标准答案、grader 或保护集。旧版运行结果只有在输入、模型、策略、工具和环境 hash 全相同时才可复用。
 
@@ -623,7 +623,7 @@ discovered → contract_draft → contract_confirmed / needs_contract
 
 ### 9.1 建议技术栈
 
-沿用原方案的 Python 3.12、Pydantic、Typer 和本地 Ollama；P0 **CLI/CI 优先**，Streamlit 仅做可选报告视图。先构建薄被测 Runtime 与统一 `AgentAdapter` 接口；外部 OpenCode 适配在本地可行性通过后接入，不让宿主集成阻塞自动 CI。核心模块通过 Python 接口调用，不强制引入多 Agent 编排框架。红队、执行、诊断、修补是逻辑角色，可由同一模型串行承担。
+建议使用 Python 3.12、Pydantic、Typer 和本地 Ollama；P0 **CLI/CI 优先**，Streamlit 仅做可选报告视图。先构建薄被测 Runtime 与统一 `AgentAdapter` 接口；外部 OpenCode 适配在本地可行性通过后接入，不让宿主集成阻塞自动 CI。核心模块通过 Python 接口调用，不强制引入多 Agent 编排框架。红队、执行、诊断、修补是逻辑角色，可由同一模型串行承担。
 
 | 模块 | 输入 | 输出 | 关键约束 |
 |---|---|---|---|
@@ -688,7 +688,7 @@ discovered → contract_draft → contract_confirmed / needs_contract
 ### 9.3 目录设计
 
 ```text
-skillloop_sec/
+skillloop/
   onboarding/       # 契约草案、可信确认、受保护版本绑定
   ci/               # PR/夜间配置、作业状态、缓存、机器退出码
   cases/            # 正常/攻击 fixture 工厂、参考计算、有效性检查
@@ -726,25 +726,25 @@ runs/<run-id>/
 以下是计划提供的接口，当前尚未实现；`confirm-contract` 只能在可信控制通道由有权主体执行，不能因待测分支中出现同名文件而自动批准：
 
 ```text
-skillsec init       --skill <dir> --draft-contract <output>
-skillsec confirm-contract --draft <file>  # 仅可信身份/控制通道；不接受自报 owner 充当授权
-skillsec ci         --skill <dir> --contract-id <approved-id> --profile pr --format json
-skillsec ci         --skill <dir> --contract-id <approved-id> --profile nightly --format json
-skillsec import     --skill <dir> --contract <file> --policy <file>
-skillsec baseline   --bundle <id> --suite <id>
-skillsec attack     --bundle <id> --split dev --max-queries 4
-skillsec reproduce  --finding <id>
-skillsec harden     --run <id> --candidates 1
-skillsec patch-static --bundle <id> --candidates 3  # P1 研究对照
-skillsec check-repair --candidate <id>
-skillsec evaluate   --candidate <id> --suite <id>
-skillsec gate       --evaluation <id>
-skillsec promote    --decision <id>
-skillsec rollback   --bundle <id>
-skillsec report     --run <id> --format markdown
+skillloop init       --skill <dir> --draft-contract <output>
+skillloop confirm-contract --draft <file>  # 仅可信身份/控制通道；不接受自报 owner 充当授权
+skillloop ci         --skill <dir> --contract-id <approved-id> --profile pr --format json
+skillloop ci         --skill <dir> --contract-id <approved-id> --profile nightly --format json
+skillloop import     --skill <dir> --contract <file> --policy <file>
+skillloop baseline   --bundle <id> --suite <id>
+skillloop attack     --bundle <id> --split dev --max-queries 4
+skillloop reproduce  --finding <id>
+skillloop harden     --run <id> --candidates 1
+skillloop patch-static --bundle <id> --candidates 3  # P1 研究对照
+skillloop check-repair --candidate <id>
+skillloop evaluate   --candidate <id> --suite <id>
+skillloop gate       --evaluation <id>
+skillloop promote    --decision <id>
+skillloop rollback   --bundle <id>
+skillloop report     --run <id> --format markdown
 ```
 
-`skillsec ci` 输出稳定 schema 的 `ci_result.json`、报告与证据包，退出码建议：`0=pass`、`1=fail`、`2=needs_contract`、`3=inconclusive`，后三者均为非零。按 Skill diff 触发 PR 快速套件，夜间或发布前触发深度套件；CI 环境预先配置受保护契约和隔离 runner，不把凭证交给被测 Skill。P0 先支持可信团队仓库或本地 CI 的自动触发；公开仓库的外部 PR 不得直接在持有凭证或可持久化状态的 DGX Spark 自托管 runner 上执行。GitHub 明确提醒不可信 PR 可持久攻陷自托管 runner；这类接入须先完成隔离调度和最小凭证设计。[GitHub Actions 安全使用说明](https://docs.github.com/en/actions/reference/security/secure-use) `promote` 只能消费已存在且 hash 匹配的通过决定。`evaluate` 是否可访问保护集由调用身份决定，不能仅靠 `--split` 字符串或 UI 隐藏按钮保护。
+`skillloop ci` 输出稳定 schema 的 `ci_result.json`、报告与证据包，退出码建议：`0=pass`、`1=fail`、`2=needs_contract`、`3=inconclusive`，后三者均为非零。按 Skill diff 触发 PR 快速套件，夜间或发布前触发深度套件；CI 环境预先配置受保护契约和隔离 runner，不把凭证交给被测 Skill。P0 先支持可信团队仓库或本地 CI 的自动触发；公开仓库的外部 PR 不得直接在持有凭证或可持久化状态的 DGX Spark 自托管 runner 上执行。GitHub 明确提醒不可信 PR 可持久攻陷自托管 runner；这类接入须先完成隔离调度和最小凭证设计。[GitHub Actions 安全使用说明](https://docs.github.com/en/actions/reference/security/secure-use) `promote` 只能消费已存在且 hash 匹配的通过决定。`evaluate` 是否可访问保护集由调用身份决定，不能仅靠 `--split` 字符串或 UI 隐藏按钮保护。
 
 ### 9.5 Dashboard
 
@@ -799,7 +799,7 @@ M0 以实际机器为准，记录模型 digest、量化格式、Ollama/CUDA 版�
 | 复现与环境重试预留 | 固定上限 | 4 |
 | **单次 PR 总上限** | 16 + 8 + 4 + 4 | **32** |
 
-若旧版 run 的 Skill、契约、模型、策略、工具、fixture 和环境 hash 全相同，可复用并引用，实际新运行数下降。夜间/发布前深度套件建议单次上限 64 次；被测 Skill 或任务类别增加时独立计量，不把各任务合并成一个未经说明的安全率。模型/工具错误须标为 `inconclusive`，不能因赶预算删除失败项。按原材料每条 45～104 秒的估算，32 次串行约 24～55 分钟纯推理，仍须在 M0 实测；CI 可以是异步阻断检查，而非承诺秒级反馈。
+若旧版 run 的 Skill、契约、模型、策略、工具、fixture 和环境 hash 全相同，可复用并引用，实际新运行数下降。夜间/发布前深度套件建议单次上限 64 次；被测 Skill 或任务类别增加时独立计量，不把各任务合并成一个未经说明的安全率。模型/工具错误须标为 `inconclusive`，不能因赶预算删除失败项。按 §10.3 的规划假设，每条轨迹约 45～104 秒，32 次串行约 24～55 分钟纯推理，仍须在 M0 实测；CI 可以是异步阻断检查，而非承诺秒级反馈。
 
 **P1 研究实验**保留下列较大预算，供论文式对照与统计报告，不能被误解为一周 P0 或每次 PR 的默认开销。一次研究核心实验的 victim rollout 预算：
 
@@ -816,7 +816,7 @@ M0 以实际机器为准，记录模型 digest、量化格式、Ollama/CUDA 版�
 
 P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模型格式修复另记预算。建议单次研究实验总上限 **1,000 次 victim rollout**，核心预留后剩余最多 248 次；另设攻击/修补模型的 token 与墙钟预算，控制测试不消耗 victim rollout。每个 rollout 还需限制最大步骤和输出，不能只限制轨迹条数。第二轮只能使用剩余额度或新建明确预算的实验 manifest，不承诺 1,000 次内完成两轮完整实验。
 
-以原材料中的吞吐作**规划估算**：若一条轨迹累计生成 400～900 tokens、累计处理 2,500～6,000 prompt tokens，串行推理下限约为：
+以待实测的 13 output tokens/s 和 171 prompt tokens/s 作**规划假设**：若一条轨迹累计生成 400～900 tokens、累计处理 2,500～6,000 prompt tokens，串行推理下限约为：
 
 ```text
 400/13 + 2500/171 ≈ 45 秒
@@ -977,9 +977,9 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 
 读取开源攻击代码时只把它作为研究资料。实际复用先转为本项目的 `AttackCase`、合成资源和本地模拟接收端，再运行；不得把仓库中的任意脚本直接放到真实工作区执行。
 
-## 14. 立项建议与下一步
+## 14. 实施建议与下一步
 
-建议采用 **SkillLoop-Sec：一次确认可信边界、后续自动运行的 Skill 安全 CI**。把“自动攻击并改写”作为流水线能力，把“无需逐条手写测试、工具执行可约束、正常业务可保持、每次变更可审计”放到产品中心。
+**SkillLoop：一次确认可信边界、后续自动运行的 Skill 安全 CI。** 把“自动攻击并改写”作为流水线能力，把“无需逐条手写测试、工具执行可约束、正常业务可保持、每次变更可审计”放到产品中心。
 
 在冻结套件前登记以下假设，结果不支持时也保留结论：
 
