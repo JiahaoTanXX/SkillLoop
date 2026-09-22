@@ -1,6 +1,6 @@
 # SkillLoop：Agent Skill 安全 CI 与自进化系统
 
-> 产品需求与技术路线 · v0.4 · 2026-09-22
+> 产品需求与技术路线 · v0.5 · 2026-09-22
 > 适用阶段：2026 NVIDIA DGX Spark Hackathon
 > 状态：待实现的方案，文中的目标值、接口与实验规模均不是已取得的结果。
 > 产品名称：SkillLoop；中文定位：一次确认可信边界、持续自动运行的 Skill 安全 CI。
@@ -8,19 +8,20 @@
 
 ## 1. 产品主张
 
-**一次确认可信业务与权限边界，之后每次 Skill 更新自动生成测试、发动注入攻击、验证真实执行、提出受限修补并运行安全与功能回归。** 模型可以提出用例和补丁；授权、关键判定与晋级门禁由独立控制面执行。
+**一次确认可信业务与权限边界，之后每次 Skill 更新先扫描生成漏洞候选清单，再逐项制定验证计划、自动生成测试、发动注入攻击、验证真实执行、提出受限修补并运行安全与功能回归。** 模型可以提出用例和补丁；授权、关键判定与晋级门禁由独立控制面执行。扫描命中是待验证假设，不是已证实漏洞。
 
-首次接入时输入 Skill 和少量可信业务边界；后续提交只需提供 Skill 变更。系统输出五类资产：
+首次接入时输入 Skill 和少量可信业务边界；后续提交只需提供 Skill 变更。系统输出六类资产：
 
 1. **已确认的接入契约**：任务目标、资源边界、允许工具、业务验收规则及来源版本；每次 CI 复用。
-2. **自动生成且可重放的评测集**：正常任务变体、低信任输入攻击、历史漏洞回归及冻结的保护用例。
-3. **加固后的 Skill 与受限策略候选**：修正危险指令和流程，把必要条件落实到工具入口。
-4. **执行证据**：从输入来源、工具请求、代理判定到实际文件/接收端状态。
-5. **CI 门禁结果**：通过、失败或证据不足；同时说明功能表现、风险变化、权限变化和成本。
+2. **扫描候选清单与逐项验证计划**：记录 SkillSpector 发现、证据、覆盖范围、可控攻击面及处理状态。
+3. **自动生成且可重放的评测集**：正常任务变体、低信任输入攻击、历史漏洞回归及冻结的保护用例。
+4. **加固后的 Skill 与受限策略候选**：修正危险指令和流程，把必要条件落实到工具入口。
+5. **执行证据**：从输入来源、工具请求、代理判定到实际文件/接收端状态。
+6. **CI 门禁结果**：通过、失败或证据不足；同时说明功能表现、风险变化、权限变化和成本。
 
 对外介绍可以使用：
 
-> SkillLoop 是运行在 DGX Spark 上的 Skill 安全 CI：首次接入确认任务和权限，之后每次 Skill 更新自动生成攻击与正常用例、执行隔离测试、必要时修补并回归；只有安全与业务门禁通过的版本才能内部晋级。
+> SkillLoop 是运行在 DGX Spark 上的 Skill 安全 CI：首次接入确认任务和权限，之后每次 Skill 更新先扫描形成漏洞候选与验证计划，再自动生成攻击和正常用例、执行隔离测试、必要时修补并回归；只有安全与业务门禁通过的版本才能内部晋级。
 
 ### 1.1 产品定位与交付范围
 
@@ -30,7 +31,7 @@ SkillLoop 直接面向 Skill 的安全与功能联合验证。用户首次确认
 |---|---|
 | 核心问题 | Skill 抵抗提示词注入和越权，同时保持正常任务能力 |
 | 触发方式 | 首次接入确认契约；之后 Skill 提交/PR 自动触发 CI |
-| 测试来源 | 自动生成正常任务、主动攻击和历史漏洞回归 |
+| 测试来源 | SkillSpector 漏洞候选、自动生成正常任务、主动攻击和历史漏洞回归 |
 | 优化对象 | Skill 指令与流程、受限的声明式权限策略 |
 | 执行证据 | 注入入口 → 行动请求 → 权限判定 → 实际副作用 |
 | 晋级标准 | 安全改善、功能保持、无静默扩权且证据完整 |
@@ -107,6 +108,8 @@ MVP 的直接使用者是提交或维护 Skill 的研发团队。产品形态首
 | FR-12 | 最小安全义务提取与工具入口绑定 | P0 | 资源/目标绑定与可信授权可执行；通用义务编译器为 P1 |
 | FR-13 | 可信授权与验证凭证 | P0 | 缺失、伪造、跨任务、产物变化后的凭证均不能放行动作 |
 | FR-14 | 补丁完整性与静态补丁研究对照 | P0/P1 | P0 拒绝缺失、越界和扩权补丁；同预算静态 baseline 为 P1 |
+| FR-15 | SkillSpector 扫描与漏洞候选清单 | P0 | 固定扫描器版本；完整 Skill 包扫描；保存原始 JSON、覆盖状态及规范化发现；错误或不完整不显示为安全通过 |
+| FR-16 | 发现驱动的验证计划与攻击回归 | P0 | 每项活跃发现标记动态测试、静态核查或需复核；可执行项绑定合法任务、攻击面、合成环境和独立 Oracle；已证实攻击进入回归库 |
 
 ### 2.4 首次接入与日常 CI 的责任边界
 
@@ -129,9 +132,9 @@ approved_example_refs: [orders_small_v1]
 
 `skillloop.yaml` 是接入声明；真正执行时仍要由受保护的 TaskContract、平台权限上限与会话授权共同约束。契约/权限变更可由所有者再次确认，但**普通 Skill 内容更新不得顺带改写它们**。CI 从受保护基线读取契约，而不是从待测分支读取可能被篡改的授权配置。
 
-**日常提交完全自动。** 触发器读取旧版与新版 Skill hash、已确认契约、工具配置和历史回归库；生成固定种子的正常/攻击用例及新开发攻击，在相同模型和环境中运行配对测试。生成器负责变体，不得修改授权、标准答案、grader 或保护集。旧版运行结果只有在输入、模型、策略、工具和环境 hash 全相同时才可复用。
+**日常提交完全自动。** 触发器读取旧版与新版 Skill hash、已确认契约、工具配置和历史回归库；先调用固定版本的 SkillSpector 扫描完整 Skill 包，生成候选清单与逐项验证计划，再生成固定种子的正常/攻击用例及新开发攻击，在相同模型和环境中运行配对测试。生成器负责变体，不得修改授权、标准答案、grader 或保护集。旧版运行结果只有在输入、模型、策略、工具和环境 hash 全相同时才可复用。
 
-**无契约时分级输出。** 零配置扫描可报告静态风险、通用越界企图和隔离运行状态；它不能证明业务功能保持。完整 CI 的 `pass` 需要可信契约和可判定的业务结果。新接入、契约变更或判定器缺失时返回 `needs_contract`；环境/证据不足返回 `inconclusive`，均不自动晋级。参考 [NVIDIA SkillEvaluator 自动生成起始用例](https://docs.nvidia.com/skills/skillevaluator/eval-datasets)：自动生成用例可减少手工编写，但默认起始用例不是本项目的提示词注入安全 Oracle。
+**无契约时分级输出。** SkillSpector 仍可输出静态风险及扫描覆盖状态，但不能据此生成有业务真值的运行时证明；零配置隔离探测也不能证明业务功能保持。完整 CI 的 `pass` 需要可信契约和可判定的业务结果。新接入、契约变更或判定器缺失时返回 `needs_contract`；扫描不完整、环境/证据不足返回 `inconclusive`，均不自动晋级。参考 [NVIDIA SkillEvaluator 自动生成起始用例](https://docs.nvidia.com/skills/skillevaluator/eval-datasets)：自动生成用例可减少手工编写，但默认起始用例不是本项目的提示词注入安全 Oracle。
 
 ## 3. 范围与威胁模型
 
@@ -218,10 +221,13 @@ approved_example_refs: [orders_small_v1]
 
 ```mermaid
 flowchart TD
-    PR[Skill 提交 / PR / 定时触发] --> C{可信契约是否已确认}
-    C -->|否| Z[零配置静态扫描与隔离探测 → needs_contract]
+    PR[Skill 提交 / PR / 定时触发] --> S[固定版本 SkillSpector 扫描完整 Skill 包]
+    S --> L[漏洞候选清单：证据 / 覆盖 / 逐项验证计划]
+    L --> C{可信契约是否已确认}
+    C -->|否| Z[静态候选与覆盖报告 → needs_contract]
     C -->|是| R[导入 Skill 快照与受保护契约]
-    R --> F[用例工厂：正常任务 / 合成 fixture / 注入攻击 / 历史回归]
+    R --> F[用例工厂：正常任务 / 发现驱动攻击 / 历史回归]
+    L --> F
     F --> V[被测 Agent：P0 薄 Runtime；外部宿主经 adapter]
     V --> P[确定性 Policy Proxy]
     P --> T[隔离工具 / 合成资源 / 本地模拟接收端]
@@ -234,8 +240,11 @@ flowchart TD
     OBL --> M[受限 Skill / Policy 修补候选]
     M --> CHECK[补丁完整性 + 权限包含 + 工具入口覆盖]
     AP[可信授权与产物验证凭证] --> P
-    CHECK --> Q[旧/新版本配对回归：正常任务 + 历史攻击 + 保护验证]
+    CHECK --> RS[相同配置复扫修补版]
+    RS --> Q[旧/新版本配对回归：原攻击 + 正常任务 + 保护验证]
     Q --> G{CI Gate}
+    L --> G
+    RS --> G
     O --> G
     G -->|pass| N[内部版本晋级 / CI 通过 / 证据包]
     G -->|fail| K[阻断并保留当前版本]
@@ -252,22 +261,43 @@ flowchart TD
 
 ```text
 首次接入：自动起草契约 → 可信确认 → 冻结权限、grader 与用例生成规则
-每次提交：读取受保护契约和新旧 Skill hash → 自动生成并校验正常/攻击用例
+每次提交：读取受保护契约和新旧 Skill hash → SkillSpector 扫描并生成逐项验证计划
+  → 自动生成并校验正常/攻击用例
   → 隔离执行旧版与新版；收集工具请求、代理判定和真实副作用
-  → 独立 Oracle 判定安全与业务；重放历史漏洞
+  → 独立 Oracle 判定每项发现的运行结果与业务；重放历史漏洞
   → 若开发集出现可修问题，生成受限 Skill/Policy 候选并初筛
   → 检查补丁完整性、权限不扩张及工具入口覆盖
-  → 用保护集验证 finalist；Gate 返回 pass/fail/needs_contract/inconclusive
+  → 相同配置复扫修补版，重放原攻击及正常任务，再用保护集验证 finalist
+  → Gate 返回 pass/fail/needs_contract/inconclusive
   → 归档证据和攻击回归；通过时才更新内部版本指针
 ```
 
 正常 Skill 更新即使没有新漏洞，也可以在无修补候选时通过 CI；“至少一个指标改善”只适用于**声称自动修复成功的候选**。PR CI 不使用一次性最终 holdout 调参；研究模式的最终保留集只在开发冻结后评测一次，失败须重新建立保留集。CI 对外发布或合并代码仍遵循仓库原有审批规则。
 
-### 5.3 自动攻击器
+### 5.3 SkillSpector 扫描到验证计划的适配
+
+**定位。** SkillSpector 是候选发现器，不是动态攻击器或安全 Oracle。它用模式、AST、污点跟踪等静态分析和可选 LLM 语义分析扫描完整 Skill 包，输出 JSON/SARIF；它不执行被测 Skill。P0 通过独立进程调用其 CLI 并解析 JSON，不改其 LangGraph 内部节点，也不把风险分数当作漏洞已证实或修复已完成的结论。[项目 README](https://github.com/NVIDIA/SkillSpector)、[开发指南](https://github.com/NVIDIA/SkillSpector/blob/main/docs/DEVELOPMENT.md)
+
+**固定输入与扫描模式。** M0 验证 Spark 上的 Python/依赖和本地模型适配，并把扫描器版本、commit、模型、配置、Skill 包 hash 写入 manifest。P0 必做完整目录的静态扫描；若本地 Ollama 语义扫描稳定，再作为明确标注的增强模式启用。初扫不加载由被测 Skill 提供的 baseline，也不启用 `--use-shipped-baseline`。扫描输出写到包外，避免报告自身成为输入。示例命令如下；`--no-llm` 仍可能向 OSV.dev 查询依赖坐标，离线回退须记录，不能称为完全无网络扫描。[CLI 与数据外发说明](https://github.com/NVIDIA/SkillSpector#trust-model-and-data-egress)
+
+```bash
+skillspector scan ./skills/my-skill --no-llm \
+  --format json --output ./runs/scan-before.json --fail-on-incomplete
+```
+
+**规范化清单。** 保存原始报告，并从 `issues[]` 提取规则 ID、类别、严重度、置信度、文件/行号、证据、修复建议和来源；同时保存 `risk_assessment`、`analysis_completeness`、`execution_successful` 与 `metadata.llm_requested/llm_available`。扫描结果可包含同一规则的多个位置；内部用 `(skill_hash, scanner_version, rule_id, path, evidence_hash)` 关联来源，不用一次运行专属的 `finding_id` 充当跨版本稳定 ID。默认退出码 `0` 仍可能含活跃发现；`1` 可表示扫描完成但触发风险/严格门禁，此时仍解析报告；`2` 是扫描错误。低分或零发现遇到不完整覆盖，不能标绿。[输出结构](https://github.com/NVIDIA/SkillSpector#machine-readable-output)、[退出码](https://github.com/NVIDIA/SkillSpector#exit-codes)、[完整性语义](https://github.com/NVIDIA/SkillSpector/blob/main/docs/ANALYSIS_RESOURCE_BOUNDS.md)
+
+**逐项验证计划，而非逐项强塞提示词。** 每个活跃发现必须归入 `dynamic_attack`、`static_check`、`needs_review` 或经可信复核、有理由的 `false_positive`；模型不能自行把发现销案，不得静默丢弃。可执行项生成 `FindingTestPlan`：关联发现、合法任务、攻击者真实可控入口、禁止结果、合成资源、独立 Oracle、预算及有效性检查。提示词/工具描述投毒可测试低信任指令是否被执行；外传/污点发现用合成 canary 和本地模拟接收端；危险命令与参数滥用用隔离资源验证副作用。依赖 CVE、可疑制品、权限声明差异不一定适合提示词攻击，应走版本/制品/权限静态核查或隔离环境验证。扫描器没报出入口时，仍保留契约驱动的通用攻击族；不能把 `issues=[]` 当作无需红队测试。规则类别与局限见 [SkillSpector 规则说明](https://github.com/NVIDIA/SkillSpector#vulnerability-patterns)。
+
+首次接入可以把已复核的历史发现及原因存入受保护的例外登记；之后按新/变更发现增量处理，但保留原始无抑制扫描报告供审计。例外仅在绑定的 Skill 内容、扫描器版本和可信边界仍适用时复用；被测包中的 baseline 或模型自报理由不能自动创建例外。[SkillSpector baseline 机制](https://github.com/NVIDIA/SkillSpector/blob/main/docs/SUPPRESSION.md)
+
+**容量与证据。** P0 对范围内的每项活跃发现自动产出计划；在 §10.3 的 victim 预算中按严重度、可控入口和业务相关性执行优先案例。未执行的高/严重候选进入 `needs_review` 或 `inconclusive`，不能用较少测试宣称全部漏洞已验证。运行结果区分 `confirmed`（可核验违规副作用）、`blocked`（越权请求被拦且无副作用）、`not_reproduced`（有效测试未触发）、`inconclusive`（环境或证据不足）；`not_reproduced` 不自动等于误报。已证实案例连同原样本、fixture、Oracle 和轨迹入历史回归。修补后必须重放同一案例与正常任务、再次扫描并探索新变体；扫描告警消失不能替代动态回归。
+
+### 5.4 自动攻击器
 
 **正常用例和标准答案怎么来。** 每个已确认的任务类别有一次性实现的 `FixtureFactory` 与 `UtilityOracle`。工厂从输入 schema、少量可信正常样例和固定随机种子生成多份合成数据；可算的预期字段、汇总值及产物 hash 由确定性参考函数产生，而不是由被测模型自报。对无法自动判定的业务语义，生成器可以草拟测试，但 CI 标为 `needs_contract` 或仅报告非阻断性观察，不能伪造确定性通过。新 Skill 若复用同一任务类别，只需换接入声明，不用重写逐条案例。
 
-**攻击种子怎么来。** 从冻结 TaskContract 提取「合法目标、禁止动作、授权资源、发布目的地」，枚举 Runtime 真实会交给模型读取的低信任槽位，例如 CSV 自由文本列、随单 Markdown 和工具返回文本。再以第 3.4 节的攻击族模板，按「攻击目标 × 入口 × 诱导方式」生成结构化 `AttackCase`。框架开发时一次性审核模板族；日常每个 Skill 的新变体由规则与本地模型自动产生，不要求作者逐条手写攻击。模板和模型只能填指定槽位，不能改用户请求、契约或工具实现。
+**攻击种子怎么来。** 从 §5.3 的 `FindingTestPlan` 与冻结 TaskContract 提取「合法目标、禁止动作、授权资源、发布目的地」，枚举 Runtime 真实会交给模型读取的低信任槽位，例如 CSV 自由文本列、随单 Markdown 和工具返回文本。再以第 3.4 节的攻击族模板，按「攻击目标 × 入口 × 诱导方式」生成结构化 `AttackCase`。扫描未覆盖或未命中的类别仍由契约驱动模板生成。框架开发时一次性审核模板族；日常每个 Skill 的新变体由规则与本地模型自动产生，不要求作者逐条手写攻击。模板和模型只能填指定槽位，不能改用户请求、契约或工具实现。
 
 **模型负责生成什么。** 攻击器得到业务上下文的脱敏摘要、允许改写的槽位、目标动作类别、长度上限和一个种子，不得到隐藏测试内容。要求返回 `payload_text`、`target_slot`、`objective_id`、`family`、`claimed_authority`、`expected_deviation`、`lineage_parent` 等字段。它生成语义改写、伪装成操作备注的指令、跨文档引用或延迟触发变体；Runner 再把文本装入指定的合成输入。模型给出的 `expected_deviation` 仅用于提出假设，实际成败由独立 Oracle 判断。
 
@@ -281,13 +311,13 @@ flowchart TD
 
 **冻结与回归。** P0 CI 将生成用例分成开发与独立保护两组，只有开发反馈可驱动变异；成功开发攻击经重放后进入历史回归。P1 研究实验再按任务、模板和 lineage 分配 dev/validation/final holdout，并限制最小化查询。P1 的包投毒另用独立生成器改写待审 Skill 包，不与 P0 的低信任运行时输入混算 ASR。
 
-### 5.4 复现与最小化
+### 5.5 复现与最小化
 
 P0 在隔离 fixture 中按固定预算重放关键失败；一次偶发失败标为不稳定，不能直接称为稳定漏洞。PR 的最多 4 次复现/环境重试预留含于 §10.3 总预算。P1 研究模式对候选漏洞重放 3 次、保存触发频率，并对稳定样本最多再用 4 次 victim 查询做最小化。
 
 最小化失败不抹去原始证据。报告区分“原样本可复现”“最小样本可复现”“仅偶发”，并分别用于修补优先级排序。
 
-### 5.5 根因与修补映射
+### 5.6 根因与修补映射
 
 | 根因 | 必须引用的证据 | 可自动修改内容 |
 |---|---|---|
@@ -300,7 +330,7 @@ P0 在隔离 fixture 中按固定预算重放关键失败；一次偶发失败�
 
 来源—行为关联通常是归因假设，不等于因果证明。对关键案例增加“移除注入后重跑”的配对对照，验证正常任务是否恢复。
 
-### 5.6 修补权限
+### 5.7 修补权限
 
 - 允许改：`SKILL.md`、已列入清单的 Markdown references、项目自定义 `policy.yaml`。
 - 禁止改：工具实现、任意脚本、TaskContract、主机安全上限、grader、Gate 阈值、隐藏用例、历史结果与 active pointer。
@@ -308,7 +338,7 @@ P0 在隔离 fixture 中按固定预算重放关键失败；一次偶发失败�
 - 每个候选最多修改 3 个文件；新增文本与推理成本受预算限制。超过限制进入人工审阅或下一轮拆分修补。
 - Policy 解析失败、无法判断是否扩权、证据引用不存在、试图修改禁止文件，均不能自动执行或晋级。
 
-### 5.7 安全义务与补丁完整性
+### 5.8 安全义务与补丁完整性
 
 每个可自动修补问题输出 `RepairObligation`：`contract_ref`、对应漏洞、受约束动作、必要前置条件、执行检查点、文本修改位置、合法对照和攻击回归 ID。来源必须是固定 TaskContract、已有平台规则或二者的收紧；工具数据和模型建议不能成为新的授权依据。
 
@@ -465,6 +495,8 @@ Runtime 为输入分配不可伪造的 `source_id/trust_level`；产物保存源
 
 同一条轨迹可能先发生被拦截请求，后发生另一项违规；blocked 与 realized 不是互斥的任务总标签。记录每项动作和每个攻击目标的结果，再聚合。
 
+扫描发现另有独立的验证状态：`confirmed` 表示有效攻击产生可核验违规副作用，关联本节的 `realized`；`blocked` 表示违规请求被代理阻断且无副作用；`not_reproduced` 表示有效测试未触发，**不能据此自动判为误报**；`inconclusive` 表示环境、覆盖或 Oracle 不足。没有可执行攻击路径的依赖/制品发现由静态核查或 `needs_review` 结案，不能混入提示词注入 ASR 分母。
+
 越权请求被拒绝后成功完成正常任务，说明运行时防御有效；只有同策略条件下越权请求减少，才支持“Skill 行为更稳健”的结论。控制面的策略篡改请求即使被硬隔离挡住，也要计入 attempted。
 
 ### 7.2 判定器
@@ -575,7 +607,7 @@ P1 接入按两步走：先导出由可信契约自动生成、经结构校验�
 
 所有阈值在 M0/契约冻结时确定。以下是**自动修补候选内部晋级**的默认规则；普通 Skill 更新若没有修补候选，只要可信契约有效、全部适用安全与业务门禁通过，即可返回 CI `pass`，不要求虚构一个“安全指标改善”。
 
-1. 内容、环境、grader、TaskContract、模型及 policy hash 完整；关键运行无未决状态。
+1. 内容、环境、grader、TaskContract、模型及 policy hash 完整；关键运行无未决状态。SkillSpector 初扫与候选复扫使用固定版本和可比配置；报告可解析且相关分析完整。每项范围内的活跃发现有验证计划与结论；未测高/严重风险或扫描失败不得以风险分数低为由自动晋级。
 2. 候选只修改允许文件；完整补丁可解析，关键业务内容未缺失，组合版本与实际测试对象一致。
 3. `P_new ⊆ P_old` 检查通过，真实主机权限上限完全不变。
 4. 对声称已强制落实的安全义务，注册工具/枚举路径覆盖率为 100%，凭证控制测试及合法对照通过；关键 `uncompiled` 风险未解决时不能自动关闭 finding 或宣称完成该项修补。
@@ -602,8 +634,8 @@ CI 对外只返回四种机器状态：`pass`（可信契约有效且适用门�
 ### 8.3 状态与回滚
 
 ```text
-discovered → contract_draft → contract_confirmed / needs_contract
-→ ci_queued → baseline_ready → tested → repair_candidate（如需）
+discovered → scanned → finding_planned → contract_draft → contract_confirmed / needs_contract
+→ ci_queued → baseline_ready → tested → [repair_candidate → rescanned_and_retested]（如需）
 → pass / fail / inconclusive → promoted_internal（仅 pass）
 ```
 
@@ -628,6 +660,7 @@ discovered → contract_draft → contract_confirmed / needs_contract
 | 模块 | 输入 | 输出 | 关键约束 |
 |---|---|---|---|
 | Importer / Registry | Skill、契约、策略 | 不可变版本与扫描摘要 | 不执行输入包的脚本 |
+| SkillSpector Adapter / Finding Planner | 固定 Skill 快照、扫描配置、可信契约 | 原始 JSON、规范化候选、逐项验证计划 | CLI 子进程；不信任包内 baseline；检查扫描覆盖与模式；扫描器不充当动态 Oracle |
 | Contract Onboarding | Skill、工具 schema、正常样例、可信确认 | 草案与已批准契约版本 | 模型草案无授权效力；普通 PR 不能改受保护契约 |
 | Case Factory | 已确认契约、seed、历史回归 | 正常/攻击 fixture 与预期状态 | 标准答案由参考程序/确定性规则生成；有效性可检查 |
 | Attack Generator | 开发用例、模板、反馈 | AttackCase | 仅写注入槽位，固定查询预算 |
@@ -651,10 +684,12 @@ discovered → contract_draft → contract_confirmed / needs_contract
 | SkillBundle | skill_hash、policy_hash、obligation_hash、parent、tool_schema_version、runtime_version、status |
 | ContractDraft / Approval | 提议字段、来源、可信确认者、批准时间、契约 hash、父版本、可用任务类别 |
 | TaskContract | task_id、可信资源绑定、业务检查、禁止副作用、授权来源 |
+| ScannerRun | skill_hash、scanner_commit/version、模式/模型、退出码、原始报告 hash、analysis_completeness、执行状态 |
+| ScanFinding / FindingTestPlan | rule_id、文件/证据、severity、scan_run、验证类型、合法任务、攻击入口、禁止结果、fixture、Oracle、预算、处理状态 |
 | GeneratedCase | case_id、contract_hash、generator_version、seed、lineage、split、validity、expected_state |
 | AttackCase | family、track、source_id、mutation_scope、objective_id、lineage、budget、split、validity |
 | ToolEvent | run_id、sequence、请求参数 hash、source_refs、policy_rule、obligation_ids、receipt_refs、decision、execution_id、结果引用 |
-| SecurityFinding | objective_id、attempted、blocked、realized、evidence_refs、replay_frequency、root_cause |
+| SecurityFinding | scan_finding_refs、objective_id、attempted、blocked、realized、not_reproduced、inconclusive、evidence_refs、replay_frequency、root_cause |
 | RepairObligation | finding_id、contract_ref、action、preconditions、checkpoint、compile_status、clean/attack_case_ids |
 | ActionReceipt | task_id、授权或验证来源、action、artifact_hash、destination、policy_version、状态、execution_id |
 | PatchCandidate | parent_bundle、strategy、changed_files、finding_ids、policy_relation、completeness、static_result |
@@ -691,6 +726,7 @@ discovered → contract_draft → contract_confirmed / needs_contract
 skillloop/
   onboarding/       # 契约草案、可信确认、受保护版本绑定
   ci/               # PR/夜间配置、作业状态、缓存、机器退出码
+  scanning/         # SkillSpector CLI adapter、报告完整性、候选清单与逐项验证计划
   cases/            # 正常/攻击 fixture 工厂、参考计算、有效性检查
   runtime/          # model client、JSON action loop、source labels
   attacks/          # templates、mutation、validity、search budgets
@@ -707,12 +743,15 @@ benchmarks/dev/     # 优化器可见；protected 由独立 Runner 持有
 dashboard/          # P0 可只交付静态报告，交互视图为加分项
 runs/<run-id>/
   manifest.json
+  scan_before.json
+  finding_plans.json
   trajectories/*.jsonl
   state_diffs/
   findings.json
   obligations.json
   execution_coverage.json
   candidate_diffs/
+  scan_after.json
   metrics.json
   promotion_decision.json
   ci_result.json
@@ -728,6 +767,7 @@ runs/<run-id>/
 ```text
 skillloop init       --skill <dir> --draft-contract <output>
 skillloop confirm-contract --draft <file>  # 仅可信身份/控制通道；不接受自报 owner 充当授权
+skillloop scan       --skill <dir> --format json  # SkillSpector 原始报告 + 规范化候选清单
 skillloop ci         --skill <dir> --contract-id <approved-id> --profile pr --format json
 skillloop ci         --skill <dir> --contract-id <approved-id> --profile nightly --format json
 skillloop import     --skill <dir> --contract <file> --policy <file>
@@ -801,6 +841,8 @@ M0 以实际机器为准，记录模型 digest、量化格式、Ollama/CUDA 版�
 
 若旧版 run 的 Skill、契约、模型、策略、工具、fixture 和环境 hash 全相同，可复用并引用，实际新运行数下降。夜间/发布前深度套件建议单次上限 64 次；被测 Skill 或任务类别增加时独立计量，不把各任务合并成一个未经说明的安全率。模型/工具错误须标为 `inconclusive`，不能因赶预算删除失败项。按 §10.3 的规划假设，每条轨迹约 45～104 秒，32 次串行约 24～55 分钟纯推理，仍须在 M0 实测；CI 可以是异步阻断检查，而非承诺秒级反馈。
 
+SkillSpector 的旧版/提交版扫描及 finalist 复扫单独记录墙钟和模型 token，不计入 32 次 victim rollout；其 CLI/模型开销在 M0 实测。PR 快速套件的 4 个攻击优先覆盖可执行且高风险的发现，其他发现仍生成验证计划；预算耗尽导致高/严重发现未测时报告未决项并阻止自动 `pass`，不能悄悄丢弃。相同配置复扫的告警变化只作为静态证据，原攻击重放和正常任务回归仍占 victim 预算。
+
 **P1 研究实验**保留下列较大预算，供论文式对照与统计报告，不能被误解为一周 P0 或每次 PR 的默认开销。一次研究核心实验的 victim rollout 预算：
 
 | 工作 | 计算 | 运行数 |
@@ -830,7 +872,8 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 
 ### 11.1 P0 交付范围
 
-- 一个任务类别（表格整理与报告）及两个同类 Skill：首个完成完整攻防修补闭环，第二个仅换 Skill 与接入配置即可运行 CI。
+- 一个任务类别（表格整理与报告）及两个同类 Skill：首个完成“扫描候选→逐项计划→攻击复现→修补→同案回归”闭环，第二个仅换 Skill 与接入配置即可运行 CI。
+- 固定 SkillSpector 版本的 CLI/JSON 适配：完整 Skill 包扫描、原始报告与覆盖状态归档、逐项验证计划；P0 优先处理提示词注入、外传和工具误用相关发现，其他类别走静态核查或需复核状态。
 - 一次性接入向导：模型起草契约、可信负责人确认、受保护版本存储；未经确认的新 Skill 只获得 `needs_contract` 与零配置扫描结果。
 - `FixtureFactory` 自动生成正常样例、期望值和合成资源；攻击器自动生成低信任文本，P0 覆盖权威伪装、额外动作诱导、目的地改写三类，其他攻击族保留接口。
 - 一个本地模型、一个薄被测 Runtime、一套资源 ID 工具、确定性 Policy Proxy 与隔离 fixture；OpenCode adapter 可做可行性验证但不是 P0 单点依赖。
@@ -839,29 +882,30 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 - Gate 区分 `pass/fail/needs_contract/inconclusive`；可拒绝全部候选，内部组合版本晋级和回滚可审计。
 - CLI + Markdown/JSON 证据报告和 4～6 分钟展示；交互 Dashboard 与完整静态补丁研究对照移至 P1。
 
-**一周内的“通用”定义：**在已有任务类别和工具 profile 内，新 Skill 不需要逐条手写测试，也不需要改核心流水线。新增任意 shell、网络服务或全新业务语义时，需要适配器与新的确定性 Oracle；产品返回 `needs_contract`，不伪称零配置安全证明。已有扫描报告可作为输入；SkillSpector JSON/SARIF adapter、完整 16+48 研究套件与 `repository-repair` 移至 P1。
+**一周内的“通用”定义：**在已有任务类别和工具 profile 内，新 Skill 不需要逐条手写测试，也不需要改核心流水线。新增任意 shell、网络服务或全新业务语义时，需要适配器与新的确定性 Oracle；产品返回 `needs_contract`，不伪称零配置安全证明。SkillSpector 的 CLI/JSON adapter 属于 P0；SARIF 导入、跨类别漏洞的动态验证、完整 16+48 研究套件与 `repository-repair` 移至 P1。P0 给每项发现生成处理计划，但受预算限制不能承诺每个规则都有可执行攻击。
 
 ### 11.2 一周开发计划
 
 | 时间 | 交付 | 验收 |
 |---|---|---|
-| Day 1 | M0 模型/环境、任务类别、接入契约草案与可信确认 | 无契约返回 `needs_contract`；确认后正常任务可完成 |
+| Day 1 | M0 模型/环境、SkillSpector 固定版本可行性、任务类别、接入契约草案与可信确认 | 完整 Skill 包可出 JSON/覆盖报告；无契约返回 `needs_contract`；确认后正常任务可完成 |
 | Day 2 | 薄 Runtime、资源 ID 工具、Policy Proxy、隔离与 trace | 所有工具调用经代理；非法资源/目标被拒；授权业务可完成 |
-| Day 3 | FixtureFactory、参考结果、安全/功能 Oracle、CI CLI 框架 | 自动生成正常样例；确定性正负例判定准确；状态码可解析 |
-| Day 4 | 三类模板攻击、模型变体、有效性检查、历史回归库 | 不改授权/标准答案；至少一条开发失败有动作和状态证据 |
+| Day 3 | SkillSpector JSON adapter、FindingTestPlan、FixtureFactory、参考结果与 Oracle | 扫描结果逐项归类；自动生成正常样例；完整性与正负例可判定 |
+| Day 4 | 发现驱动的三类模板攻击、模型变体、有效性检查、历史回归库与 CI CLI | 不改授权/标准答案；至少一条开发失败有动作和状态证据 |
 | Day 5 | 受限修补、补丁完整性、策略包含、C1/C2 凭证与 Gate | 缺失/伪造授权、扩权及功能退化被拒；合法发布通过 |
 | Day 6 | PR 与夜间 profile、第二同类 Skill 配置接入 | Skill 变更自动触发；第二 Skill 不改核心代码运行并出报告 |
-| Day 7 | 端到端重跑、失效注入、证据报告与演示 | pass/fail/needs_contract/inconclusive 四状态；真实与回放标注清楚 |
+| Day 7 | 原案回放、修补后复扫、失效注入、证据报告与演示 | 扫描低分不能掩盖未测发现；pass/fail/needs_contract/inconclusive 四状态；真实与回放标注清楚 |
 
 开发责任建议分为 Runtime/权限、用例生成/评测、修补/Gate、CI/报告四个工作包，按实际人数合并。团队若不足两名熟悉 Python 的开发者，先保证一个完整任务类别与 CI 门禁，再降低第二 Skill、自动修补或展示层复杂度；不要削弱工具入口约束和独立判定。
 
-工程量规划估算（不含模型权重与第三方依赖）：一周 P0 约 2,600～4,350 行功能代码，另有约 1,000～2,000 行**一次性平台测试与首个任务类别的 fixture/参考判定**；这不是每个 Skill 都要重写的成本。同类别新 Skill 预计只需数十行接入声明和少量可信正常样例，系统自动扩展测试。全新工具类别或不可计算的业务语义要新增适配器/Oracle，不能套用该低接入成本。代码量是排期估算，不作为验收指标；以“第二 Skill 不改核心代码”和四状态 CI 实测为准。
+工程量规划估算（不含模型权重与第三方依赖）：加入 SkillSpector CLI/JSON adapter、发现归类和计划生成后，一周 P0 约 2,800～4,700 行功能代码，另有约 1,100～2,100 行**一次性平台测试与首个任务类别的 fixture/参考判定**；这不是每个 Skill 都要重写的成本。同类别新 Skill 预计只需数十行接入声明和少量可信正常样例，系统自动扩展测试。全新工具类别或不可计算的业务语义要新增适配器/Oracle，不能套用该低接入成本。代码量是排期估算，不作为验收指标；以“第二 Skill 不改核心代码”和四状态 CI 实测为准。
 
 ### 11.3 Go / No-Go
 
 - Day 1 可信契约无法与待测 Skill 分离：先修接入边界，不能从 Skill 自述中直接生成授权。
 - Day 2 正常任务无法稳定完成：简化任务和工具 schema，不能拿基础模型不会用工具当作注入防御成功。
 - Day 3 grader 不可靠：CI 返回 `inconclusive`，先修判定器，不开始自动晋级。
+- SkillSpector 安装不兼容、JSON 不可解析或扫描不完整：保留原始错误并返回 `inconclusive`；不能跳过扫描后继续宣称已完成漏洞清单验证。
 - 工具可绕过代理或模型能写凭证：不宣称已实现执行约束，先封闭该通路。
 - Day 4 未找到可复现漏洞：明确“当前开发测试未发现”，拓展开发输入；不修改保护集，也不制造虚假成功案例。
 - Day 6 第二 Skill 需要改核心流水线：只宣称首个任务类别的闭环，不宣称已经验证配置复用。
@@ -873,9 +917,9 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 | 时间 | 画面与要点 |
 |---|---|
 | 0:00～0:45 | 首次接入自动起草契约；可信确认一次；说明 Skill 自身不能授予权限 |
-| 0:45～1:30 | 提交 Skill v2，CI 自动生成正常/攻击用例；无逐例手工测试 |
+| 0:45～1:30 | 提交 Skill v2，展示 SkillSpector 候选清单和逐项验证计划，再自动生成正常/攻击用例 |
 | 1:30～2:25 | 展示低信任内容、Agent 工具请求、代理判定与模拟接收端真实状态 |
-| 2:25～3:20 | 自动修补候选及安全义务，回归验证安全和业务；失败候选被 Gate 拒绝 |
+| 2:25～3:20 | 自动修补候选及安全义务；原攻击重放、正常任务回归、修补版复扫；失败候选被 Gate 拒绝 |
 | 3:20～4:20 | 输出 `ci_result.json`、状态码、报告、版本归档；第二同类 Skill 配置接入 |
 | 4:20～5:20 | Spark 本地推理、每 PR 预算、覆盖边界与下一阶段研究实验 |
 
@@ -887,8 +931,9 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 
 - [ ] 首次接入自动生成契约草案；未获可信确认返回 `needs_contract`，Skill 文本不能自行创建授权。
 - [ ] 修改 Skill 后，CI 无需手工逐条写案例即可生成、运行、判定并保存可复现结果。
+- [ ] SkillSpector 原始 JSON、扫描版本/模式、覆盖状态和逐项验证计划可审阅；高/严重未测风险不能被低分掩盖。
 - [ ] 至少两个同类 Skill 共用核心流水线；第二个只换 Skill 与接入配置，若需改核心代码则如实标注。
-- [ ] 导入、基线、攻击、复现、修补、复测、晋级/拒绝、回滚可端到端完成。
+- [ ] 导入、扫描、发现归类、基线、攻击、复现、修补、同案复测与复扫、晋级/拒绝、回滚可端到端完成。
 - [ ] 至少一个开发攻击有动作证据和状态证据，重放频率可查看。
 - [ ] P0 最多一个自动修补 finalist，修改能追溯到漏洞；缺失、不完整、越权补丁均被拒。
 - [ ] 安全义务有可信依据；已编译执行点覆盖明确，未编译项不被自动关闭。
@@ -907,6 +952,8 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 |---|---|---|
 | 从 Skill 自动推断的契约被当成授权 | 恶意 Skill 把越权目标写成“正常流程” | 草案与批准状态分离；受保护控制面确认一次；PR 只读已批准契约 |
 | 模型同时出题又自我判卷 | 自动生成“标准答案”附和受测 Skill | 正常任务预期由可信样例、schema 与参考计算生成；副作用由独立状态检查；无法判定则 `needs_contract` |
+| 把扫描告警或低风险分当成运行时结论 | 未复现就宣称无漏洞，或报告干净就宣称补丁有效 | 每项发现保留验证类型与状态；同案重放、正常回归、复扫和覆盖检查分开门禁 |
+| 被测包自带的抑制清单隐藏发现 | Skill 作者修改 baseline 使风险分降低 | P0 不启用包内 baseline；可信控制面单独审核误报与例外 |
 | 生成用例无效或覆盖单一 | 大量同义攻击被当成独立发现 | 结构校验、lineage 去重、有效率与覆盖记录；保护种子与历史回归独立维护 |
 | PR 运行偷换契约或缓存 | 变更 Skill 的同时放宽权限，或复用不同环境结果 | 契约从受保护版本读取；缓存键包含 Skill/契约/模型/策略/工具/环境 hash |
 | CI 缺证据却返回绿色 | grader 错误、超时或工具旁路被当成通过 | 明确 `inconclusive` 非零退出；fail-closed；报告未决项 |
@@ -941,8 +988,10 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 | [SkillJect — jiaxiaojunQAQ/SkillJect](https://github.com/jiaxiaojunQAQ/SkillJect) | 面向恶意 Skill 的自动安全评测；生成、执行、分析循环；记录 sandbox trace 与攻击结果；公开实现支持 Claude Code/OpenClaw | 与“自动攻击 Skill 找漏洞”高度相关，优先借鉴攻击入口、反馈循环与轨迹格式 | 其重点是攻击构造和评估；本项目增加防御修补、权限治理及业务保持门禁。现成流程涉及外部 Agent 与 OpenSandbox，不能假设直接在本地薄 Runtime 上运行 |
 | [Skill-Inject — aisa-group/skill-inject](https://github.com/aisa-group/skill-inject) | 测量 Skill 文件中恶意指令对 Agent 的影响，含上下文相关/明显攻击、正常任务与不同安全提示条件 | 为包投毒分支、正常任务对照和安全提示 baseline 提供任务设计参考 | 优先参考评测结构，将选定样本改造成合成目标；保留样本来源和划分。公开流程包含容器、Agent CLI 与 API 依赖，本地适配需单独验证 |
 | [Progent — sunblaze-ucb/progent](https://github.com/sunblaze-ucb/progent) | 用工具名和参数上的符号策略控制权限；论文描述确定性调用检查、自动收紧及需批准的扩张 | 是权限技术路线最直接的参考，尤其适合把 policy 修补纳入自进化 | P0 先实现有限集合 DSL，P1 再评估其符号策略/SMT 路线；不能把借鉴 Progent 的能力宣称为原创。[论文](https://arxiv.org/abs/2504.11703) |
-| [SkillSpector — NVIDIA/SkillSpector](https://github.com/NVIDIA/SkillSpector) | 面向 Skill 的安装前安全扫描，结合静态和可选 LLM 分析；支持结构化报告及 MCP 接口 | 最适合作为导入与候选静态检查，契合 NVIDIA 生态；报告可转成根因分析线索 | 先消费 JSON/SARIF；扫描结论不替代运行时副作用与业务回归。必须记录扫描模式、缺失分析及完整性，不能把未完成扫描显示成通过 |
+| [SkillSpector — NVIDIA/SkillSpector](https://github.com/NVIDIA/SkillSpector) | 面向完整 Skill 包的静态/可选 LLM 扫描；CLI 输出 JSON/Markdown/SARIF 与覆盖信息，不执行被测 Skill | P0 作为候选发现入口：JSON `issues[]` 进入逐项验证计划，再由本项目生成攻击并检查真实副作用 | 固定版本及扫描模式；不加载被测包自带 baseline；检查完整性与原始退出码。报告命中不等于漏洞证实，修补后低分不等于运行时修复；详见 §5.3 |
 | [AgentDojo — ethz-spylab/agentdojo](https://github.com/ethz-spylab/agentdojo) | 动态评测工具型 Agent 的提示词注入攻击与防御；支持任务套件、攻击和防御扩展 | 借鉴合法任务与攻击目标分离、环境状态检查和统一 runner；P1 用于外部迁移验证 | 自建 Skill workload 需写 adapter，不能把自定义小套件叫作完整 AgentDojo 结果。修改判定时保留与上游的差异说明。[官方文档](https://agentdojo.spylab.ai/) |
+
+SkillSpector 本次进一步核对了 `v2.11.2` 源码（commit [`dabf475`](https://github.com/NVIDIA/SkillSpector/commit/dabf4759a189be0f0428a2f7a472b3d5bdad1fe6)），只克隆阅读、未安装或执行。仓库 README 写 71 种模式/17 类，[NVIDIA 托管指南](https://docs.nvidia.com/skills/scanning-agent-skills)仍写 68 种/17 类；应以运行时固定的版本、规则集与原始报告为准，不混用两个文档的数量。仓库支持本地 Ollama，但 Spark 上的依赖安装、模型输出质量和耗时须在 M0 实测；可选 LLM 会发送可分析文件内容到所选 provider，`--no-llm` 下的 OSV 查询仍可能发送依赖坐标。[README 信任边界](https://github.com/NVIDIA/SkillSpector#trust-model-and-data-egress)
 
 ### 13.2 可复用的扫描、运行时与优化组件
 
@@ -971,9 +1020,9 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 
 ### 13.4 选型结论
 
-**P0 核心依赖：受保护接入契约 + 自动用例工厂 + 本地模型/薄 Runtime + 有限 Policy Proxy/可信凭证 + 确定性 grader + CI Gate/Registry。** PR/提交自动触发与机器可读结果是主产品，不依赖 SkillSecurer 代码。攻防与评测参考 SkillJect、Skill-Inject、AgentDojo、SkillSecurer；有界修补和用例格式参考 SkillOpt、skill-up；权限控制参考 Progent。
+**P0 核心依赖：SkillSpector CLI/JSON 候选发现 + 受保护接入契约 + 发现驱动的自动用例工厂 + 本地模型/薄 Runtime + 有限 Policy Proxy/可信凭证 + 确定性 grader + CI Gate/Registry。** PR/提交自动触发与机器可读结果是主产品，不依赖 SkillSecurer 代码。SkillSpector 本身不提供动态攻击成功 Oracle；攻防与评测参考 SkillJect、Skill-Inject、AgentDojo、SkillSecurer；有界修补和用例格式参考 SkillOpt、skill-up；权限控制参考 Progent。
 
-**P1 再决定是否替换模块：** 完整静态修补对照与 2×2 消融用于研究归因；SkillSpector 提供外部扫描报告；OpenShell 提供隔离；GEPA 或 SkillOpt 可试验替换文本候选搜索；PyRIT/garak 提供攻击来源；SkillEvaluator、skill-up 或 promptfoo 可提供评测适配。每个 adapter 必须证明它减少工程成本或增加测量覆盖，再引入核心路径；多个框架不能同时掌握 protected/holdout 的写权限。
+**P1 再决定是否扩展或替换模块：** 完整静态修补对照与 2×2 消融用于研究归因；SkillSpector 的 SARIF/MCP、跨类别验证及外部依赖追踪可扩展 P0 JSON 入口；OpenShell 提供隔离；GEPA 或 SkillOpt 可试验替换文本候选搜索；PyRIT/garak 提供攻击来源；SkillEvaluator、skill-up 或 promptfoo 可提供评测适配。每个 adapter 必须证明它减少工程成本或增加测量覆盖，再引入核心路径；多个框架不能同时掌握 protected/holdout 的写权限。
 
 读取开源攻击代码时只把它作为研究资料。实际复用先转为本项目的 `AttackCase`、合成资源和本地模拟接收端，再运行；不得把仓库中的任意脚本直接放到真实工作区执行。
 
