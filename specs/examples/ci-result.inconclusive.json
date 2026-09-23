@@ -1,0 +1,39 @@
+{
+  "schema_version": "2.0",
+  "job_id": "job-inconclusive",
+  "source_commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "submitted_bundle_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "submitted_head_verdict": "inconclusive",
+  "candidate_bundle_digest": null,
+  "candidate_verdict": null,
+  "repair_required": false,
+  "promoted": false,
+  "reason_codes": [
+    "mandatory_coverage_incomplete"
+  ],
+  "incomplete_items": [
+    "case-12"
+  ],
+  "coverage": {
+    "profile": "strict_ci",
+    "task_families": [
+      "orders_customer_summary_v1"
+    ],
+    "required_cases": 12,
+    "completed_cases": 11,
+    "suite_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "budget": {
+    "victim_rollouts_used": 12,
+    "victim_rollouts_limit": 40
+  },
+  "gate_spec_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "evaluation_attestation_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "evidence_index_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "required_enforcement": [
+    "tool_proxy",
+    "policy_backend",
+    "transactional_mock_receiver",
+    "approved_contract"
+  ]
+}

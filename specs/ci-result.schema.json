@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/JiahaoTanXX/SkillLoop/main/specs/ci-result.schema.json",
+  "title": "SkillLoop CI Result V2.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "job_id", "source_commit_sha", "submitted_bundle_digest",
+    "submitted_head_verdict", "candidate_bundle_digest", "candidate_verdict",
+    "repair_required", "promoted", "reason_codes", "incomplete_items", "coverage",
+    "budget", "gate_spec_digest", "evaluation_attestation_digest", "evidence_index_digest",
+    "required_enforcement"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "job_id": {"type": "string", "minLength": 1},
+    "source_commit_sha": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "submitted_bundle_digest": {"$ref": "#/$defs/digest"},
+    "submitted_head_verdict": {"$ref": "#/$defs/verdict"},
+    "candidate_bundle_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+    "candidate_verdict": {"anyOf": [{"$ref": "#/$defs/verdict"}, {"type": "null"}]},
+    "repair_required": {"type": "boolean"},
+    "promoted": {"type": "boolean"},
+    "reason_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "incomplete_items": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "task_families", "required_cases", "completed_cases", "suite_digest"],
+      "properties": {
+        "profile": {"enum": ["strict_ci", "synthetic_ablation"]},
+        "task_families": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "required_cases": {"type": "integer", "minimum": 0},
+        "completed_cases": {"type": "integer", "minimum": 0},
+        "suite_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["victim_rollouts_used", "victim_rollouts_limit"],
+      "properties": {
+        "victim_rollouts_used": {"type": "integer", "minimum": 0},
+        "victim_rollouts_limit": {"type": "integer", "minimum": 1}
+      }
+    },
+    "gate_spec_digest": {"$ref": "#/$defs/digest"},
+    "evaluation_attestation_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+    "evidence_index_digest": {"$ref": "#/$defs/digest"},
+    "required_enforcement": {"type": "array", "uniqueItems": true, "items": {"enum": ["tool_proxy", "policy_backend", "transactional_mock_receiver", "approved_contract"]}}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "verdict": {"enum": ["pass", "fail", "needs_contract", "inconclusive"]}
+  },
+  "allOf": [
+    {"if": {"properties": {"submitted_head_verdict": {"const": "pass"}}}, "then": {"properties": {"repair_required": {"const": false}}}},
+    {"if": {"properties": {"promoted": {"const": true}}}, "then": {"properties": {"submitted_head_verdict": {"const": "pass"}, "coverage": {"properties": {"profile": {"const": "strict_ci"}}}}}},
+    {"if": {"properties": {"candidate_bundle_digest": {"type": "null"}}}, "then": {"properties": {"candidate_verdict": {"type": "null"}}}},
+    {"if": {"properties": {"candidate_verdict": {"type": "null"}}}, "then": {"properties": {"candidate_bundle_digest": {"type": "null"}}}},
+    {"if": {"properties": {"submitted_head_verdict": {"const": "inconclusive"}}}, "then": {"properties": {"incomplete_items": {"minItems": 1}}}},
+    {"if": {"properties": {"submitted_head_verdict": {"const": "pass"}}}, "then": {"properties": {"incomplete_items": {"maxItems": 0}}}}
+  ]
+}
