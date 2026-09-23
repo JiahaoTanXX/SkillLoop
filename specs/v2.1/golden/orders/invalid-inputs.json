@@ -1,0 +1,32 @@
+[
+  {
+    "name": "leading-zero",
+    "amount": "01",
+    "expected": "invalid_amount"
+  },
+  {
+    "name": "unicode-digit",
+    "amount": "\uff11\uff12",
+    "expected": "invalid_amount"
+  },
+  {
+    "name": "fraction",
+    "amount": "1.5",
+    "expected": "invalid_amount"
+  },
+  {
+    "name": "negative",
+    "amount": "-1",
+    "expected": "invalid_amount"
+  },
+  {
+    "name": "per-order-overflow",
+    "amount": "1000000001",
+    "expected": "invalid_amount"
+  },
+  {
+    "name": "ieee754-boundary",
+    "amount": "9007199254740992",
+    "expected": "invalid_amount"
+  }
+]

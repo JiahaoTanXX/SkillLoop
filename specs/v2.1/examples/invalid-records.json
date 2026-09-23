@@ -1,0 +1,1228 @@
+[
+  {
+    "name": "duplicate-inputs",
+    "record": {
+      "api_major": 3,
+      "kind": "ToolCall",
+      "call_id": "x",
+      "run_id": "r",
+      "fencing_token": 1,
+      "tool": "build_report",
+      "args": {
+        "input_ids": [
+          "input:orders",
+          "input:orders"
+        ],
+        "output_id": "artifact:report",
+        "transform_id": "orders_summary_v1",
+        "expected_version": 0,
+        "idempotency_key": "build-once"
+      }
+    },
+    "expected_layer": "schema",
+    "expected_code": "schema_invalid"
+  },
+  {
+    "name": "unsupported-deny",
+    "record": {
+      "api_major": 3,
+      "kind": "Policy",
+      "body": {
+        "policy_format": "m1-effective-actions-v1",
+        "contract_digest": "sha256:954249cb26308aa6cd612b0ed7ebc705406dddcd65fd9e7500640cf762bdd046",
+        "domain_digest": "sha256:f2ff83860a4dc203988ed1a22ba1f21237f04abdbd0c4c951103cfbed121de78",
+        "allowed_actions": [
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:customers",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:orders",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:notes",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "skill:guide.md",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "build_report",
+            "resource_bindings": [
+              {
+                "parameter": "input_ids[0]",
+                "resource_id": "input:customers",
+                "access": "read"
+              },
+              {
+                "parameter": "input_ids[1]",
+                "resource_id": "input:orders",
+                "access": "read"
+              },
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "write"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "write_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "write"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "validate_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": "orders_full_v1"
+          },
+          {
+            "tool": "prepare_publication",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": "sink:business-inbox",
+            "check_set_id": "orders_full_v1"
+          },
+          {
+            "tool": "publish_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": "sink:business-inbox",
+            "check_set_id": "orders_full_v1"
+          }
+        ],
+        "max_tool_calls": 12,
+        "prerequisites_profile": "m1-fixed-v1",
+        "deny": [
+          "input:orders"
+        ]
+      },
+      "policy_digest": "sha256:ba20ed31a1c71d3e972fe93484b2b1225cf73b488bfd8a504ff5b0e98e2a1087"
+    },
+    "expected_layer": "schema",
+    "expected_code": "schema_invalid"
+  },
+  {
+    "name": "split-quota-duplicate-rule",
+    "record": {
+      "api_major": 3,
+      "kind": "Policy",
+      "body": {
+        "policy_format": "m1-effective-actions-v1",
+        "contract_digest": "sha256:954249cb26308aa6cd612b0ed7ebc705406dddcd65fd9e7500640cf762bdd046",
+        "domain_digest": "sha256:f2ff83860a4dc203988ed1a22ba1f21237f04abdbd0c4c951103cfbed121de78",
+        "allowed_actions": [
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:customers",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:orders",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:notes",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "skill:guide.md",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "build_report",
+            "resource_bindings": [
+              {
+                "parameter": "input_ids[0]",
+                "resource_id": "input:customers",
+                "access": "read"
+              },
+              {
+                "parameter": "input_ids[1]",
+                "resource_id": "input:orders",
+                "access": "read"
+              },
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "write"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "write_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "write"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "validate_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": "orders_full_v1"
+          },
+          {
+            "tool": "prepare_publication",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": "sink:business-inbox",
+            "check_set_id": "orders_full_v1"
+          },
+          {
+            "tool": "publish_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": "sink:business-inbox",
+            "check_set_id": "orders_full_v1"
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:customers",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          }
+        ],
+        "max_tool_calls": 12,
+        "prerequisites_profile": "m1-fixed-v1"
+      },
+      "policy_digest": "sha256:3a0f8dc86ec84906001b7aefa345bb856f693189cde4931311f0f7d220c9593a"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "duplicate_action"
+  },
+  {
+    "name": "remove-receipt",
+    "record": {
+      "api_major": 3,
+      "kind": "Policy",
+      "body": {
+        "policy_format": "m1-effective-actions-v1",
+        "contract_digest": "sha256:954249cb26308aa6cd612b0ed7ebc705406dddcd65fd9e7500640cf762bdd046",
+        "domain_digest": "sha256:f2ff83860a4dc203988ed1a22ba1f21237f04abdbd0c4c951103cfbed121de78",
+        "allowed_actions": [
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:customers",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:orders",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "input:notes",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "read_resource",
+            "resource_bindings": [
+              {
+                "parameter": "resource_id",
+                "resource_id": "skill:guide.md",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "build_report",
+            "resource_bindings": [
+              {
+                "parameter": "input_ids[0]",
+                "resource_id": "input:customers",
+                "access": "read"
+              },
+              {
+                "parameter": "input_ids[1]",
+                "resource_id": "input:orders",
+                "access": "read"
+              },
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "write"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "write_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "write"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": null
+          },
+          {
+            "tool": "validate_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": null,
+            "check_set_id": "orders_full_v1"
+          },
+          {
+            "tool": "prepare_publication",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": "sink:business-inbox",
+            "check_set_id": "orders_full_v1"
+          },
+          {
+            "tool": "publish_artifact",
+            "resource_bindings": [
+              {
+                "parameter": "output_id",
+                "resource_id": "artifact:report",
+                "access": "read"
+              }
+            ],
+            "destination_id": "sink:business-inbox",
+            "check_set_id": "orders_full_v1"
+          }
+        ],
+        "max_tool_calls": 12,
+        "prerequisites_profile": "without-receipt"
+      },
+      "policy_digest": "sha256:ba20ed31a1c71d3e972fe93484b2b1225cf73b488bfd8a504ff5b0e98e2a1087"
+    },
+    "expected_layer": "schema",
+    "expected_code": "schema_invalid"
+  },
+  {
+    "name": "candidate-cannot-green-head",
+    "record": {
+      "api_major": 3,
+      "kind": "CIResult",
+      "report_id": "report-fail",
+      "source_kind": "git_commit",
+      "source_commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "trigger_generation": 1,
+      "submitted_subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+      "submitted_decision": {
+        "api_major": 3,
+        "kind": "GateResult",
+        "decision_id": "decision-fail-bc27fe",
+        "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+        "verdict": "fail",
+        "reason_codes": [
+          "security_violation"
+        ],
+        "incomplete_items": [],
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+        "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+        "issued_at": "2026-09-23T08:00:00Z"
+      },
+      "candidate_subject_digest": "sha256:368629b8b64f5628645d4c4f933aaa794608571364f82d3b727806f863cfb3f4",
+      "candidate_decision": {
+        "api_major": 3,
+        "kind": "GateResult",
+        "decision_id": "decision-pass-cfb3f4",
+        "subject_digest": "sha256:368629b8b64f5628645d4c4f933aaa794608571364f82d3b727806f863cfb3f4",
+        "verdict": "pass",
+        "reason_codes": [],
+        "incomplete_items": [],
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+        "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+        "issued_at": "2026-09-23T08:00:00Z"
+      },
+      "repair_required": true,
+      "eligibility": "promoted",
+      "promoted_subject_digest": "sha256:368629b8b64f5628645d4c4f933aaa794608571364f82d3b727806f863cfb3f4",
+      "required_enforcement": [
+        "tool_proxy",
+        "policy_backend",
+        "transactional_store",
+        "approved_contract"
+      ],
+      "coverage": {
+        "required_cases": 9,
+        "completed_cases": 9,
+        "suite_digest": "sha256:f8ebd43dbef1f029bf4930c65c9b7c5cc76af476927cee861ff18fcc73bfc4ab",
+        "case_result_index_digest": "sha256:3839f7651e03f22e682fc2e03215449a24cc694d3d1f757bea267ef1221752ed"
+      },
+      "versions": {
+        "scanner_profile_digest": "sha256:6105d8625ada3c9bf514062b5696e9d7aa11e4b5e2c3d8629713f0bf2e45f6fd",
+        "model_config_digest": "sha256:9372c470eeadd5ecd9c3c74c2b3cb633f8e2f2fad799250a0f70d652b6b825e4",
+        "tool_implementation_digest": "sha256:f9d35d43770d39092a663e665e82ae1d84a9e0da3d0d10c407acada6a40cd281",
+        "runtime_digest": "sha256:d92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23",
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80"
+      },
+      "budget": {
+        "rollouts_used": 9,
+        "rollouts_limit": 40,
+        "reserved_execution_ms": 2000000,
+        "execution_limit_ms": 14400000
+      },
+      "incomplete_items": [],
+      "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "invalid_promotion"
+  },
+  {
+    "name": "git-without-sha",
+    "record": {
+      "api_major": 3,
+      "kind": "CIResult",
+      "report_id": "report-pass",
+      "source_kind": "git_commit",
+      "source_commit_sha": null,
+      "trigger_generation": 1,
+      "submitted_subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+      "submitted_decision": {
+        "api_major": 3,
+        "kind": "GateResult",
+        "decision_id": "decision-pass-bc27fe",
+        "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+        "verdict": "pass",
+        "reason_codes": [],
+        "incomplete_items": [],
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+        "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+        "issued_at": "2026-09-23T08:00:00Z"
+      },
+      "candidate_subject_digest": null,
+      "candidate_decision": null,
+      "repair_required": false,
+      "eligibility": "eligible",
+      "promoted_subject_digest": null,
+      "required_enforcement": [
+        "tool_proxy",
+        "policy_backend",
+        "transactional_store",
+        "approved_contract"
+      ],
+      "coverage": {
+        "required_cases": 9,
+        "completed_cases": 9,
+        "suite_digest": "sha256:f8ebd43dbef1f029bf4930c65c9b7c5cc76af476927cee861ff18fcc73bfc4ab",
+        "case_result_index_digest": "sha256:3839f7651e03f22e682fc2e03215449a24cc694d3d1f757bea267ef1221752ed"
+      },
+      "versions": {
+        "scanner_profile_digest": "sha256:6105d8625ada3c9bf514062b5696e9d7aa11e4b5e2c3d8629713f0bf2e45f6fd",
+        "model_config_digest": "sha256:9372c470eeadd5ecd9c3c74c2b3cb633f8e2f2fad799250a0f70d652b6b825e4",
+        "tool_implementation_digest": "sha256:f9d35d43770d39092a663e665e82ae1d84a9e0da3d0d10c407acada6a40cd281",
+        "runtime_digest": "sha256:d92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23",
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80"
+      },
+      "budget": {
+        "rollouts_used": 9,
+        "rollouts_limit": 40,
+        "reserved_execution_ms": 2000000,
+        "execution_limit_ms": 14400000
+      },
+      "incomplete_items": [],
+      "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "source_identity"
+  },
+  {
+    "name": "unpaired-candidate",
+    "record": {
+      "api_major": 3,
+      "kind": "CIResult",
+      "report_id": "report-pass",
+      "source_kind": "git_commit",
+      "source_commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "trigger_generation": 1,
+      "submitted_subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+      "submitted_decision": {
+        "api_major": 3,
+        "kind": "GateResult",
+        "decision_id": "decision-pass-bc27fe",
+        "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+        "verdict": "pass",
+        "reason_codes": [],
+        "incomplete_items": [],
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+        "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+        "issued_at": "2026-09-23T08:00:00Z"
+      },
+      "candidate_subject_digest": null,
+      "candidate_decision": {
+        "api_major": 3,
+        "kind": "GateResult",
+        "decision_id": "decision-pass-bc27fe",
+        "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+        "verdict": "pass",
+        "reason_codes": [],
+        "incomplete_items": [],
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+        "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+        "issued_at": "2026-09-23T08:00:00Z"
+      },
+      "repair_required": false,
+      "eligibility": "eligible",
+      "promoted_subject_digest": null,
+      "required_enforcement": [
+        "tool_proxy",
+        "policy_backend",
+        "transactional_store",
+        "approved_contract"
+      ],
+      "coverage": {
+        "required_cases": 9,
+        "completed_cases": 9,
+        "suite_digest": "sha256:f8ebd43dbef1f029bf4930c65c9b7c5cc76af476927cee861ff18fcc73bfc4ab",
+        "case_result_index_digest": "sha256:3839f7651e03f22e682fc2e03215449a24cc694d3d1f757bea267ef1221752ed"
+      },
+      "versions": {
+        "scanner_profile_digest": "sha256:6105d8625ada3c9bf514062b5696e9d7aa11e4b5e2c3d8629713f0bf2e45f6fd",
+        "model_config_digest": "sha256:9372c470eeadd5ecd9c3c74c2b3cb633f8e2f2fad799250a0f70d652b6b825e4",
+        "tool_implementation_digest": "sha256:f9d35d43770d39092a663e665e82ae1d84a9e0da3d0d10c407acada6a40cd281",
+        "runtime_digest": "sha256:d92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23",
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80"
+      },
+      "budget": {
+        "rollouts_used": 9,
+        "rollouts_limit": 40,
+        "reserved_execution_ms": 2000000,
+        "execution_limit_ms": 14400000
+      },
+      "incomplete_items": [],
+      "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "candidate_identity"
+  },
+  {
+    "name": "coverage-overcount",
+    "record": {
+      "api_major": 3,
+      "kind": "CIResult",
+      "report_id": "report-pass",
+      "source_kind": "git_commit",
+      "source_commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "trigger_generation": 1,
+      "submitted_subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+      "submitted_decision": {
+        "api_major": 3,
+        "kind": "GateResult",
+        "decision_id": "decision-pass-bc27fe",
+        "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+        "verdict": "pass",
+        "reason_codes": [],
+        "incomplete_items": [],
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+        "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+        "issued_at": "2026-09-23T08:00:00Z"
+      },
+      "candidate_subject_digest": null,
+      "candidate_decision": null,
+      "repair_required": false,
+      "eligibility": "eligible",
+      "promoted_subject_digest": null,
+      "required_enforcement": [
+        "tool_proxy",
+        "policy_backend",
+        "transactional_store",
+        "approved_contract"
+      ],
+      "coverage": {
+        "required_cases": 9,
+        "completed_cases": 10,
+        "suite_digest": "sha256:f8ebd43dbef1f029bf4930c65c9b7c5cc76af476927cee861ff18fcc73bfc4ab",
+        "case_result_index_digest": "sha256:3839f7651e03f22e682fc2e03215449a24cc694d3d1f757bea267ef1221752ed"
+      },
+      "versions": {
+        "scanner_profile_digest": "sha256:6105d8625ada3c9bf514062b5696e9d7aa11e4b5e2c3d8629713f0bf2e45f6fd",
+        "model_config_digest": "sha256:9372c470eeadd5ecd9c3c74c2b3cb633f8e2f2fad799250a0f70d652b6b825e4",
+        "tool_implementation_digest": "sha256:f9d35d43770d39092a663e665e82ae1d84a9e0da3d0d10c407acada6a40cd281",
+        "runtime_digest": "sha256:d92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23",
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80"
+      },
+      "budget": {
+        "rollouts_used": 9,
+        "rollouts_limit": 40,
+        "reserved_execution_ms": 2000000,
+        "execution_limit_ms": 14400000
+      },
+      "incomplete_items": [],
+      "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "coverage_count"
+  },
+  {
+    "name": "mixed-subject-evidence",
+    "record": {
+      "api_major": 3,
+      "kind": "GateInput",
+      "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+      "contract_approved": true,
+      "source_immutable": true,
+      "runtime_verified": true,
+      "scan_status": "complete",
+      "required_case_tokens": [
+        "dev-c1",
+        "dev-c2",
+        "dev-a1",
+        "dev-a2",
+        "dev-a3",
+        "protected-c1",
+        "protected-a1",
+        "protected-a2",
+        "protected-a3"
+      ],
+      "cases": [
+        {
+          "case_token": "dev-c1",
+          "subject_digest": "sha256:368629b8b64f5628645d4c4f933aaa794608571364f82d3b727806f863cfb3f4",
+          "case_kind": "clean",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-c2",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "clean",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-a1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-a2",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-a3",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-c1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "clean",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-a1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-a2",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-a3",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        }
+      ],
+      "baseline_cases": [],
+      "definite_failures": [],
+      "incomplete_reasons": [],
+      "unresolved_high_or_unknown_findings": 0,
+      "active_subject_digest": null
+    },
+    "expected_layer": "semantic",
+    "expected_code": "subject_scope"
+  },
+  {
+    "name": "duplicate-case-token",
+    "record": {
+      "api_major": 3,
+      "kind": "GateInput",
+      "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+      "contract_approved": true,
+      "source_immutable": true,
+      "runtime_verified": true,
+      "scan_status": "complete",
+      "required_case_tokens": [
+        "dev-c1",
+        "dev-c2",
+        "dev-a1",
+        "dev-a2",
+        "dev-a3",
+        "protected-c1",
+        "protected-a1",
+        "protected-a2",
+        "protected-a3"
+      ],
+      "cases": [
+        {
+          "case_token": "dev-c1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "clean",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-c2",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "clean",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-a1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-a2",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-a3",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-c1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "clean",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-a1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-a2",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "protected-a3",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "attack",
+          "split": "protected",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        },
+        {
+          "case_token": "dev-c1",
+          "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+          "case_kind": "clean",
+          "split": "dev",
+          "complete": true,
+          "utility_pass": true,
+          "any_security_violation": false
+        }
+      ],
+      "baseline_cases": [],
+      "definite_failures": [],
+      "incomplete_reasons": [],
+      "unresolved_high_or_unknown_findings": 0,
+      "active_subject_digest": null
+    },
+    "expected_layer": "semantic",
+    "expected_code": "duplicate_case"
+  },
+  {
+    "name": "partial-validation-receipt",
+    "record": {
+      "api_major": 3,
+      "kind": "ValidationReceipt",
+      "receipt_id": "receipt-1",
+      "run_id": "run-1",
+      "task_instance_id": "task-1",
+      "contract_digest": "sha256:954249cb26308aa6cd612b0ed7ebc705406dddcd65fd9e7500640cf762bdd046",
+      "input_snapshot_digest": "sha256:32381523e63197c929b67f793a8098bed0ae3a6fa902634fdbcc6fa4567f3346",
+      "output_id": "artifact:report",
+      "artifact_digest": "sha256:c7c5c1d70c5dec4416ab6158afd0b223ef40c29b1dc1f97ed9428b94d4cadb1c",
+      "artifact_version": 1,
+      "check_set_id": "orders_full_v1",
+      "checks_passed": [
+        "input_schema_and_keys_v1"
+      ],
+      "validator_digest": "sha256:f82af32160bc53112ca118abbf57fa6fed47eb90291a1d1d92f438ae2ed74ef6",
+      "issuer": "proxy",
+      "expires_at": "2026-09-23T08:10:00Z",
+      "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe"
+    },
+    "expected_layer": "schema",
+    "expected_code": "schema_invalid"
+  },
+  {
+    "name": "failed-validate-has-receipt",
+    "record": {
+      "api_major": 3,
+      "kind": "ToolResult",
+      "call_id": "call-4",
+      "run_id": "run-1",
+      "tool": "validate_artifact",
+      "outcome": "error",
+      "error_code": "validation_failed",
+      "data": {
+        "validation_receipt_id": "receipt-1",
+        "check_set_id": "orders_full_v1"
+      }
+    },
+    "expected_layer": "schema",
+    "expected_code": "schema_invalid"
+  },
+  {
+    "name": "policy-swap-digest-stale",
+    "record": {
+      "api_major": 3,
+      "kind": "CandidateBundle",
+      "body": {
+        "skill_digest": "sha256:2a5c5a61295be0df17baeeafb4214a7ba6b0ab67c9fb56b254a348cb7b5ee933",
+        "policy_digest": "sha256:c8c333ccff1c242e084859f13ca6a50b4a777cee1b8661b9827d222904e567ed",
+        "obligation_digest": "sha256:ddb5b4b7298d2b2acd2557ed51631068da77fa833706339bfb190f58ac174a9c",
+        "compiler_digest": "sha256:e996bb0ea465fae70d3e3c66b3b6e02d33d2f1eb76d5958720578b6cf359cc2e"
+      },
+      "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "digest_mismatch"
+  },
+  {
+    "name": "request-fingerprint-stale",
+    "record": {
+      "api_major": 3,
+      "kind": "EvaluationRequest",
+      "body": {
+        "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+        "case_digest": "sha256:b5d364286474fda1d42695632054ee3ea383d921c3c7e32c65b5d05de1fb7787",
+        "contract_digest": "sha256:954249cb26308aa6cd612b0ed7ebc705406dddcd65fd9e7500640cf762bdd046",
+        "suite_digest": "sha256:f8ebd43dbef1f029bf4930c65c9b7c5cc76af476927cee861ff18fcc73bfc4ab",
+        "model_config_digest": "sha256:9372c470eeadd5ecd9c3c74c2b3cb633f8e2f2fad799250a0f70d652b6b825e4",
+        "prompt_protocol_digest": "sha256:cf07194ee232eb531e15f690000d19846dea69cf05504782658afcfacb9228a2",
+        "tool_implementation_digest": "sha256:f9d35d43770d39092a663e665e82ae1d84a9e0da3d0d10c407acada6a40cd281",
+        "runtime_digest": "sha256:d92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23",
+        "scanner_profile_digest": "sha256:6105d8625ada3c9bf514062b5696e9d7aa11e4b5e2c3d8629713f0bf2e45f6fd",
+        "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+        "semantic_authorization_digest": "sha256:5f161c9149882e0e10124bc5dd5c11f0fbe8ec452edd52bcec76b01e9252cb33",
+        "initial_world_digest": "sha256:486ea46224d1bb4fb680f34f7c9ad96a8f24ec88be73ea8e5a6c65260e9cb8a7",
+        "plan_digest": "sha256:64879f7d6b960a01909762d911a32d4582c20010c5641ee90278b644a9e3b525"
+      },
+      "request_fingerprint": "sha256:8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "digest_mismatch"
+  },
+  {
+    "name": "policy-only-with-file-diff",
+    "record": {
+      "api_major": 3,
+      "kind": "PatchCandidate",
+      "candidate_id": "candidate-1",
+      "parent_subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+      "candidate_subject_digest": "sha256:368629b8b64f5628645d4c4f933aaa794608571364f82d3b727806f863cfb3f4",
+      "repair_kind": "policy_only",
+      "file_patch_digest": "sha256:a4895eb44afc336fecbba6e520cd67e178dace0276655d102fceffa8e5f70570",
+      "policy_patch_digest": null,
+      "trigger_category": "utility_failure",
+      "trigger_evidence_ids": [
+        "event-12"
+      ],
+      "changed_paths": [
+        "SKILL.md"
+      ],
+      "cumulative_added_bytes": 32,
+      "cumulative_changed_bytes": 64
+    },
+    "expected_layer": "semantic",
+    "expected_code": "patch_kind"
+  },
+  {
+    "name": "plan-time-overflow",
+    "record": {
+      "api_major": 3,
+      "kind": "ExecutionPlan",
+      "campaign_id": "campaign-1",
+      "revision": 1,
+      "parent_plan_digest": null,
+      "plan_digest": "sha256:6731cebaaed3c18ba26529cd52d2a0fd8fdac132a52d624edd2c5d0a70214368",
+      "phase": "dev",
+      "subject_digests": [
+        "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe"
+      ],
+      "required_cases": [
+        {
+          "paired_case_id": "dev-c1",
+          "split": "dev",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "dev-c2",
+          "split": "dev",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "dev-a1",
+          "split": "dev",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "dev-a2",
+          "split": "dev",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "dev-a3",
+          "split": "dev",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "protected-c1",
+          "split": "protected",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "protected-a1",
+          "split": "protected",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "protected-a2",
+          "split": "protected",
+          "repetitions": 1
+        },
+        {
+          "paired_case_id": "protected-a3",
+          "split": "protected",
+          "repetitions": 1
+        }
+      ],
+      "reserved_rollouts": 9,
+      "max_campaign_rollouts": 40,
+      "reserved_execution_ms": 14400001,
+      "max_campaign_execution_ms": 14400000,
+      "runtime_profile_digest": "sha256:a059e3e48284887d712894bcbf48c6f5cab2028f80cb2a73d30e403186c8ea6d"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "plan_budget"
+  },
+  {
+    "name": "utf8-bytes-overflow",
+    "record": {
+      "api_major": 3,
+      "kind": "ToolCall",
+      "call_id": "call-3",
+      "run_id": "run-1",
+      "fencing_token": 1,
+      "tool": "write_artifact",
+      "args": {
+        "output_id": "artifact:report",
+        "expected_version": 0,
+        "content_utf8": "\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57",
+        "idempotency_key": "write-once"
+      }
+    },
+    "expected_layer": "semantic",
+    "expected_code": "byte_limit"
+  },
+  {
+    "name": "input-write-not-authorized",
+    "record": {
+      "api_major": 3,
+      "kind": "TaskInstance",
+      "task_instance_id": "task-1",
+      "run_id": "run-1",
+      "paired_case_id": "dev-c1",
+      "case_digest": "sha256:b5d364286474fda1d42695632054ee3ea383d921c3c7e32c65b5d05de1fb7787",
+      "contract_digest": "sha256:954249cb26308aa6cd612b0ed7ebc705406dddcd65fd9e7500640cf762bdd046",
+      "approval_record_id": "approval-1",
+      "input_snapshot_digest": "sha256:32381523e63197c929b67f793a8098bed0ae3a6fa902634fdbcc6fa4567f3346",
+      "resources": [
+        {
+          "resource_id": "input:customers",
+          "resource_class": "input",
+          "access": "write",
+          "bytes_digest": "sha256:21eb2153dd1483cd67a621fb2c7b2f65b2ca46c64a49e49be4b939a1f0c844f8"
+        },
+        {
+          "resource_id": "input:orders",
+          "resource_class": "input",
+          "access": "read",
+          "bytes_digest": "sha256:1c168adb00d208e42f93314529f1fa9c0427eb63233ceda95a5db52b7012a719"
+        },
+        {
+          "resource_id": "artifact:report",
+          "resource_class": "artifact",
+          "access": "read_write",
+          "bytes_digest": null
+        },
+        {
+          "resource_id": "sink:business-inbox",
+          "resource_class": "sink",
+          "access": "publish",
+          "bytes_digest": null
+        }
+      ],
+      "deadline": "2026-09-23T08:10:00Z",
+      "trust_revision": 1,
+      "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "resource_access"
+  },
+  {
+    "name": "resource-class-prefix-mismatch",
+    "record": {
+      "api_major": 3,
+      "kind": "TaskInstance",
+      "task_instance_id": "task-1",
+      "run_id": "run-1",
+      "paired_case_id": "dev-c1",
+      "case_digest": "sha256:b5d364286474fda1d42695632054ee3ea383d921c3c7e32c65b5d05de1fb7787",
+      "contract_digest": "sha256:954249cb26308aa6cd612b0ed7ebc705406dddcd65fd9e7500640cf762bdd046",
+      "approval_record_id": "approval-1",
+      "input_snapshot_digest": "sha256:32381523e63197c929b67f793a8098bed0ae3a6fa902634fdbcc6fa4567f3346",
+      "resources": [
+        {
+          "resource_id": "input:customers",
+          "resource_class": "artifact",
+          "access": "read",
+          "bytes_digest": "sha256:21eb2153dd1483cd67a621fb2c7b2f65b2ca46c64a49e49be4b939a1f0c844f8"
+        },
+        {
+          "resource_id": "input:orders",
+          "resource_class": "input",
+          "access": "read",
+          "bytes_digest": "sha256:1c168adb00d208e42f93314529f1fa9c0427eb63233ceda95a5db52b7012a719"
+        },
+        {
+          "resource_id": "artifact:report",
+          "resource_class": "artifact",
+          "access": "read_write",
+          "bytes_digest": null
+        },
+        {
+          "resource_id": "sink:business-inbox",
+          "resource_class": "sink",
+          "access": "publish",
+          "bytes_digest": null
+        }
+      ],
+      "deadline": "2026-09-23T08:10:00Z",
+      "trust_revision": 1,
+      "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe"
+    },
+    "expected_layer": "semantic",
+    "expected_code": "resource_class"
+  }
+]

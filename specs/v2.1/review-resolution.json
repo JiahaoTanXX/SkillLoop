@@ -1,0 +1,290 @@
+[
+  {
+    "id": "V01",
+    "decision": "§1、13；实体/六工具/Gate/四状态 schema 与正反例一起分发，wire API=3",
+    "counterexample": "缺必填、未知字段/枚举、非法跨字段拒绝；不能只查 JSON 能解析",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V02",
+    "decision": "§3.1 是唯一权限表，CI 不批准契约或改 Gate",
+    "counterexample": "CI 身份调用 approve 拒绝；批准域内绑定成功",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V03",
+    "decision": "§8.1、11；基础9例、全部选定业务成功、任何实际违规失败；每 subject 独立",
+    "counterexample": "无active、低风险真实违规、非关键退化、零用例、提交败候选过分别裁决",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V04",
+    "decision": "§6.1；仅有效动作集合、固定前置条件、共享计数；deny/OR unsupported",
+    "counterexample": "删除 deny 的旧格式不能被忽略；分裂额度/移除 receipt/新增 sink 不得获子集证明",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V05",
+    "decision": "§5.2、6.2；新增 prepare_publication，绑定实际产物后返不透明 grant",
+    "counterexample": "空会话合法完成；缺基础范围是 harness error，域外请求拒绝且不永久挂起",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V06",
+    "decision": "§3.2；proxy 独占数据库、worker 只 RPC，OCI 无网络、按角色 UDS 与 gateway 禁正文共享",
+    "counterexample": "worker 写 receipt、读保护、管理接口/外网拒绝；合法推理和工具通过",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V07",
+    "decision": "§9、11；保护域向可信 Gate 提供无 payload 的逐例矩阵",
+    "counterexample": "active/candidate A/B 交换成功仍失败；补丁器不可读矩阵和隐藏内容",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V08",
+    "decision": "§3.3；评分清单隐藏，运行时秘密可暴露，sink ID 可表达",
+    "counterexample": "合成机制夹具真实泄漏可检测；strict 同目标被阻止，不能以目标不可表示充数",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V09",
+    "decision": "§4.2、9；组合 subject 覆盖 Skill/policy/obligation/compiler；纯策略有身份",
+    "counterexample": "同 Skill 不同 policy 不同 subject；丢策略不能沿用候选证明",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V10",
+    "decision": "§6.1、9；只收紧，功能恢复不扩权；失败候选可放弃",
+    "counterexample": "误收紧后不得以恢复业务删条件；未改善照实输出",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V11",
+    "decision": "§1、10、13；M1 有界关键历史全部必测，溢出不确定；跨作业 FR-OPS",
+    "counterexample": "容量越界不采样为 pass，范围表与Gate保持一致",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V12",
+    "decision": "§4.3、8.3；CaseTemplate 不带run，实例/run独立，重复/重试分开",
+    "counterexample": "两subject×两重复四run，配对键相同，跨run receipt 拒绝",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V13",
+    "decision": "§4.4；运行前 RequestFingerprint 与执行后 RecordDigest 分开，M1无缓存",
+    "counterexample": "请求先算；实际事件改变只改执行证明；无自引用哈希",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V14",
+    "decision": "§5.2、6.1；全部六工具统一资源绑定，loader 创建 reference namespace",
+    "counterexample": "validate/publish 其他任务产物拒绝；同包合法 reference 能读",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V15",
+    "decision": "§6.3；产物字节/版本/凭证/接收事件同SQLite，固定持久化模式",
+    "counterexample": "write/publish竞争与commit后崩溃均能取回相同字节",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V16",
+    "decision": "§6.3；认证/fence→幂等查参→新动作授权/计额",
+    "counterexample": "已消费 grant 同key返回旧结果；跨task不可读；新key不能再消费",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V17",
+    "decision": "§3.1、4.4、6.2；OS socket身份、批准ID、独立body hash、证明有效期",
+    "counterexample": "伪actor、过期记录、改body、无审批拒绝；不造循环签名",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V18",
+    "decision": "§10；campaign预算固定，计划revision追加；M1不跨批",
+    "counterexample": "新发现保留，重启/换job不重置，保护恢复不换候选",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V19",
+    "decision": "§5、10；小输入、整文件无分页、token预检、实测校准、总墙钟预留",
+    "counterexample": "最大支持输入＋拒绝恢复；计划放不下先报容量不足",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V20",
+    "decision": "§5.1、4.4；金额/总量安全整数、字段长度/CSV子集/换行摘要固定",
+    "counterexample": "2^53、长字段、BOM、Unicode数字/前导零都得到唯一结果",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V21",
+    "decision": "§1、5.1；M1 同契约两流程明确不算完整G1；新业务DSL/Markdown协议未定义即不支持",
+    "counterexample": "接入不能暗改oracle；G1/G2先交独立金样再宣称实现",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V22",
+    "decision": "§4.1、11、13；无契约导入扫描贯通，本地SHA=null，unsupported为原因",
+    "counterexample": "本地无契约needs_contract；有契约非不可变源inconclusive；不伪造SHA",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V23",
+    "decision": "§7.2；持续静态命中不自动取消有效缓解；按作用域/证明失效重开",
+    "counterexample": "文字未变但代理持续拦截状态稳定；真实突破reopen；静态风险静态证明",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V24",
+    "decision": "§8.3；safe robust=业务成功且无违规，attempt/effect分母独立",
+    "counterexample": "完成但泄漏safe robust=0，被阻断不计effect成功",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V25",
+    "decision": "§7.1与scanner profile；固定commit/24 analyzer、网络隔离、真实spike证据才ready",
+    "counterexample": "0但有finding可完整；0+partial不完整；超时/失败不能用最小规则冒充",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V26",
+    "decision": "§4.1；Git对象树正式评估，本地fd安全打开仅观测不晋级",
+    "counterexample": "换链接不越界读；混合活动目录不能获得immutable资格",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V27",
+    "decision": "§5.2；六工具完整schema、新建0、build禁覆盖、无分页、批失败跳过",
+    "counterexample": "stale写/失败validate/重复输入/未知transform和UTF-8字节超限唯一结果",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V28",
+    "decision": "§5.3；system/task/skill/tool角色、可信来源结构和上下文预检",
+    "counterexample": "伪system不改代理；模板role变化改指纹；超上下文不静默截断",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V29",
+    "decision": "§8.1–2；基础矩阵独立于finding；reference A为响应变异、B动态延后",
+    "counterexample": "零finding照测；A不改包摘要；删除目标不虚计覆盖",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V30",
+    "decision": "§10；fencing贯穿proxy/模型/结果，预算持久化，未知调用保守消费",
+    "counterexample": "旧worker复活拒绝，取消后不发布，重启计数不归零",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V31",
+    "decision": "§12；事务事实可重建，模型trace不可补造；报告版本化；M1不自动GC",
+    "counterexample": "缺模型trace仍inconclusive；新判定不覆盖旧报告；引用证据不能删",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V32",
+    "decision": "§4.4；每对象投影、统一sha256前缀、ASCII路径，业务name/path保留",
+    "counterexample": "改客户名/引用路径摘要必变；显示字段不影响body；Unicode文件名拒绝",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V33",
+    "decision": "§8.3、11；fixture/Agent/策略/infra/作业分层，配置错误不归Skill",
+    "counterexample": "全非法输入不充正常分母；缺基础授权inconclusive；可恢复deny不自动失败",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V34",
+    "decision": "§12；SHA check与本地CAS分开，远端乐观检查不假称原子",
+    "counterexample": "新head不继承旧绿；旧generation不覆盖；无PR本地profile明确",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V35",
+    "decision": "§7.2；静态误报管理员命令/证据/范围/期限，M1无accepted_risk放行",
+    "counterexample": "人工例外不能覆盖真实违规；过期/证据变化重新待审",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  },
+  {
+    "id": "V36",
+    "decision": "§0–1、8–9、15；单人逐步指南，组合价值待验证，机制/模型实测分开",
+    "counterexample": "没有自然有效补丁不宣称修复效果；G2未做不称跨家族通用已完成",
+    "design_status": "specified",
+    "implementation_status": "not_verified",
+    "source_review": "SkillLoop-PRD-v2.0-review.zh-CN.md"
+  }
+]

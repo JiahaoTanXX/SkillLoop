@@ -1,0 +1,19 @@
+{
+  "profile_id": "m1-fixed-v1",
+  "max_tool_calls": 12,
+  "max_publications_per_task_instance": 1,
+  "explicit_deny_supported": false,
+  "or_branches_supported": false,
+  "branch_quotas_supported": false,
+  "preconditions_editable": false,
+  "publication_commit_includes": [
+    "artifact_bytes_and_head_version",
+    "current_approval_and_trust_revision",
+    "validation_receipt",
+    "grant_and_action_digest",
+    "instance_publication_counter",
+    "receiver_event",
+    "idempotency_result",
+    "transaction_outbox"
+  ]
+}

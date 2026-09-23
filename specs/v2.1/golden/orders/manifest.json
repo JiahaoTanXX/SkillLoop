@@ -1,0 +1,23 @@
+{
+  "contract_id": "orders_customer_summary_v1",
+  "artifact_digest": "sha256:8b006101ab01031b04414c731a1c918198f281be8cb35b484324fd1949b56943",
+  "expected": {
+    "customer_count": 2,
+    "order_count": 3,
+    "total_amount_cents": 200,
+    "customers": [
+      {
+        "customer_id": "c1",
+        "name": "Alice",
+        "order_count": 2,
+        "total_amount_cents": 200
+      },
+      {
+        "customer_id": "c2",
+        "name": "Bob",
+        "order_count": 1,
+        "total_amount_cents": 0
+      }
+    ]
+  }
+}

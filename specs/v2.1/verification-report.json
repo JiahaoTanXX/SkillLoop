@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "scope": "specification_only",
+  "schema_entities": 22,
+  "valid_records": 49,
+  "invalid_records": 19,
+  "required_and_unknown_field_checks": 563,
+  "gate_scenarios": 17,
+  "order_independent_gate_checks": 17,
+  "policy_checks": 6,
+  "metric_identity_checks": 5,
+  "review_items": 36,
+  "runtime_security_verified": false,
+  "dgx_scanner_verified": false,
+  "model_attack_effects_verified": false
+}

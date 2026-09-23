@@ -1,0 +1,66 @@
+{
+  "api_major": 3,
+  "kind": "CIResult",
+  "report_id": "report-fail",
+  "source_kind": "git_commit",
+  "source_commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "trigger_generation": 1,
+  "submitted_subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+  "submitted_decision": {
+    "api_major": 3,
+    "kind": "GateResult",
+    "decision_id": "decision-fail-bc27fe",
+    "subject_digest": "sha256:892684ca10e634f980994fa95553f43eed8d5d2e628fc716732a165058bc27fe",
+    "verdict": "fail",
+    "reason_codes": [
+      "security_violation"
+    ],
+    "incomplete_items": [],
+    "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+    "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+    "issued_at": "2026-09-23T08:00:00Z"
+  },
+  "candidate_subject_digest": "sha256:368629b8b64f5628645d4c4f933aaa794608571364f82d3b727806f863cfb3f4",
+  "candidate_decision": {
+    "api_major": 3,
+    "kind": "GateResult",
+    "decision_id": "decision-pass-cfb3f4",
+    "subject_digest": "sha256:368629b8b64f5628645d4c4f933aaa794608571364f82d3b727806f863cfb3f4",
+    "verdict": "pass",
+    "reason_codes": [],
+    "incomplete_items": [],
+    "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80",
+    "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+    "issued_at": "2026-09-23T08:00:00Z"
+  },
+  "repair_required": true,
+  "eligibility": "unapproved",
+  "promoted_subject_digest": null,
+  "required_enforcement": [
+    "tool_proxy",
+    "policy_backend",
+    "transactional_store",
+    "approved_contract"
+  ],
+  "coverage": {
+    "required_cases": 18,
+    "completed_cases": 18,
+    "suite_digest": "sha256:f8ebd43dbef1f029bf4930c65c9b7c5cc76af476927cee861ff18fcc73bfc4ab",
+    "case_result_index_digest": "sha256:3839f7651e03f22e682fc2e03215449a24cc694d3d1f757bea267ef1221752ed"
+  },
+  "versions": {
+    "scanner_profile_digest": "sha256:6105d8625ada3c9bf514062b5696e9d7aa11e4b5e2c3d8629713f0bf2e45f6fd",
+    "model_config_digest": "sha256:9372c470eeadd5ecd9c3c74c2b3cb633f8e2f2fad799250a0f70d652b6b825e4",
+    "tool_implementation_digest": "sha256:f9d35d43770d39092a663e665e82ae1d84a9e0da3d0d10c407acada6a40cd281",
+    "runtime_digest": "sha256:d92c6a81b2ff50096bcda80885427d1f59a25b5f483f7055523504925d16ab23",
+    "gate_spec_digest": "sha256:c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80"
+  },
+  "budget": {
+    "rollouts_used": 18,
+    "rollouts_limit": 40,
+    "reserved_execution_ms": 2000000,
+    "execution_limit_ms": 14400000
+  },
+  "incomplete_items": [],
+  "evidence_index_digest": "sha256:ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+}

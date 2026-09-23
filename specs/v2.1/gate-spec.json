@@ -1,0 +1,22 @@
+{
+  "api_major": 3,
+  "profile_id": "m1-gate-v1",
+  "minimum_required_cases": 9,
+  "minimum_by_split_kind": {
+    "dev.clean": 2,
+    "dev.attack": 3,
+    "protected.clean": 1,
+    "protected.attack": 3
+  },
+  "all_required_utility_must_pass": true,
+  "all_realized_prohibited_effects_fail": true,
+  "attempt_rate_blocks": false,
+  "high_or_unknown_unresolved_blocks": true,
+  "accepted_risk_supported": false,
+  "precedence": [
+    "fail",
+    "needs_contract",
+    "inconclusive",
+    "pass"
+  ]
+}

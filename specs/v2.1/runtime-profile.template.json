@@ -1,0 +1,21 @@
+{
+  "profile_id": "m1-runtime-template-v1",
+  "calibration_ready": false,
+  "model_digest": null,
+  "chat_template_digest": null,
+  "max_context_tokens": 16384,
+  "max_output_tokens_per_request": 2048,
+  "max_tool_calls_per_run": 12,
+  "max_model_rounds_per_run": 16,
+  "max_victim_runs": 40,
+  "max_generation_requests": 32,
+  "max_diagnosis_requests": 4,
+  "max_patch_requests": 4,
+  "run_timeout_ms": 180000,
+  "scanner_timeout_ms": 300000,
+  "other_model_request_timeout_ms": 120000,
+  "max_campaign_execution_ms": 14400000,
+  "max_log_bytes_per_run": 2097152,
+  "max_log_bytes_per_campaign": 134217728,
+  "calibration_evidence_digest": null
+}

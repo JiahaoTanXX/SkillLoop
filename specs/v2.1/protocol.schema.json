@@ -1,0 +1,3105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/JiahaoTanXX/SkillLoop/main/specs/v2.1/protocol.schema.json",
+  "title": "SkillLoop V2.1 protocol, wire API 3",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ContractBody"
+    },
+    {
+      "$ref": "#/$defs/ApprovalRecord"
+    },
+    {
+      "$ref": "#/$defs/SourceSnapshot"
+    },
+    {
+      "$ref": "#/$defs/CandidateBundle"
+    },
+    {
+      "$ref": "#/$defs/CaseTemplate"
+    },
+    {
+      "$ref": "#/$defs/TaskInstance"
+    },
+    {
+      "$ref": "#/$defs/Policy"
+    },
+    {
+      "$ref": "#/$defs/RepairObligations"
+    },
+    {
+      "$ref": "#/$defs/ToolCall"
+    },
+    {
+      "$ref": "#/$defs/ToolResult"
+    },
+    {
+      "$ref": "#/$defs/ValidationReceipt"
+    },
+    {
+      "$ref": "#/$defs/ActionGrant"
+    },
+    {
+      "$ref": "#/$defs/RunResult"
+    },
+    {
+      "$ref": "#/$defs/PatchCandidate"
+    },
+    {
+      "$ref": "#/$defs/ExecutionPlan"
+    },
+    {
+      "$ref": "#/$defs/EvaluationRequest"
+    },
+    {
+      "$ref": "#/$defs/GateInput"
+    },
+    {
+      "$ref": "#/$defs/GateResult"
+    },
+    {
+      "$ref": "#/$defs/Attestation"
+    },
+    {
+      "$ref": "#/$defs/CIResult"
+    },
+    {
+      "$ref": "#/$defs/ScannerReport"
+    },
+    {
+      "$ref": "#/$defs/PluginManifest"
+    }
+  ],
+  "$defs": {
+    "ContractBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "ContractBody"
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "contract_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "family_id": {
+              "const": "orders_customer_summary_v1"
+            },
+            "input_schema_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "output_schema_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transform_id": {
+              "const": "orders_summary_v1"
+            },
+            "check_set_id": {
+              "const": "orders_full_v1"
+            },
+            "approved_resource_slots": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "maxItems": 16
+            },
+            "approved_sink_slots": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "maxItems": 8
+            },
+            "allowed_output_fields": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "oracle_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "contract_id",
+            "revision",
+            "family_id",
+            "input_schema_id",
+            "output_schema_id",
+            "transform_id",
+            "check_set_id",
+            "approved_resource_slots",
+            "approved_sink_slots",
+            "allowed_output_fields",
+            "oracle_digest"
+          ]
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "body",
+        "digest"
+      ]
+    },
+    "ApprovalRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "ApprovalRecord"
+        },
+        "approval_record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "trust_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "status": {
+          "enum": [
+            "approved",
+            "revoked",
+            "expired"
+          ]
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "approval_record_id",
+        "contract_digest",
+        "issuer",
+        "issued_at",
+        "expires_at",
+        "trust_revision",
+        "status"
+      ]
+    },
+    "SourceSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "SourceSnapshot"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_kind": {
+          "enum": [
+            "git_commit",
+            "local_observed"
+          ]
+        },
+        "source_commit_sha": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_consistency": {
+          "enum": [
+            "immutable",
+            "unverified"
+          ]
+        },
+        "skill_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9._/-]+$"
+              },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "bytes_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "path",
+              "size_bytes",
+              "bytes_digest"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "snapshot_id",
+        "source_kind",
+        "source_commit_sha",
+        "source_consistency",
+        "skill_digest",
+        "files"
+      ]
+    },
+    "CandidateBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "CandidateBundle"
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "skill_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "policy_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "obligation_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "compiler_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "skill_digest",
+            "policy_digest",
+            "obligation_digest",
+            "compiler_digest"
+          ]
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "body",
+        "subject_digest"
+      ]
+    },
+    "CaseTemplate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "CaseTemplate"
+        },
+        "paired_case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "case_kind": {
+          "enum": [
+            "clean",
+            "attack"
+          ]
+        },
+        "split": {
+          "enum": [
+            "dev",
+            "protected"
+          ]
+        },
+        "fixture_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "business_projection_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "payload_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clean_pair_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "objective_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "repetitions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "required": {
+          "const": true
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "paired_case_id",
+        "case_kind",
+        "split",
+        "fixture_digest",
+        "business_projection_digest",
+        "payload_digest",
+        "clean_pair_id",
+        "objective_ids",
+        "repetitions",
+        "required"
+      ]
+    },
+    "TaskInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "TaskInstance"
+        },
+        "task_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paired_case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "case_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "contract_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "approval_record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_snapshot_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "resource_id": {
+                "type": "string",
+                "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+              },
+              "resource_class": {
+                "enum": [
+                  "skill",
+                  "input",
+                  "artifact",
+                  "sink"
+                ]
+              },
+              "access": {
+                "enum": [
+                  "read",
+                  "write",
+                  "read_write",
+                  "publish"
+                ]
+              },
+              "bytes_digest": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "resource_id",
+              "resource_class",
+              "access",
+              "bytes_digest"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "trust_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "task_instance_id",
+        "run_id",
+        "paired_case_id",
+        "case_digest",
+        "contract_digest",
+        "approval_record_id",
+        "input_snapshot_digest",
+        "resources",
+        "deadline",
+        "trust_revision",
+        "subject_digest"
+      ]
+    },
+    "Policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "Policy"
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "policy_format": {
+              "const": "m1-effective-actions-v1"
+            },
+            "contract_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "domain_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "allowed_actions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "tool": {
+                    "enum": [
+                      "read_resource",
+                      "build_report",
+                      "write_artifact",
+                      "validate_artifact",
+                      "prepare_publication",
+                      "publish_artifact"
+                    ]
+                  },
+                  "resource_bindings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "parameter": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "resource_id": {
+                          "type": "string",
+                          "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                        },
+                        "access": {
+                          "enum": [
+                            "read",
+                            "write"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "parameter",
+                        "resource_id",
+                        "access"
+                      ]
+                    },
+                    "minItems": 0,
+                    "maxItems": 8
+                  },
+                  "destination_id": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "check_set_id": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "tool",
+                  "resource_bindings",
+                  "destination_id",
+                  "check_set_id"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 128
+            },
+            "max_tool_calls": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "prerequisites_profile": {
+              "const": "m1-fixed-v1"
+            }
+          },
+          "required": [
+            "policy_format",
+            "contract_digest",
+            "domain_digest",
+            "allowed_actions",
+            "max_tool_calls",
+            "prerequisites_profile"
+          ]
+        },
+        "policy_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "body",
+        "policy_digest"
+      ]
+    },
+    "RepairObligations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "RepairObligations"
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "contract_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "obligation_type": {
+                    "enum": [
+                      "require_validated_artifact",
+                      "restrict_destination",
+                      "restrict_resources"
+                    ]
+                  },
+                  "slot_refs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1,
+                    "maxItems": 16
+                  },
+                  "check_set_id": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "obligation_type",
+                  "slot_refs",
+                  "check_set_id"
+                ]
+              },
+              "minItems": 0,
+              "maxItems": 16
+            }
+          },
+          "required": [
+            "contract_digest",
+            "items"
+          ]
+        },
+        "obligation_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "compiler_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "body",
+        "obligation_digest",
+        "compiler_digest"
+      ]
+    },
+    "ToolCall": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolCall"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fencing_token": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "tool": {
+              "const": "read_resource"
+            },
+            "args": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "resource_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                }
+              },
+              "required": [
+                "resource_id"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "fencing_token",
+            "tool",
+            "args"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolCall"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fencing_token": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "tool": {
+              "const": "build_report"
+            },
+            "args": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "input_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "uniqueItems": true
+                },
+                "output_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "transform_id": {
+                  "const": "orders_summary_v1"
+                },
+                "expected_version": {
+                  "const": 0
+                },
+                "idempotency_key": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "input_ids",
+                "output_id",
+                "transform_id",
+                "expected_version",
+                "idempotency_key"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "fencing_token",
+            "tool",
+            "args"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolCall"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fencing_token": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "tool": {
+              "const": "write_artifact"
+            },
+            "args": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "output_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "expected_version": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "content_utf8": {
+                  "type": "string",
+                  "maxLength": 16384
+                },
+                "idempotency_key": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "output_id",
+                "expected_version",
+                "content_utf8",
+                "idempotency_key"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "fencing_token",
+            "tool",
+            "args"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolCall"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fencing_token": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "tool": {
+              "const": "validate_artifact"
+            },
+            "args": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "output_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "check_set_id": {
+                  "const": "orders_full_v1"
+                }
+              },
+              "required": [
+                "output_id",
+                "artifact_digest",
+                "check_set_id"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "fencing_token",
+            "tool",
+            "args"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolCall"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fencing_token": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "tool": {
+              "const": "prepare_publication"
+            },
+            "args": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "output_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "destination_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "validation_receipt_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "idempotency_key": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "output_id",
+                "artifact_digest",
+                "destination_id",
+                "validation_receipt_id",
+                "idempotency_key"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "fencing_token",
+            "tool",
+            "args"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolCall"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fencing_token": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "tool": {
+              "const": "publish_artifact"
+            },
+            "args": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "output_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "destination_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "validation_receipt_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "idempotency_key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "grant_ref": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "output_id",
+                "artifact_digest",
+                "destination_id",
+                "validation_receipt_id",
+                "idempotency_key",
+                "grant_ref"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "fencing_token",
+            "tool",
+            "args"
+          ]
+        }
+      ]
+    },
+    "ToolResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolResult"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "const": "read_resource"
+            },
+            "outcome": {
+              "const": "ok"
+            },
+            "error_code": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "resource_id": {
+                  "type": "string",
+                  "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+                },
+                "content_utf8": {
+                  "type": "string",
+                  "maxLength": 4096
+                },
+                "bytes_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "resource_id",
+                "content_utf8",
+                "bytes_digest"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "tool",
+            "outcome",
+            "error_code",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolResult"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "const": "build_report"
+            },
+            "outcome": {
+              "const": "ok"
+            },
+            "error_code": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "artifact_digest",
+                "version"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "tool",
+            "outcome",
+            "error_code",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolResult"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "const": "write_artifact"
+            },
+            "outcome": {
+              "const": "ok"
+            },
+            "error_code": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "artifact_digest",
+                "version"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "tool",
+            "outcome",
+            "error_code",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolResult"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "const": "validate_artifact"
+            },
+            "outcome": {
+              "const": "ok"
+            },
+            "error_code": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "validation_receipt_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "check_set_id": {
+                  "const": "orders_full_v1"
+                }
+              },
+              "required": [
+                "validation_receipt_id",
+                "check_set_id"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "tool",
+            "outcome",
+            "error_code",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolResult"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "const": "prepare_publication"
+            },
+            "outcome": {
+              "const": "ok"
+            },
+            "error_code": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "grant_ref": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "action_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+                }
+              },
+              "required": [
+                "grant_ref",
+                "action_digest",
+                "expires_at"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "tool",
+            "outcome",
+            "error_code",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolResult"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "const": "publish_artifact"
+            },
+            "outcome": {
+              "const": "ok"
+            },
+            "error_code": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "publication_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "publication_id",
+                "artifact_digest"
+              ]
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "tool",
+            "outcome",
+            "error_code",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "api_major": {
+              "const": 3
+            },
+            "kind": {
+              "const": "ToolResult"
+            },
+            "call_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "run_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "type": "string",
+              "minLength": 1
+            },
+            "outcome": {
+              "enum": [
+                "deny",
+                "error",
+                "skipped"
+              ]
+            },
+            "error_code": {
+              "enum": [
+                "invalid_argument",
+                "unauthorized",
+                "approval_required",
+                "stale_version",
+                "size_limit",
+                "missing_resource",
+                "validation_failed",
+                "grant_unavailable",
+                "conflict",
+                "unknown_effect",
+                "internal_error",
+                "stale_worker",
+                "cancelled",
+                "skipped_after_failure",
+                "unsupported_capability",
+                "context_exceeded",
+                "unknown_tool"
+              ]
+            },
+            "data": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "api_major",
+            "kind",
+            "call_id",
+            "run_id",
+            "tool",
+            "outcome",
+            "error_code",
+            "data"
+          ]
+        }
+      ]
+    },
+    "ValidationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "ValidationReceipt"
+        },
+        "receipt_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "input_snapshot_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "output_id": {
+          "type": "string",
+          "pattern": "^(skill|input|artifact|sink):[A-Za-z0-9_./:-]+$"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "check_set_id": {
+          "const": "orders_full_v1"
+        },
+        "checks_passed": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "input_schema_and_keys_v1",
+              "output_schema_v1",
+              "exact_reference_output_v1",
+              "output_size_v1"
+            ]
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "validator_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "receipt_id",
+        "run_id",
+        "task_instance_id",
+        "contract_digest",
+        "input_snapshot_digest",
+        "output_id",
+        "artifact_digest",
+        "artifact_version",
+        "check_set_id",
+        "checks_passed",
+        "validator_digest",
+        "issuer",
+        "expires_at",
+        "subject_digest"
+      ]
+    },
+    "ActionGrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "ActionGrant"
+        },
+        "grant_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approval_record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "trust_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "state": {
+          "enum": [
+            "issued",
+            "committed",
+            "revoked",
+            "expired"
+          ]
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "grant_ref",
+        "run_id",
+        "task_instance_id",
+        "approval_record_id",
+        "action_digest",
+        "trust_revision",
+        "issuer",
+        "issued_at",
+        "expires_at",
+        "state",
+        "subject_digest"
+      ]
+    },
+    "RunResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "RunResult"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "paired_case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repetition_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "attempt_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "case_kind": {
+          "enum": [
+            "clean",
+            "attack"
+          ]
+        },
+        "case_validity": {
+          "enum": [
+            "valid",
+            "invalid",
+            "harness_error",
+            "unknown"
+          ]
+        },
+        "agent_outcome": {
+          "enum": [
+            "success",
+            "failure",
+            "not_evaluated",
+            "indeterminate"
+          ]
+        },
+        "policy_decisions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "allow",
+              "deny",
+              "unknown",
+              "not_applicable"
+            ]
+          },
+          "minItems": 0
+        },
+        "infra_status": {
+          "enum": [
+            "ok",
+            "config_error",
+            "timeout",
+            "cancelled",
+            "runtime_error",
+            "clock_error"
+          ]
+        },
+        "exposure_status": {
+          "enum": [
+            "exposed",
+            "not_read",
+            "delivery_failed",
+            "context_exceeded",
+            "not_applicable"
+          ]
+        },
+        "objective_results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "objective_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "level": {
+                "enum": [
+                  "attempt",
+                  "effect"
+                ]
+              },
+              "success": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "objective_id",
+              "level",
+              "success"
+            ]
+          },
+          "minItems": 0
+        },
+        "any_security_violation": {
+          "type": "boolean"
+        },
+        "utility_success": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_complete": {
+          "type": "boolean"
+        },
+        "execution_record_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "run_id",
+        "task_instance_id",
+        "subject_digest",
+        "paired_case_id",
+        "repetition_index",
+        "attempt_index",
+        "case_kind",
+        "case_validity",
+        "agent_outcome",
+        "policy_decisions",
+        "infra_status",
+        "exposure_status",
+        "objective_results",
+        "any_security_violation",
+        "utility_success",
+        "evidence_complete",
+        "execution_record_digest"
+      ]
+    },
+    "PatchCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "PatchCandidate"
+        },
+        "candidate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "candidate_subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "repair_kind": {
+          "enum": [
+            "text_only",
+            "policy_only",
+            "combined"
+          ]
+        },
+        "file_patch_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "policy_patch_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "trigger_category": {
+          "enum": [
+            "realized_violation",
+            "utility_failure",
+            "preventive_static",
+            "attempt_reduction"
+          ]
+        },
+        "trigger_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "changed_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "maxItems": 3
+        },
+        "cumulative_added_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096
+        },
+        "cumulative_changed_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8192
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "candidate_id",
+        "parent_subject_digest",
+        "candidate_subject_digest",
+        "repair_kind",
+        "file_patch_digest",
+        "policy_patch_digest",
+        "trigger_category",
+        "trigger_evidence_ids",
+        "changed_paths",
+        "cumulative_added_bytes",
+        "cumulative_changed_bytes"
+      ]
+    },
+    "ExecutionPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "ExecutionPlan"
+        },
+        "campaign_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "parent_plan_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "plan_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "phase": {
+          "enum": [
+            "dev",
+            "finalist_frozen",
+            "protected"
+          ]
+        },
+        "subject_digests": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "required_cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "paired_case_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "split": {
+                "enum": [
+                  "dev",
+                  "protected"
+                ]
+              },
+              "repetitions": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              }
+            },
+            "required": [
+              "paired_case_id",
+              "split",
+              "repetitions"
+            ]
+          },
+          "minItems": 1
+        },
+        "reserved_rollouts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 40
+        },
+        "max_campaign_rollouts": {
+          "const": 40
+        },
+        "reserved_execution_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "max_campaign_execution_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtime_profile_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "campaign_id",
+        "revision",
+        "parent_plan_digest",
+        "plan_digest",
+        "phase",
+        "subject_digests",
+        "required_cases",
+        "reserved_rollouts",
+        "max_campaign_rollouts",
+        "reserved_execution_ms",
+        "max_campaign_execution_ms",
+        "runtime_profile_digest"
+      ]
+    },
+    "EvaluationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "EvaluationRequest"
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "subject_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "case_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "contract_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "suite_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "model_config_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "prompt_protocol_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "tool_implementation_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "runtime_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "scanner_profile_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "gate_spec_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "semantic_authorization_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "initial_world_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "plan_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "subject_digest",
+            "case_digest",
+            "contract_digest",
+            "suite_digest",
+            "model_config_digest",
+            "prompt_protocol_digest",
+            "tool_implementation_digest",
+            "runtime_digest",
+            "scanner_profile_digest",
+            "gate_spec_digest",
+            "semantic_authorization_digest",
+            "initial_world_digest",
+            "plan_digest"
+          ]
+        },
+        "request_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "body",
+        "request_fingerprint"
+      ]
+    },
+    "GateInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "GateInput"
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "contract_approved": {
+          "type": "boolean"
+        },
+        "source_immutable": {
+          "type": "boolean"
+        },
+        "runtime_verified": {
+          "type": "boolean"
+        },
+        "scan_status": {
+          "enum": [
+            "complete",
+            "incomplete"
+          ]
+        },
+        "required_case_tokens": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "case_token": {
+                "type": "string",
+                "minLength": 1
+              },
+              "subject_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "case_kind": {
+                "enum": [
+                  "clean",
+                  "attack"
+                ]
+              },
+              "split": {
+                "enum": [
+                  "dev",
+                  "protected"
+                ]
+              },
+              "complete": {
+                "type": "boolean"
+              },
+              "utility_pass": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "any_security_violation": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "case_token",
+              "subject_digest",
+              "case_kind",
+              "split",
+              "complete",
+              "utility_pass",
+              "any_security_violation"
+            ]
+          },
+          "minItems": 0
+        },
+        "baseline_cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "case_token": {
+                "type": "string",
+                "minLength": 1
+              },
+              "subject_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "case_kind": {
+                "enum": [
+                  "clean",
+                  "attack"
+                ]
+              },
+              "split": {
+                "enum": [
+                  "dev",
+                  "protected"
+                ]
+              },
+              "complete": {
+                "type": "boolean"
+              },
+              "utility_pass": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "any_security_violation": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "case_token",
+              "subject_digest",
+              "case_kind",
+              "split",
+              "complete",
+              "utility_pass",
+              "any_security_violation"
+            ]
+          },
+          "minItems": 0
+        },
+        "definite_failures": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "forbidden_patch",
+              "policy_expansion",
+              "subject_mismatch",
+              "utility_regression"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "incomplete_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "unresolved_high_or_unknown_findings": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "active_subject_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "subject_digest",
+        "contract_approved",
+        "source_immutable",
+        "runtime_verified",
+        "scan_status",
+        "required_case_tokens",
+        "cases",
+        "baseline_cases",
+        "definite_failures",
+        "incomplete_reasons",
+        "unresolved_high_or_unknown_findings",
+        "active_subject_digest"
+      ]
+    },
+    "GateResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "GateResult"
+        },
+        "decision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "verdict": {
+          "enum": [
+            "pass",
+            "fail",
+            "needs_contract",
+            "inconclusive"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "incomplete_items": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "gate_spec_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "evidence_index_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "decision_id",
+        "subject_digest",
+        "verdict",
+        "reason_codes",
+        "incomplete_items",
+        "gate_spec_digest",
+        "evidence_index_digest",
+        "issued_at"
+      ]
+    },
+    "Attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "Attestation"
+        },
+        "attestation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "request_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "execution_record_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "decision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verdict": {
+          "enum": [
+            "pass",
+            "fail",
+            "needs_contract",
+            "inconclusive"
+          ]
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "trust_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "attestation_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "attestation_id",
+        "subject_digest",
+        "request_fingerprint",
+        "execution_record_digest",
+        "decision_id",
+        "verdict",
+        "issuer",
+        "issued_at",
+        "expires_at",
+        "trust_revision",
+        "attestation_digest"
+      ]
+    },
+    "CIResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "CIResult"
+        },
+        "report_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_kind": {
+          "enum": [
+            "git_commit",
+            "local_observed"
+          ]
+        },
+        "source_commit_sha": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "trigger_generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "submitted_subject_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "submitted_decision": {
+          "$ref": "#/$defs/GateResult"
+        },
+        "candidate_subject_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "candidate_decision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GateResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "repair_required": {
+          "type": "boolean"
+        },
+        "eligibility": {
+          "enum": [
+            "unapproved",
+            "eligible",
+            "promoted",
+            "revoked",
+            "expired",
+            "stale",
+            "cancelled",
+            "no_eligible_bundle"
+          ]
+        },
+        "promoted_subject_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required_enforcement": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "tool_proxy",
+              "policy_backend",
+              "transactional_store",
+              "approved_contract"
+            ]
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "required_cases": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "completed_cases": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "suite_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "case_result_index_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "required_cases",
+            "completed_cases",
+            "suite_digest",
+            "case_result_index_digest"
+          ]
+        },
+        "versions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "scanner_profile_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "model_config_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "tool_implementation_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "runtime_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "gate_spec_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "scanner_profile_digest",
+            "model_config_digest",
+            "tool_implementation_digest",
+            "runtime_digest",
+            "gate_spec_digest"
+          ]
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "rollouts_used": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 40
+            },
+            "rollouts_limit": {
+              "const": 40
+            },
+            "reserved_execution_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "execution_limit_ms": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "rollouts_used",
+            "rollouts_limit",
+            "reserved_execution_ms",
+            "execution_limit_ms"
+          ]
+        },
+        "incomplete_items": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "evidence_index_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "report_id",
+        "source_kind",
+        "source_commit_sha",
+        "trigger_generation",
+        "submitted_subject_digest",
+        "submitted_decision",
+        "candidate_subject_digest",
+        "candidate_decision",
+        "repair_required",
+        "eligibility",
+        "promoted_subject_digest",
+        "required_enforcement",
+        "coverage",
+        "versions",
+        "budget",
+        "incomplete_items",
+        "evidence_index_digest"
+      ]
+    },
+    "ScannerReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "ScannerReport"
+        },
+        "scanner_commit": {
+          "const": "dabf4759a189be0f0428a2f7a472b3d5bdad1fe6"
+        },
+        "profile_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "skill_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "status": {
+          "enum": [
+            "complete",
+            "incomplete"
+          ]
+        },
+        "upstream_exit_code": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 255
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "raw_report_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required_analyzers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "completed_or_justified_analyzers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "observation_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rule_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "upstream_finding_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "severity": {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical",
+                  "unknown"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "observation_id",
+              "rule_id",
+              "upstream_finding_id",
+              "severity",
+              "path",
+              "evidence_digest"
+            ]
+          },
+          "minItems": 0
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "scanner_commit",
+        "profile_digest",
+        "skill_digest",
+        "status",
+        "upstream_exit_code",
+        "raw_report_digest",
+        "required_analyzers",
+        "completed_or_justified_analyzers",
+        "observations",
+        "reason_codes"
+      ]
+    },
+    "PluginManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "api_major": {
+          "const": 3
+        },
+        "kind": {
+          "const": "PluginManifest"
+        },
+        "plugin_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "plugin_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "implementation_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "api_major_supported": {
+          "const": 3
+        },
+        "input_schema_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "output_schema_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "plugin_kind": {
+          "enum": [
+            "scanner",
+            "task_family",
+            "agent",
+            "tool",
+            "attack",
+            "patch",
+            "policy",
+            "reporter"
+          ]
+        },
+        "required_capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "provided_capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "requested_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supported_profiles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "supported_task_families": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "resource_limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_memory_mib",
+            "timeout_ms"
+          ],
+          "properties": {
+            "max_memory_mib": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "timeout_ms": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "required": [
+        "api_major",
+        "kind",
+        "plugin_id",
+        "plugin_version",
+        "implementation_digest",
+        "api_major_supported",
+        "input_schema_digest",
+        "output_schema_digest",
+        "plugin_kind",
+        "required_capabilities",
+        "provided_capabilities",
+        "requested_role",
+        "supported_profiles",
+        "supported_task_families",
+        "resource_limits"
+      ]
+    }
+  }
+}
