@@ -1,6 +1,6 @@
 # SkillLoop：Agent Skill 安全 CI 与自进化系统
 
-> 产品需求与技术路线 · v0.6 · 2026-09-23
+> 产品需求与技术路线 · v0.7 · 2026-09-23
 > 适用阶段：2026 NVIDIA DGX Spark Hackathon
 > 状态：待实现的方案，文中的目标值、接口与实验规模均不是已取得的结果。
 > 产品名称：SkillLoop；中文定位：一次确认可信边界、持续自动运行的 Skill 安全 CI。
@@ -8,7 +8,7 @@
 
 ## 1. 产品主张
 
-**一次确认可信业务与权限边界，之后每次 Skill 更新先扫描生成漏洞候选清单，再逐项制定验证计划、自动生成测试、发动注入攻击、验证真实执行、提出受限修补并运行安全与功能回归。** 模型可以提出用例和补丁；授权、关键判定与晋级门禁由独立控制面执行。扫描命中是待验证假设，不是已证实漏洞。
+**一次确认可信业务与权限边界，之后每次 Skill 更新运行“静态扫描 → 按发现生成攻击用例 → 隔离攻击与全流程取证 → 根据证据修补 → 复扫并重放攻击及正常任务”的有界循环，直到通过门禁或耗尽预算。** 模型可以提出用例和补丁；授权、关键判定与晋级门禁由独立控制面执行。扫描命中是待验证假设，不是已证实漏洞。
 
 首次接入时输入 Skill 和少量可信业务边界；后续提交只需提供 Skill 变更。系统输出六类资产：
 
@@ -21,7 +21,7 @@
 
 对外介绍可以使用：
 
-> SkillLoop 是运行在 DGX Spark 上的 Skill 安全 CI：首次接入确认任务和权限，之后每次 Skill 更新先扫描形成漏洞候选与验证计划，再自动生成攻击和正常用例、执行隔离测试、必要时修补并回归；只有安全与业务门禁通过的版本才能内部晋级。
+> SkillLoop 是运行在 DGX Spark 上的 Skill 安全 CI：首次接入确认任务和权限；每次更新从静态漏洞候选出发，自动生成针对性攻击，抓取运行轨迹与真实副作用，据此修补、复扫和复测，并在固定预算内循环；只有安全与业务门禁通过的版本才能内部晋级。
 
 ### 1.1 产品定位与交付范围
 
@@ -98,7 +98,7 @@ MVP 的直接使用者是提交或维护 Skill 的研发团队。产品形态首
 | FR-02 | 自动生成正常任务、合成 fixture 与攻击基线 | P0 | 不逐条手写用例；生成用例经结构/范围校验并保留来源和 seed |
 | FR-03 | 模板与反馈驱动攻击生成 | P0 | 有攻击入口限制、预算、lineage 和有效性检查 |
 | FR-04 | 工具调用前的确定性权限检查 | P0 | 所有注册工具统一经过代理；未知工具默认拒绝 |
-| FR-05 | 证据归因与受限修补 | P0 | 每次 CI 至多一个 finalist；补丁引用有效 trace，输出 Skill 和 policy diff |
+| FR-05 | 证据归因与受限修补循环 | P0 | 每次 CI 最多两轮开发集修补、最终只晋级一个 finalist；每轮补丁引用有效 trace，输出 Skill 和 policy diff，随后复扫与同案复测 |
 | FR-06 | 防回归、权限包含、独立评测门禁 | P0 | 可以 Reject All；超时或缺证据不能算通过 |
 | FR-07 | 版本晋级、冻结、回滚 | P0 | 原子更新组合版本；历史证据不被覆盖 |
 | FR-08 | PR/提交触发的 CLI/CI 与机器可读报告 | P0 | 无交互重复运行；返回 pass/fail/needs_contract/inconclusive 与证据路径 |
@@ -235,19 +235,23 @@ flowchart TD
     P --> E
     T --> E
     E --> O[独立安全 Oracle + 功能 Grader]
-    O --> D[开发集失败：复现 / 根因分析]
+    O -->|可修复的开发失败| D[开发集失败：复现 / 根因分析]
+    O -->|无可修复开发失败| G
     D --> OBL[安全义务: 依据 / 前置条件 / 执行点]
     OBL --> M[受限 Skill / Policy 修补候选]
     M --> CHECK[补丁完整性 + 权限包含 + 工具入口覆盖]
     AP[可信授权与产物验证凭证] --> P
     CHECK --> RS[相同配置复扫修补版]
-    RS --> Q[旧/新版本配对回归：原攻击 + 正常任务 + 保护验证]
-    Q --> G{CI Gate}
-    L --> G
-    RS --> G
-    O --> G
+    RS --> Q[开发集复测：原攻击 + 新变体 + 正常任务]
+    Q --> LOOP{修补开发集通过?}
+    LOOP -->|否，仍可修且未超预算| D
+    LOOP -->|否，无法修或预算耗尽| K[阻断并保留当前版本]
+    LOOP -->|是| G{独立保护验证 + CI Gate}
+    L -.未决风险.-> G
+    RS -.复扫证据.-> G
+    O -.初测证据.-> G
     G -->|pass| N[内部版本晋级 / CI 通过 / 证据包]
-    G -->|fail| K[阻断并保留当前版本]
+    G -->|fail| K
     G -->|证据不足| U[needs_contract / inconclusive]
     N --> REG[不可变回归库]
     K --> REG
@@ -257,22 +261,24 @@ flowchart TD
     H -.约束.-> G
 ```
 
-### 5.2 一轮自进化
+### 5.2 发现驱动的循环
 
 ```text
 首次接入：自动起草契约 → 可信确认 → 冻结权限、grader 与用例生成规则
-每次提交：读取受保护契约和新旧 Skill hash → SkillSpector 扫描并生成逐项验证计划
-  → 自动生成并校验正常/攻击用例
-  → 隔离执行旧版与新版；收集工具请求、代理判定和真实副作用
-  → 独立 Oracle 判定每项发现的运行结果与业务；重放历史漏洞
-  → 若开发集出现可修问题，生成受限 Skill/Policy 候选并初筛
-  → 检查补丁完整性、权限不扩张及工具入口覆盖
-  → 相同配置复扫修补版，重放原攻击及正常任务，再用保护集验证 finalist
-  → Gate 返回 pass/fail/needs_contract/inconclusive
-  → 归档证据和攻击回归；通过时才更新内部版本指针
+每次提交：读取受保护契约和新旧 Skill hash → SkillSpector 静态扫描完整包
+  → 为每条活跃发现建立 FindingTestPlan，生成绑定 finding_id 的 AttackCase 与正常对照
+  → 隔离执行攻击；捕获输入来源、模型/工具动作、代理判定、工具结果、产物与环境状态
+  → 独立 Oracle 判定是否真正触发漏洞；把有效失败的完整 trace 交给修补器
+  → 生成受限 Skill/Policy 候选 → 完整性、权限包含和执行点检查
+  → 同配置复扫候选，并重放原攻击、同族新变体、正常任务与历史回归
+  → 开发集仍失败且可修、预算未尽：把新 trace/新发现送回修补器，开始下一轮
+  → 开发集通过：只对最终候选运行独立保护验证与 CI Gate
+  → 归档每轮版本、发现、用例、trace、补丁和判定；通过时才更新内部版本指针
 ```
 
-正常 Skill 更新即使没有新漏洞，也可以在无修补候选时通过 CI；“至少一个指标改善”只适用于**声称自动修复成功的候选**。PR CI 不使用一次性最终 holdout 调参；研究模式的最终保留集只在开发冻结后评测一次，失败须重新建立保留集。CI 对外发布或合并代码仍遵循仓库原有审批规则。
+**循环单位是一个候选版本，不是一次模型对话。** 每轮都有唯一 `iteration_id`，输入上轮固定的 Skill/Policy hash、未关闭的 `finding_id`、关联攻击与失败 trace；输出新 hash、补丁 diff、复扫结果、原攻击及新变体的执行结论。第一轮攻击若未复现，保留 `not_reproduced` 或 `inconclusive`，不得伪造失败 trace 触发自动修补。候选复扫出现的新发现必须进入下一轮计划；未处理的高/严重发现阻止自动通过。多个 finding 可共用一次运行或一个根因补丁，但每项都要保留独立的用例、证据与结论。
+
+P0 每次 CI 最多两轮开发集修补；只有开发集通过的最终候选可使用一次独立保护验证。保护验证失败即停止该次 CI，不能把保护用例或逐例载荷反馈给修补器继续迭代。正常 Skill 更新即使没有新漏洞，也可以在无修补候选时通过 CI；“至少一个指标改善”只适用于**声称自动修复成功的候选**。研究模式的最终保留集只在开发冻结后评测一次。CI 对外发布或合并代码仍遵循仓库原有审批规则。
 
 ### 5.3 SkillSpector 扫描到验证计划的适配
 
@@ -652,9 +658,11 @@ CI 对外只返回四种机器状态：`pass`（可信契约有效且适用门�
 ### 8.3 状态与回滚
 
 ```text
-discovered → scanned → finding_planned → contract_draft → contract_confirmed / needs_contract
-→ ci_queued → baseline_ready → tested → [repair_candidate → rescanned_and_retested]（如需）
-→ pass / fail / inconclusive → promoted_internal（仅 pass）
+discovered → scanned → finding_planned → contract_confirmed / needs_contract
+→ attacked → trace_captured → independently_verified
+→ [repair_candidate → rescanned → same_attack_replayed → new_variant_tested
+   → utility_checked → development_decision → 下一轮 repair_candidate]（有界循环）
+→ final_protected_gate → pass / fail / inconclusive → promoted_internal（仅 pass）
 ```
 
 内部实验 Registry 可按 Gate 自动晋级；对外分发或生产部署另行批准。晋级与回滚均针对 `(skill_hash, policy_hash, obligation_hash, tool_schema_version, runtime_version)` 的组合，避免 Skill 更新而策略或执行义务未同步。授权凭证属于任务状态，不随版本包分发或回滚恢复。
@@ -663,7 +671,7 @@ discovered → scanned → finding_planned → contract_draft → contract_confi
 
 ### 8.4 终止与防过拟合
 
-- P0 每次 CI 最多完成 1 轮受限自动修补、1 个 finalist；没有可验证改善则输出失败报告或保持原版本。P1 研究模式才运行 3 个本路线候选与额外静态对照候选。
+- P0 每次 CI 最多完成 2 轮受限自动修补，按上一轮开发失败 trace 和候选复扫发现生成下一轮输入；最终只选 1 个 finalist。若首轮已通过开发检查则直接进入最终门禁；没有可验证改善则输出失败报告或保持原版本。P1 研究模式才运行 3 个本路线候选与额外静态对照候选。
 - 达到总预算、连续两轮无收益、无法安全修补或只有扩权才能继续时，停止自动演化并输出报告。
 - CI 保护样本只向优化器返回聚合结果与 reason code，不返回原始载荷；每次提交记录调用次数与 lineage，反复提交可能间接过拟合，需要定期更新保护种子并保留旧漏洞回归。
 - P1 研究模式的受保护验证集最多评估两轮，最终 holdout 在开发停止后一次性运行；失败后不能换个候选重试同一 holdout 并声称独立验证。
@@ -688,7 +696,7 @@ discovered → scanned → finding_planned → contract_draft → contract_confi
 | Receipt Store | 可信任务授权、确定性验证事件 | 与动作/产物绑定的凭证 | 模型不可写；消费与执行原子关联 |
 | Oracle / Grader | 状态快照、契约、轨迹 | 安全和功能结果 | 不能由候选或红队修改 |
 | Diagnoser | 开发失败证据 | 根因及修改位置 | 所有引用可验证 |
-| Patcher | 根因、旧版本 | 一个 finalist 与差异 | 受限写入、禁止扩权 |
+| Patcher | 本轮未关闭 finding、失败 trace、上一候选 | 本轮候选与差异，最终至多一个 finalist | 受限写入、禁止扩权；仅消费开发集反馈 |
 | Static Patcher（P1） | 静态包、契约、工具、Policy0 | 静态文本候选 | 无失败 trace；同生成预算上限 |
 | Gate | 保护评测、策略检查 | 决定与原因 | 不可被模型覆盖 |
 | CI Orchestrator / Reporter | Skill diff、已确认契约、run 与决定 | 状态码、JSON、Markdown、可选 Dashboard | 非交互重复执行；区分 pass/fail/needs_contract/inconclusive |
@@ -704,9 +712,11 @@ discovered → scanned → finding_planned → contract_draft → contract_confi
 | TaskContract | task_id、可信资源绑定、业务检查、禁止副作用、授权来源 |
 | ScannerRun | skill_hash、scanner_commit/version、模式/模型、退出码、原始报告 hash、analysis_completeness、执行状态 |
 | ScanFinding / FindingTestPlan | rule_id、文件/证据、severity、scan_run、验证类型、合法任务、攻击入口、禁止结果、fixture、Oracle、预算、处理状态 |
+| LoopIteration | ci_job_id、iteration_index、parent_bundle_hash、open_finding_ids、input_trace_refs、candidate_hash、rescan_run_id、development_verdict、next_action、stop_reason |
 | GeneratedCase | case_id、contract_hash、generator_version、seed、lineage、split、validity、expected_state |
 | AttackCase | family、track、source_id、mutation_scope、objective_id、lineage、budget、split、validity |
 | ToolEvent | run_id、sequence、请求参数 hash、source_refs、policy_rule、obligation_ids、receipt_refs、decision、execution_id、结果引用 |
+| ExecutionTrace | run_id、finding_ids、case_id、bundle/policy/model/fixture hash、输入来源与载荷 hash、模型可见消息引用、逐步动作、工具请求/响应、代理决策、文件前后快照、模拟接收端事件、最终产物、时间戳、Oracle 结果与环境错误 |
 | SecurityFinding | scan_finding_refs、objective_id、attempted、blocked、realized、not_reproduced、inconclusive、evidence_refs、replay_frequency、root_cause |
 | RepairObligation | finding_id、contract_ref、action、preconditions、checkpoint、compile_status、clean/attack_case_ids |
 | ActionReceipt | task_id、授权或验证来源、action、artifact_hash、destination、policy_version、状态、execution_id |
@@ -852,14 +862,15 @@ M0 以实际机器为准，记录模型 digest、量化格式、Ollama/CUDA 版�
 | 工作 | 计算 | 运行数上限 |
 |---|---|---:|
 | 当前已晋级版与提交版的 PR 快速套件 | 2 版本 ×（2 正常 + 4 攻击 + 2 历史回归） | 16 |
-| 如需修补，1 个 finalist 复测 | 1 ×（2 正常 + 4 攻击 + 2 历史回归） | 8 |
+| 如需修补，每轮开发集复测 | 最多 2 轮 ×（1 正常 + 2 攻击 + 2 历史回归） | 10 |
+| 最终候选独立保护验证 | 1 ×（1 正常 + 2 攻击） | 3 |
 | 受限开发攻击变异 | 每个 PR 总计 | 4 |
 | 复现与环境重试预留 | 固定上限 | 4 |
-| **单次 PR 总上限** | 16 + 8 + 4 + 4 | **32** |
+| **单次 PR 总上限** | 16 + 10 + 3 + 4 + 4 | **37** |
 
-若旧版 run 的 Skill、契约、模型、策略、工具、fixture 和环境 hash 全相同，可复用并引用，实际新运行数下降。夜间/发布前深度套件建议单次上限 64 次；被测 Skill 或任务类别增加时独立计量，不把各任务合并成一个未经说明的安全率。模型/工具错误须标为 `inconclusive`，不能因赶预算删除失败项。按 §10.3 的规划假设，每条轨迹约 45～104 秒，32 次串行约 24～55 分钟纯推理，仍须在 M0 实测；CI 可以是异步阻断检查，而非承诺秒级反馈。
+开发集包括首个正常任务、两个攻击及两个历史回归；保护集包括另一个正常任务和两个未向修补器公开的攻击。每轮都复扫完整候选 Skill；复扫不计入 victim rollout，但必须记录耗时与成本。开发集失败可进入下一轮；保护集只运行在开发通过的最终候选上，失败后停止本次循环。若旧版 run 的 Skill、契约、模型、策略、工具、fixture 和环境 hash 全相同，可复用并引用，实际新运行数下降。夜间/发布前深度套件建议单次上限 64 次；被测 Skill 或任务类别增加时独立计量，不把各任务合并成一个未经说明的安全率。模型/工具错误须标为 `inconclusive`，不能因赶预算删除失败项。按规划假设，每条轨迹约 45～104 秒，37 次串行约 28～64 分钟纯推理，仍须在 M0 实测；CI 可以是异步阻断检查，而非承诺秒级反馈。
 
-SkillSpector 的旧版/提交版扫描及 finalist 复扫单独记录墙钟和模型 token，不计入 32 次 victim rollout；其 CLI/模型开销在 M0 实测。PR 快速套件的 4 个攻击优先覆盖可执行且高风险的发现，其他发现仍生成验证计划；预算耗尽导致高/严重发现未测时报告未决项并阻止自动 `pass`，不能悄悄丢弃。相同配置复扫的告警变化只作为静态证据，原攻击重放和正常任务回归仍占 victim 预算。
+SkillSpector 的旧版/提交版扫描及每轮候选复扫单独记录墙钟和模型 token，不计入 37 次 victim rollout；其 CLI/模型开销在 M0 实测。PR 快速套件的 4 个攻击优先覆盖可执行且高风险的发现，其他发现仍生成验证计划；预算耗尽导致高/严重发现未测时报告未决项并阻止自动 `pass`，不能悄悄丢弃。相同配置复扫的告警变化只作为静态证据，原攻击重放和正常任务回归仍占 victim 预算。
 
 **P1 研究实验**保留下列较大预算，供论文式对照与统计报告，不能被误解为一周 P0 或每次 PR 的默认开销。一次研究核心实验的 victim rollout 预算：
 
@@ -890,13 +901,13 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 
 ### 11.1 P0 交付范围
 
-- 一个任务类别（表格整理与报告）及两个同类 Skill：首个完成“扫描候选→逐项计划→攻击复现→修补→同案回归”闭环，第二个仅换 Skill 与接入配置即可运行 CI。
+- 一个任务类别（表格整理与报告）及两个同类 Skill：首个完成“静态扫描→逐项生成攻击→运行取证→修补→复扫复测→必要时再修补”的有界循环，第二个仅换 Skill 与接入配置即可运行 CI。
 - 固定 SkillSpector 版本的 CLI/JSON 适配：完整 Skill 包扫描、原始报告与覆盖状态归档、逐项验证计划；P0 优先处理提示词注入、外传和工具误用相关发现，其他类别走静态核查或需复核状态。
 - 一次性接入向导：模型起草契约、可信负责人确认、受保护版本存储；未经确认的新 Skill 只获得 `needs_contract` 与零配置扫描结果。
 - `FixtureFactory` 自动生成正常样例、期望值和合成资源；攻击器自动生成低信任文本，P0 覆盖权威伪装、额外动作诱导、目的地改写三类，其他攻击族保留接口。
 - 一个本地模型、一个薄被测 Runtime、一套资源 ID 工具、确定性 Policy Proxy 与隔离 fixture；OpenCode adapter 可做可行性验证但不是 P0 单点依赖。
 - PR 快速 CI 与夜间深度 profile：无交互执行、历史攻击重放、旧/新版本配对、固定预算、`ci_result.json` 和非零失败退出码。
-- 开发失败触发至多一个自动修补 finalist；保留有证据的 Skill/策略 diff、补丁完整性、权限不扩张、C1/C2 可信授权/执行点控制与正常业务回归。
+- 开发失败触发最多两轮自动修补，最终至多一个 finalist；每轮保留 finding、攻击用例、全流程 trace、Skill/策略 diff、复扫与复测判定，并检查补丁完整性、权限不扩张、C1/C2 可信授权/执行点控制与正常业务回归。
 - Gate 区分 `pass/fail/needs_contract/inconclusive`；可拒绝全部候选，内部组合版本晋级和回滚可审计。
 - CLI + Markdown/JSON 证据报告和 4～6 分钟展示；交互 Dashboard 与完整静态补丁研究对照移至 P1。
 
@@ -937,7 +948,7 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 | 0:00～0:45 | 首次接入自动起草契约；可信确认一次；说明 Skill 自身不能授予权限 |
 | 0:45～1:30 | 提交 Skill v2，展示 SkillSpector 候选清单和逐项验证计划，再自动生成正常/攻击用例 |
 | 1:30～2:25 | 展示低信任内容、Agent 工具请求、代理判定与模拟接收端真实状态 |
-| 2:25～3:20 | 自动修补候选及安全义务；原攻击重放、正常任务回归、修补版复扫；失败候选被 Gate 拒绝 |
+| 2:25～3:20 | 展示第 1 轮补丁及复扫复测；若开发测试仍失败，展示失败 trace 驱动第 2 轮修补，最终候选才进入保护门禁 |
 | 3:20～4:20 | 输出 `ci_result.json`、状态码、报告、版本归档；第二同类 Skill 配置接入 |
 | 4:20～5:20 | Spark 本地推理、每 PR 预算、覆盖边界与下一阶段研究实验 |
 
@@ -953,7 +964,8 @@ P1 研究模式的漏洞复现、最小化、历史回归、环境重试、模�
 - [ ] 至少两个同类 Skill 共用核心流水线；第二个只换 Skill 与接入配置，若需改核心代码则如实标注。
 - [ ] 导入、扫描、发现归类、基线、攻击、复现、修补、同案复测与复扫、晋级/拒绝、回滚可端到端完成。
 - [ ] 至少一个开发攻击有动作证据和状态证据，重放频率可查看。
-- [ ] P0 最多一个自动修补 finalist，修改能追溯到漏洞；缺失、不完整、越权补丁均被拒。
+- [ ] 至少一个受控案例展示第 1 轮开发复测失败后，系统自动把新 trace 和未关闭 finding 送入第 2 轮；两轮各自有 Skill hash、扫描、攻击与正常任务结果，最终至多一个 finalist。
+- [ ] 修改能追溯到漏洞；缺失、不完整、越权补丁均被拒；保护用例逐例内容不进入下一轮修补上下文。
 - [ ] 安全义务有可信依据；已编译执行点覆盖明确，未编译项不被自动关闭。
 - [ ] 缺失/伪造/跨任务/重放凭证与验证后改写均有失败测试，合法对应操作通过。
 - [ ] 有正常授权发布通过、错误目的地被拒绝、禁用合法发布被 Gate 拒绝的测试。
