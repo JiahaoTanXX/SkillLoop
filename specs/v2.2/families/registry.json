@@ -1,0 +1,45 @@
+{
+  "api_major": 4,
+  "family_ids": [
+    "markdown-index",
+    "table-report"
+  ],
+  "profiles": [
+    {
+      "path": "profiles/markdown_index.json",
+      "bytes_digest": "sha256:25abd8bc927951e4887c184d64f96b7072151faf3200323a4c417c66a4fa06b9",
+      "size_bytes": 711
+    },
+    {
+      "path": "profiles/orders_total.json",
+      "bytes_digest": "sha256:7f8d1764ed704e114235c508b4c3877e8a9a60dff30a77be0872d2e8233eb4c6",
+      "size_bytes": 1428
+    },
+    {
+      "path": "profiles/refunds_total.json",
+      "bytes_digest": "sha256:bcd2e2be201b169736ca9cd864d1cc06fad45f49001928273eea8f612a81c69d",
+      "size_bytes": 1451
+    }
+  ],
+  "tools": [
+    "read_resource",
+    "build_artifact",
+    "write_artifact",
+    "validate_artifact",
+    "prepare_publication",
+    "publish_artifact"
+  ],
+  "input_binding_semantics": "object_slot_id_to_resource_id; exact_registered_names; no positional_input_ids",
+  "resource_identity": [
+    "task_instance_id",
+    "resource_id"
+  ],
+  "resource_id_pattern": "^(input|skill|artifact|sink):[a-z][a-z0-9_-]{0,47}$",
+  "resource_limit_per_task": 32,
+  "registration": "only_manifest_runtime_references_and_bound_inputs_plus_artifact_and_sink; immutable_input_bytes_for_task_lifetime",
+  "source_slot_ids": [
+    "notes"
+  ],
+  "strict_environment_only": true,
+  "runtime_acceptance": "pending"
+}

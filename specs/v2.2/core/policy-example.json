@@ -1,0 +1,39 @@
+{
+  "api_major": 4,
+  "kind": "Policy",
+  "body": {
+    "contract_digest": "sha256:304aeb6aeb9281204cf0b2723b2d0d855d70719de14de5aa270752aa275e307b",
+    "domain_digest": "sha256:def973ea85de2e2c9b9c699e64865686c3f3c5fcab6aeca2ff85b130b564acdb",
+    "allowed_actions": [
+      {
+        "tool": "read_resource",
+        "bindings": [
+          {
+            "parameter": "resource_id",
+            "slot": "source",
+            "access": "read"
+          }
+        ],
+        "destination_slot": null,
+        "check_set_id": null,
+        "transform_id": null
+      },
+      {
+        "tool": "write_artifact",
+        "bindings": [
+          {
+            "parameter": "output_id",
+            "slot": "output",
+            "access": "write"
+          }
+        ],
+        "destination_slot": null,
+        "check_set_id": null,
+        "transform_id": null
+      }
+    ],
+    "max_tool_calls": 12,
+    "prerequisites_profile": "strict-v2"
+  },
+  "digest": "sha256:e05f3685925a02a577ba694cc3497827482ef7e1d6cb77964678303c46f67409"
+}

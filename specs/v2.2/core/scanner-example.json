@@ -1,0 +1,159 @@
+{
+  "api_major": 4,
+  "kind": "ScannerReport",
+  "body": {
+    "profile_digest": "sha256:f5690fd781e01a13b2bdab22a216424c46868c6a4639831d61e251653cb3b829",
+    "scanner_version": "dabf4759a189be0f0428a2f7a472b3d5bdad1fe6",
+    "status": "complete",
+    "upstream_exit_code": 0,
+    "raw_report_digest": "sha256:da1d1849e3872d4301b74aa170cc1ee2d656631056948107ad0eb5b2d7bd0adf",
+    "analyzers": [
+      {
+        "analyzer_id": "artifact_integrity",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:1f7d32286fc5ef67440cbbef1eb40ff759bbd49d3a9f028aa2ba772e9abaabb6"
+      },
+      {
+        "analyzer_id": "behavioral_ast",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:d2fec67bd6548d3417befae0739450f2723494c2a746fe32730b57c29a76ac3c"
+      },
+      {
+        "analyzer_id": "behavioral_taint_tracking",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:3fff5c9508f0711cd1a52a65227d747fd3c4950fc20a32db820c320dbc342708"
+      },
+      {
+        "analyzer_id": "bundled_execution_surface",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:e0f5df55615226bc00a03cf03b1ca2753c4eb572569492768350d6915f95a478"
+      },
+      {
+        "analyzer_id": "mcp_least_privilege",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:476deb69d523301f6ec7b1b4f2ccf532f6308f248fa54c57386fe3eb818e7121"
+      },
+      {
+        "analyzer_id": "mcp_rug_pull",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:d98c44dea7a93d11dc12d12a569f3abfca91443f28cce1a85721ebebb15e3c8a"
+      },
+      {
+        "analyzer_id": "mcp_tool_poisoning",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:66816c6995c72c2edd36fc1c761993c08d066daa0173a8daf7946778ae2e17de"
+      },
+      {
+        "analyzer_id": "static_patterns_agent_snooping",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:f81fa5e03780ea3db09345271f6cf53bb7e4542c76058d4b984c7e9e49e64e06"
+      },
+      {
+        "analyzer_id": "static_patterns_anti_refusal",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:0ef26b1d490574371d721ca43c04fe7885de1031061b1389a593aa0764d5dad5"
+      },
+      {
+        "analyzer_id": "static_patterns_data_exfiltration",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:6ef440a6c7181456f2c69c42932682c743551d0ad1764572eebc51b6f2818feb"
+      },
+      {
+        "analyzer_id": "static_patterns_deserialization",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:0f22bf9bad2952fc2587e598171d369ee7abe1ed88e0b67ceaede7de30224c6f"
+      },
+      {
+        "analyzer_id": "static_patterns_excessive_agency",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:79d00656e59b1e93d17e05b83af4e677214f3da106d019718668ee3b7b4fca85"
+      },
+      {
+        "analyzer_id": "static_patterns_harmful_content",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:9160771b044e811a510d4e13cea5f89ae4ea4e333e41d187ee151ecbd75d0813"
+      },
+      {
+        "analyzer_id": "static_patterns_memory_poisoning",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:d480dabb451dc4d5c3742469b7975107c74f79954bcccc9122be1951bf90d3e5"
+      },
+      {
+        "analyzer_id": "static_patterns_output_handling",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:37dfa89b4a6b357ebf1f5234e31cca57e90c6addcb8f14fdc4e00db355c88ac9"
+      },
+      {
+        "analyzer_id": "static_patterns_privilege_escalation",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:db1f44394e9afbdede2b166ab4cc192464c4c919aef85e3a08eb32fb3315ebc8"
+      },
+      {
+        "analyzer_id": "static_patterns_prompt_injection",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:ed6093f729b4d4ab977677a454559b59836e845b1842e696e4f9da6aeb2fa6e5"
+      },
+      {
+        "analyzer_id": "static_patterns_rogue_agent",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:06e40c73834cfda6d24e6342159f31bee1f902941520c163e45fc1b339bdf295"
+      },
+      {
+        "analyzer_id": "static_patterns_ssrf",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:1e6c759604aa2b5a6d4f875f96b83f44c051838fdb8e824e2f2cc044581cd820"
+      },
+      {
+        "analyzer_id": "static_patterns_supply_chain",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:1dd360701f4dc33d95b761d3d18905b44edd8054c08a6015d35fddf08670b1b9"
+      },
+      {
+        "analyzer_id": "static_patterns_system_prompt_leakage",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:5f35c46bfcd6f6a78c3f210006f95c9173ae6e6b9fb50ebb04109f0d9942218d"
+      },
+      {
+        "analyzer_id": "static_patterns_tool_misuse",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:1f6a66167945e97b9516fee6552f8d688b6ba44e5b89b6f63397dbb71893e6e4"
+      },
+      {
+        "analyzer_id": "static_yara",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:52bc0dbdc07c61eb7e55227e5eb2efe23b1aaf61403d98ccd929fb5b69922a32"
+      },
+      {
+        "analyzer_id": "structured_skill_roles",
+        "status": "completed",
+        "reason": null,
+        "evidence_digest": "sha256:a86afa49af5686ac398587f75fa56c45b19fb504c655b64b51842fc5d85f5930"
+      }
+    ],
+    "finding_digests": []
+  },
+  "digest": "sha256:867660c73729fa38273a0d138ed95a74ba6a2d8de1f00deb6511712e1387732b"
+}

@@ -1,0 +1,286 @@
+{
+  "spec_version": "2.2",
+  "api_major": 4,
+  "kind": "CliProfile",
+  "program": "skillloop",
+  "implemented_in_this_repository": false,
+  "stdout": "one_strict_JSON_object_plus_LF",
+  "stderr": "diagnostics_without_secrets",
+  "commands": [
+    {
+      "name": "import",
+      "required_flags": [
+        "--git-repo",
+        "--commit",
+        "--skill-path"
+      ],
+      "optional_flags": [
+        "--operation-id"
+      ],
+      "stdout_schema": "SourceSnapshot",
+      "role": "operator",
+      "side_effect": "read_git_objects_only",
+      "success_exit": 0
+    },
+    {
+      "name": "scan",
+      "required_flags": [
+        "--snapshot"
+      ],
+      "optional_flags": [
+        "--scanner-profile",
+        "--operation-id"
+      ],
+      "stdout_schema": "ScannerReport",
+      "role": "operator",
+      "side_effect": "offline_static_scan",
+      "success_exit": 0
+    },
+    {
+      "name": "evaluate",
+      "required_flags": [
+        "--snapshot",
+        "--contract",
+        "--model-config"
+      ],
+      "optional_flags": [
+        "--operation-id",
+        "--trigger-ref",
+        "--repair-rounds=0|1|2"
+      ],
+      "stdout_schema": "CIResult",
+      "role": "operator",
+      "side_effect": "create_or_resume_campaign",
+      "success_exit": "verdict"
+    },
+    {
+      "name": "harden",
+      "required_flags": [
+        "--campaign",
+        "--parent-subject"
+      ],
+      "optional_flags": [
+        "--operation-id"
+      ],
+      "stdout_schema": "HardenResult",
+      "role": "operator",
+      "side_effect": "one_dev_repair_round_only_before_finalist_freeze",
+      "success_exit": "verdict"
+    },
+    {
+      "name": "report",
+      "required_flags": [
+        "--campaign"
+      ],
+      "optional_flags": [
+        "--format=json"
+      ],
+      "stdout_schema": "PublicReport",
+      "role": "operator",
+      "side_effect": "read_only",
+      "success_exit": 0
+    },
+    {
+      "name": "promote",
+      "required_flags": [
+        "--campaign",
+        "--subject",
+        "--expected-active-revision"
+      ],
+      "optional_flags": [
+        "--operation-id"
+      ],
+      "stdout_schema": "RegistryEntry",
+      "role": "controller",
+      "side_effect": "registry_CAS_only_not_git_merge",
+      "success_exit": 0
+    },
+    {
+      "name": "inspect",
+      "required_flags": [
+        "--campaign"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "CampaignInspection",
+      "role": "operator",
+      "side_effect": "read_only_public_projection",
+      "success_exit": 0
+    },
+    {
+      "name": "admin approve-domain",
+      "required_flags": [
+        "--domain",
+        "--operation-id",
+        "--contract",
+        "--model-config",
+        "--factory-profile"
+      ],
+      "optional_flags": [
+        "--expires-at"
+      ],
+      "stdout_schema": "ApprovalResult",
+      "role": "admin",
+      "side_effect": "proxy_effective_approval_commit",
+      "success_exit": 0
+    },
+    {
+      "name": "admin approve-factory",
+      "required_flags": [
+        "--factory-profile",
+        "--operation-id"
+      ],
+      "optional_flags": [
+        "--expires-at"
+      ],
+      "stdout_schema": "ApprovalResult",
+      "role": "admin",
+      "side_effect": "versioned_factory_approval",
+      "success_exit": 0
+    },
+    {
+      "name": "admin review-finding",
+      "required_flags": [
+        "--finding",
+        "--decision",
+        "--evidence",
+        "--expires-at",
+        "--operation-id"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "FindingDisposition",
+      "role": "admin",
+      "side_effect": "audited_limited_review",
+      "success_exit": 0
+    },
+    {
+      "name": "admin retire-history",
+      "required_flags": [
+        "--history-case",
+        "--reason",
+        "--evidence",
+        "--operation-id"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "HistoryRetirement",
+      "role": "admin",
+      "side_effect": "audited_retirement",
+      "success_exit": 0
+    },
+    {
+      "name": "admin revoke",
+      "required_flags": [
+        "--approval",
+        "--operation-id"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "ApprovalResult",
+      "role": "admin",
+      "side_effect": "same_database_revoke_before_ack",
+      "success_exit": 0
+    },
+    {
+      "name": "admin cancel",
+      "required_flags": [
+        "--campaign",
+        "--operation-id"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "CancellationResult",
+      "role": "admin",
+      "side_effect": "increment_fence_and_stop_new_actions",
+      "success_exit": 0
+    },
+    {
+      "name": "admin export",
+      "required_flags": [
+        "--campaign",
+        "--destination",
+        "--operation-id"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "ArchiveManifest",
+      "role": "admin",
+      "side_effect": "verified_encrypted_export",
+      "success_exit": 0
+    },
+    {
+      "name": "admin archive",
+      "required_flags": [
+        "--campaign",
+        "--export-manifest",
+        "--operation-id"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "ArchiveResult",
+      "role": "admin",
+      "side_effect": "withdraw_qualification_then_remove_inactive",
+      "success_exit": 0
+    },
+    {
+      "name": "admin restore",
+      "required_flags": [
+        "--archive",
+        "--new-deployment-epoch",
+        "--operation-id"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "RestoreResult",
+      "role": "admin",
+      "side_effect": "new_epoch_revoke_old_credentials",
+      "success_exit": 0
+    },
+    {
+      "name": "admin calibrate",
+      "required_flags": [
+        "--runtime-profile",
+        "--evidence-dir"
+      ],
+      "optional_flags": [],
+      "stdout_schema": "CalibrationReport",
+      "role": "admin",
+      "side_effect": "real_platform_probe_required",
+      "success_exit": 0
+    }
+  ],
+  "verdict_exit": {
+    "pass": 0,
+    "fail": 1,
+    "needs_contract": 3,
+    "inconclusive": 4
+  },
+  "errors": {
+    "syntax_or_invalid_ref": 64,
+    "permission": 77,
+    "io": 74,
+    "temporary_busy": 75,
+    "invalid_business_input": "CIResult_inconclusive_invalid_contract_input"
+  },
+  "operation_id": "same_parameters_same_result_different_parameters_conflict",
+  "scan_requires_contract": false,
+  "github": {
+    "execution": "controlled_service_API_polling",
+    "minimum_permissions": [
+      "contents:read",
+      "pull_requests:read",
+      "checks:write"
+    ],
+    "credentials": "installation_token_control_service_only_never_worker_or_PR",
+    "required_check": "SkillLoop / security",
+    "required_check_app_id": "administrator_pins_installed_App_ID_before_enablement",
+    "head_binding": "exact_PR_head_SHA_and_persistent_generation",
+    "fork_import": "read_only_git_objects_no_PR_scripts",
+    "conclusions": {
+      "pass": "success",
+      "fail": "failure",
+      "needs_contract": "action_required",
+      "inconclusive": "failure"
+    },
+    "old_generation": "cancelled_no_qualification",
+    "config_change": "new_generation_recheck_current_head",
+    "optional_publisher": "separately_approved_permission_no_auto_merge",
+    "webhook_enabled": false,
+    "if_webhook_added": "HMAC_SHA256_validate_raw_body_and_delivery_dedup_before_dispatch",
+    "registry_and_github_cross_system_atomic": false
+  },
+  "output_schema_location": "core protocol.schema.json for core types; operations/control.schema.json for control projections"
+}

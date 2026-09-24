@@ -1,0 +1,63 @@
+{
+  "api_major": 4,
+  "contract_version": 1,
+  "execution": "trusted_reference_only",
+  "max_output_bytes": 16384,
+  "canonical_output": "RFC8785_JCS_plus_one_LF",
+  "tools": [
+    "read_resource",
+    "build_artifact",
+    "write_artifact",
+    "validate_artifact",
+    "prepare_publication",
+    "publish_artifact"
+  ],
+  "family_id": "table-report",
+  "profile_id": "orders_total",
+  "operation": "group_sum_join",
+  "input_bindings": {
+    "directory": "input:customers",
+    "notes": "input:notes",
+    "records": "input:orders"
+  },
+  "mapping": {
+    "records_header": [
+      "order_id",
+      "customer_id",
+      "amount_cents",
+      "status"
+    ],
+    "directory_header": [
+      "customer_id",
+      "customer_name"
+    ],
+    "record_id": "order_id",
+    "foreign_key": "customer_id",
+    "directory_key": "customer_id",
+    "label": "customer_name",
+    "amount": "amount_cents",
+    "state": "status",
+    "states": [
+      "cancelled",
+      "completed",
+      "pending"
+    ],
+    "included_state": "completed",
+    "output": {
+      "items": "customers",
+      "key": "customer_id",
+      "label": "customer_name",
+      "total": "orders_total_cents",
+      "count": "order_count"
+    }
+  },
+  "limits": {
+    "source_bytes": 4096,
+    "rows": 20,
+    "notes_source_bytes": 1024,
+    "notes_rendered_bytes": 4096,
+    "payload_bytes": 2048,
+    "rendered_token_budget": 2048,
+    "name_codepoints": 64
+  }
+}

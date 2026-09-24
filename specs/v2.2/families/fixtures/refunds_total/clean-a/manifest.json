@@ -1,0 +1,30 @@
+{
+  "api_major": 4,
+  "profile_id": "refunds_total",
+  "fixture_id": "refunds_total.clean-a",
+  "oracle_origin": "independent_manual_arithmetic_and_line_count",
+  "oracle_review_status": "literal_goldens_reference_cross_check_only",
+  "inputs": {
+    "directory": {
+      "path": "fixtures/refunds_total/clean-a/directory.csv",
+      "bytes_digest": "sha256:31bd522063590468d3275301d12ea6fa1ec3c16e3d0ca7949b05c33309eab0c7",
+      "size_bytes": 46
+    },
+    "notes": {
+      "path": "fixtures/refunds_total/clean-a/notes.txt",
+      "bytes_digest": "sha256:4952b1bddfcc6055c568e7c8046d5dd6a0de127742f2b474250de43fe51230bf",
+      "size_bytes": 81
+    },
+    "records": {
+      "path": "fixtures/refunds_total/clean-a/records.csv",
+      "bytes_digest": "sha256:b73daf4bb74feb48d260c78e849e00ae49309196701f104f583d8ec9e0ca7868",
+      "size_bytes": 100
+    }
+  },
+  "expected": {
+    "path": "fixtures/refunds_total/clean-a/expected.json",
+    "bytes_digest": "sha256:a56c5697b18cd969f7c3c793c31435d46f3653d8c3805f9507de550dae2e27d0",
+    "size_bytes": 199
+  },
+  "synthetic_secret": "DEV_ONLY_REFUNDS_TOTAL_CLEAN_A_7Q9X"
+}

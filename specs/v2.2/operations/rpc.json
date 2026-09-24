@@ -1,0 +1,183 @@
+{
+  "spec_version": "2.2",
+  "api_major": 4,
+  "kind": "RpcProfile",
+  "transport": "AF_UNIX_SOCK_SEQPACKET",
+  "peer_auth": "SO_PEERCRED_UID_plus_registered_run_and_fence",
+  "caller_supplied_role_authorizes": false,
+  "max_message_bytes": 262144,
+  "max_request_seconds": 10,
+  "max_open_connections_per_role": 16,
+  "roles": [
+    {
+      "role": "controller",
+      "uid": 21001,
+      "methods": [
+        "activate_approval",
+        "revoke_approval",
+        "start_run",
+        "cancel_run",
+        "recover_operation",
+        "reserve_campaign",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "runtime",
+      "uid": 21002,
+      "methods": [
+        "register_call_batch",
+        "read_resource",
+        "build_artifact",
+        "write_artifact",
+        "validate_artifact",
+        "prepare_publication",
+        "publish_artifact",
+        "record_terminal_output",
+        "infer_current_context",
+        "get_operation"
+      ],
+      "tool_socket": true
+    },
+    {
+      "role": "proxy",
+      "uid": 21003,
+      "methods": [],
+      "tool_socket": false
+    },
+    {
+      "role": "protected_evaluator",
+      "uid": 21004,
+      "methods": [
+        "create_epoch",
+        "reserve_protected_session",
+        "resolve_private_case",
+        "read_private_evidence",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "gate",
+      "uid": 21005,
+      "methods": [
+        "read_private_evidence",
+        "read_authoritative_manifest",
+        "write_gate_result",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "generator",
+      "uid": 21006,
+      "methods": [
+        "read_dev_evidence",
+        "write_attack_proposal",
+        "infer_current_context",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "patcher",
+      "uid": 21007,
+      "methods": [
+        "read_dev_evidence",
+        "write_patch_proposal",
+        "infer_current_context",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "scanner",
+      "uid": 21008,
+      "methods": [
+        "read_import_snapshot",
+        "write_scan_report",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "report",
+      "uid": 21009,
+      "methods": [
+        "read_public_projection",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "admin",
+      "uid": 21010,
+      "methods": [
+        "approve_domain",
+        "approve_factory",
+        "review_finding",
+        "retire_history",
+        "archive",
+        "restore",
+        "export",
+        "get_operation"
+      ],
+      "tool_socket": false
+    },
+    {
+      "role": "model_gateway",
+      "uid": 21011,
+      "methods": [
+        "infer_current_context",
+        "get_operation"
+      ],
+      "tool_socket": false
+    }
+  ],
+  "call_identity": [
+    "deployment_epoch",
+    "run_id",
+    "fence",
+    "internal_call_id"
+  ],
+  "native_tool_call_id": "correlation_only_unique_per_provider_response",
+  "registration": "trusted_runtime_persists_response_id_batch_index_canonical_args_digest_before_proxy_call",
+  "batch": "atomic_reserve_all_or_none",
+  "duplicate_internal_id": "same_args_transport_replay_no_new_quota_other_args_reject",
+  "new_logical_call_existing_idempotency_key": "consume_tool_quota_then_return_existing_result",
+  "skipped_registered_call": "counts_toward_quota",
+  "authoritative_database": {
+    "owner": "proxy",
+    "mode": "SQLite_WAL_FULL",
+    "tables": [
+      "effective_approvals",
+      "trust_revision",
+      "run_fence",
+      "call_registration",
+      "tool_budget",
+      "artifact_blob_version",
+      "receipts",
+      "grants",
+      "idempotency_results",
+      "accepted_events",
+      "outbox"
+    ],
+    "revoke_ack": "after_same_database_commit",
+    "model_calls_inside_transaction": false
+  },
+  "idempotency_errors": {
+    "deterministic_failure": "cache_result_for_registered_call",
+    "transaction_proven_not_started": "same_call_transport_retry",
+    "commit_unknown": "recover_authoritative_result_before_retry",
+    "stale_fence": "reject_tools_use_controller_recovery"
+  },
+  "receipt_ttl_seconds": 300,
+  "grant_ttl_seconds": 600,
+  "receipt_expiry": "min(issued_at+300,run_deadline,approval_lease_expiry)",
+  "grant_expiry": "min(issued_at+600,receipt_expiry,run_deadline,approval_lease_expiry)",
+  "same_key_expired_prepare": "return_original_expired_grant",
+  "artifact_version": "strictly_increasing_including_same_bytes",
+  "max_new_publications_per_task": 1,
+  "long_operation_protocol": "acknowledge_accepted_with_OperationTicket_within_10s_then_get_operation; owner/run/role_bound; only_completed_yields_result_digest"
+}

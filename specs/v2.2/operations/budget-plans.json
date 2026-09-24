@@ -1,0 +1,163 @@
+{
+  "spec_version": "2.2",
+  "api_major": 4,
+  "kind": "BudgetExamples",
+  "basis": "synthetic_configured_caps_not_hardware_benchmark",
+  "plan_unit": "one_campaign_one_profile_explicit_rows",
+  "plans": [
+    {
+      "id": "submitted_only",
+      "parameters": {
+        "finalists": 0,
+        "abandoned": 0,
+        "active": 0,
+        "findings": 0,
+        "history": 0,
+        "retries": 0
+      },
+      "expected": {
+        "planned_attempts": 27,
+        "retry_reserve": 2,
+        "reserved_victim_attempts": 29,
+        "input_tokens": 6866944,
+        "output_tokens": 980992,
+        "wall_seconds": 7500,
+        "disk_bytes": 851443712,
+        "fits_configured_bounds": true,
+        "admission": "calibration_required"
+      }
+    },
+    {
+      "id": "candidate_no_finding",
+      "parameters": {
+        "finalists": 1,
+        "abandoned": 0,
+        "active": 0,
+        "findings": 0,
+        "history": 0,
+        "retries": 0
+      },
+      "expected": {
+        "planned_attempts": 54,
+        "retry_reserve": 2,
+        "reserved_victim_attempts": 56,
+        "input_tokens": 13060096,
+        "output_tokens": 1865728,
+        "wall_seconds": 12360,
+        "disk_bytes": 964689920,
+        "fits_configured_bounds": true,
+        "admission": "calibration_required"
+      }
+    },
+    {
+      "id": "one_finding",
+      "parameters": {
+        "finalists": 1,
+        "abandoned": 0,
+        "active": 0,
+        "findings": 1,
+        "history": 0,
+        "retries": 0
+      },
+      "expected": {
+        "planned_attempts": 66,
+        "retry_reserve": 2,
+        "reserved_victim_attempts": 68,
+        "input_tokens": 15812608,
+        "output_tokens": 2258944,
+        "wall_seconds": 14520,
+        "disk_bytes": 1015021568,
+        "fits_configured_bounds": true,
+        "admission": "calibration_required"
+      }
+    },
+    {
+      "id": "two_rounds_active",
+      "parameters": {
+        "finalists": 1,
+        "abandoned": 1,
+        "active": 1,
+        "findings": 0,
+        "history": 0,
+        "retries": 0
+      },
+      "expected": {
+        "planned_attempts": 96,
+        "retry_reserve": 2,
+        "reserved_victim_attempts": 98,
+        "input_tokens": 22693888,
+        "output_tokens": 3241984,
+        "wall_seconds": 19920,
+        "disk_bytes": 1140850688,
+        "fits_configured_bounds": true,
+        "admission": "calibration_required"
+      }
+    },
+    {
+      "id": "one_retry",
+      "parameters": {
+        "finalists": 1,
+        "abandoned": 1,
+        "active": 1,
+        "findings": 0,
+        "history": 0,
+        "retries": 1
+      },
+      "expected": {
+        "planned_attempts": 97,
+        "retry_reserve": 1,
+        "reserved_victim_attempts": 98,
+        "input_tokens": 22693888,
+        "output_tokens": 3241984,
+        "wall_seconds": 19920,
+        "disk_bytes": 1140850688,
+        "fits_configured_bounds": true,
+        "admission": "calibration_required"
+      }
+    },
+    {
+      "id": "history_near_capacity",
+      "parameters": {
+        "finalists": 1,
+        "abandoned": 1,
+        "active": 1,
+        "findings": 0,
+        "history": 3,
+        "retries": 0
+      },
+      "expected": {
+        "planned_attempts": 123,
+        "retry_reserve": 2,
+        "reserved_victim_attempts": 125,
+        "input_tokens": 28887040,
+        "output_tokens": 4126720,
+        "wall_seconds": 24780,
+        "disk_bytes": 1254096896,
+        "fits_configured_bounds": true,
+        "admission": "calibration_required"
+      }
+    },
+    {
+      "id": "history_over_capacity",
+      "parameters": {
+        "finalists": 1,
+        "abandoned": 1,
+        "active": 1,
+        "findings": 0,
+        "history": 4,
+        "retries": 0
+      },
+      "expected": {
+        "planned_attempts": 132,
+        "retry_reserve": 2,
+        "reserved_victim_attempts": 134,
+        "input_tokens": 30951424,
+        "output_tokens": 4421632,
+        "wall_seconds": 26400,
+        "disk_bytes": 1291845632,
+        "fits_configured_bounds": false,
+        "admission": "rejected"
+      }
+    }
+  ]
+}

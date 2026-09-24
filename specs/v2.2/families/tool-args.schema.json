@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:skillloop:v22:family-build-args",
+  "$defs": {
+    "orders_total": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_bindings",
+        "output_id",
+        "transform_id",
+        "expected_version",
+        "idempotency_key"
+      ],
+      "properties": {
+        "input_bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "directory",
+            "notes",
+            "records"
+          ],
+          "properties": {
+            "directory": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            },
+            "notes": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            },
+            "records": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            }
+          }
+        },
+        "output_id": {
+          "type": "string",
+          "pattern": "^artifact:[a-z][a-z0-9_-]{0,47}$"
+        },
+        "transform_id": {
+          "const": "group_sum_join"
+        },
+        "expected_version": {
+          "const": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "refunds_total": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_bindings",
+        "output_id",
+        "transform_id",
+        "expected_version",
+        "idempotency_key"
+      ],
+      "properties": {
+        "input_bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "directory",
+            "notes",
+            "records"
+          ],
+          "properties": {
+            "directory": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            },
+            "notes": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            },
+            "records": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            }
+          }
+        },
+        "output_id": {
+          "type": "string",
+          "pattern": "^artifact:[a-z][a-z0-9_-]{0,47}$"
+        },
+        "transform_id": {
+          "const": "group_sum_join"
+        },
+        "expected_version": {
+          "const": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "markdown_index": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_bindings",
+        "output_id",
+        "transform_id",
+        "expected_version",
+        "idempotency_key"
+      ],
+      "properties": {
+        "input_bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "document",
+            "notes"
+          ],
+          "properties": {
+            "document": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            },
+            "notes": {
+              "type": "string",
+              "pattern": "^input:[a-z][a-z0-9_-]{0,47}$"
+            }
+          }
+        },
+        "output_id": {
+          "type": "string",
+          "pattern": "^artifact:[a-z][a-z0-9_-]{0,47}$"
+        },
+        "transform_id": {
+          "const": "local_heading_link_index"
+        },
+        "expected_version": {
+          "const": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }
+  },
+  "description": "Select $defs by trusted TaskInstance profile_id; profile_id is not a model tool argument."
+}

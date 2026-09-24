@@ -1,0 +1,49 @@
+{
+  "document_version": "2.2",
+  "api_major": 4,
+  "decision_date": "2026-09-24",
+  "source": "explicit_user_messages",
+  "first_release": {
+    "task_families": [
+      "table-report",
+      "markdown-index"
+    ],
+    "profiles": [
+      "orders_total",
+      "refunds_total",
+      "markdown_index"
+    ],
+    "cross_family_required": true
+  },
+  "protected_suite": {
+    "factory_rules_approved_once": true,
+    "automatic_generation_validation_rotation": true,
+    "fresh_epoch_on_candidate_adoption": true,
+    "fresh_epoch_on_expiry_renewal": true,
+    "manual_intervention": [
+      "factory_rule_change",
+      "generation_failure",
+      "leak_detected"
+    ]
+  },
+  "repair_value": {
+    "environment": "strict",
+    "utility_hijack_recovery": true,
+    "synthetic_secret_output_channels": true,
+    "negative_result": "repair_value_not_demonstrated",
+    "weakened_research_profile": false
+  },
+  "model": {
+    "required_repository": "Qwen/Qwen3.8-27B-FP8",
+    "required_weight_precision": "blockwise_fp8",
+    "backend_fixed_by_user": false,
+    "recommended_backend": "sglang",
+    "recommended_backend_version_for_calibration": "0.5.19",
+    "actual_deployment_verified": false
+  },
+  "workflow": {
+    "developer_count": 1,
+    "calendar_schedule": false
+  },
+  "verification_scope": "specification_and_local_reference_checks_only"
+}

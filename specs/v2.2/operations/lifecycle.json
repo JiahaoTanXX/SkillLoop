@@ -1,0 +1,415 @@
+{
+  "spec_version": "2.2",
+  "api_major": 4,
+  "kind": "LifecycleProfile",
+  "run_transitions": [
+    {
+      "event": "start",
+      "from": [
+        "reserved"
+      ],
+      "to": "running",
+      "utility": "unknown",
+      "coverage": "pending",
+      "retry": "none",
+      "atomic_records": [
+        "run_start",
+        "lease",
+        "fence"
+      ],
+      "budget_effect": "consume_attempt"
+    },
+    {
+      "event": "model_stop_without_required_publication",
+      "from": [
+        "running"
+      ],
+      "to": "completed",
+      "utility": "fail",
+      "coverage": "complete_if_trace_complete",
+      "retry": "never",
+      "atomic_records": [
+        "terminal_output",
+        "oracle_failure"
+      ],
+      "budget_effect": "retain"
+    },
+    {
+      "event": "final_answer_without_tools",
+      "from": [
+        "running"
+      ],
+      "to": "completed",
+      "utility": "fail",
+      "coverage": "complete_if_trace_complete",
+      "retry": "never",
+      "atomic_records": [
+        "terminal_output",
+        "oracle_failure"
+      ],
+      "budget_effect": "retain"
+    },
+    {
+      "event": "tool_or_round_budget_exhausted",
+      "from": [
+        "running"
+      ],
+      "to": "completed",
+      "utility": "fail",
+      "coverage": "complete_if_trace_complete",
+      "retry": "never",
+      "atomic_records": [
+        "budget_event",
+        "terminal_output",
+        "oracle_failure"
+      ],
+      "budget_effect": "retain"
+    },
+    {
+      "event": "recoverable_tool_denial",
+      "from": [
+        "running"
+      ],
+      "to": "running",
+      "utility": "unknown",
+      "coverage": "pending",
+      "retry": "remaining_budget_only",
+      "atomic_records": [
+        "denial",
+        "call_result"
+      ],
+      "budget_effect": "consume_reserved_call"
+    },
+    {
+      "event": "argument_parse_error",
+      "from": [
+        "running"
+      ],
+      "to": "running",
+      "utility": "unknown",
+      "coverage": "pending",
+      "retry": "remaining_round_budget_only",
+      "atomic_records": [
+        "parse_error"
+      ],
+      "budget_effect": "consume_model_round"
+    },
+    {
+      "event": "publish_committed",
+      "from": [
+        "running"
+      ],
+      "to": "finalizing",
+      "utility": "pass",
+      "coverage": "pending",
+      "retry": "none",
+      "atomic_records": [
+        "publication",
+        "outbox",
+        "idempotency_result"
+      ],
+      "budget_effect": "skip_remaining_business_calls"
+    },
+    {
+      "event": "capture_final_output",
+      "from": [
+        "finalizing"
+      ],
+      "to": "completed",
+      "utility": "pass",
+      "coverage": "complete_if_trace_complete",
+      "retry": "never",
+      "atomic_records": [
+        "terminal_output",
+        "output_channel_oracle"
+      ],
+      "budget_effect": "retain"
+    },
+    {
+      "event": "provider_timeout",
+      "from": [
+        "running",
+        "finalizing"
+      ],
+      "to": "incomplete",
+      "utility": "unknown_preserve_known_fail",
+      "coverage": "incomplete",
+      "retry": "qualified_infrastructure_only",
+      "atomic_records": [
+        "provider_error",
+        "partial_trace"
+      ],
+      "budget_effect": "retain_and_new_attempt_if_qualified"
+    },
+    {
+      "event": "lease_lost",
+      "from": [
+        "running",
+        "finalizing"
+      ],
+      "to": "incomplete",
+      "utility": "unknown_preserve_known_fail",
+      "coverage": "incomplete",
+      "retry": "qualified_infrastructure_only",
+      "atomic_records": [
+        "fence_increment",
+        "partial_trace"
+      ],
+      "budget_effect": "retain"
+    },
+    {
+      "event": "trace_limit_exceeded",
+      "from": [
+        "running",
+        "finalizing"
+      ],
+      "to": "incomplete",
+      "utility": "unknown_preserve_known_fail",
+      "coverage": "incomplete",
+      "retry": "never",
+      "atomic_records": [
+        "trace_limit",
+        "emergency_terminal_record"
+      ],
+      "budget_effect": "retain"
+    },
+    {
+      "event": "cancel",
+      "from": [
+        "reserved",
+        "running",
+        "finalizing"
+      ],
+      "to": "cancelled",
+      "utility": "unknown_preserve_known_fail",
+      "coverage": "incomplete",
+      "retry": "never",
+      "atomic_records": [
+        "same_database_cancel",
+        "fence_increment"
+      ],
+      "budget_effect": "retain"
+    },
+    {
+      "event": "late_output",
+      "from": [
+        "cancelled",
+        "incomplete",
+        "completed"
+      ],
+      "to": "unchanged",
+      "utility": "unchanged",
+      "coverage": "unchanged",
+      "retry": "never",
+      "atomic_records": [
+        "quarantine_index"
+      ],
+      "budget_effect": "no_new_adjudication"
+    },
+    {
+      "event": "post_publish_tool",
+      "from": [
+        "finalizing"
+      ],
+      "to": "finalizing",
+      "utility": "unchanged",
+      "coverage": "pending",
+      "retry": "never",
+      "atomic_records": [
+        "skipped_call"
+      ],
+      "budget_effect": "already_reserved_call_counts"
+    }
+  ],
+  "campaign_states": [
+    "queued",
+    "importing",
+    "scanning",
+    "dev_evaluating",
+    "patching",
+    "finalist_frozen",
+    "protected_building",
+    "protected_evaluating",
+    "judging",
+    "completed",
+    "incomplete",
+    "cancelled"
+  ],
+  "campaign_rules": [
+    {
+      "event": "cancel",
+      "from": "any_nonterminal",
+      "to": "cancelled",
+      "atomic": "proxy_cancel_commit_before_ack",
+      "late_results": "quarantine"
+    },
+    {
+      "event": "protect_generation_failed",
+      "from": "protected_building",
+      "to": "incomplete",
+      "atomic": "record_factory_failure",
+      "late_results": "quarantine"
+    },
+    {
+      "event": "candidate_changed_after_freeze",
+      "from": "finalist_frozen_or_later",
+      "to": "reject_transition",
+      "atomic": "no_change",
+      "late_results": "quarantine"
+    }
+  ],
+  "retry": {
+    "max_per_plan_item": 1,
+    "max_per_campaign": 2,
+    "known_failure_retry": false,
+    "unknown_side_effect_retry": false,
+    "protected_requirement": "provably_not_delivered",
+    "new_run_record": true
+  },
+  "finding_verification": [
+    "unverified",
+    "confirmed",
+    "not_reproduced",
+    "not_applicable",
+    "inconclusive"
+  ],
+  "finding_disposition": [
+    "open",
+    "repaired",
+    "mitigated_by_policy",
+    "false_positive",
+    "manual_action_required"
+  ],
+  "history": {
+    "scope": "project_across_campaigns",
+    "partition": [
+      "family",
+      "contract",
+      "objective",
+      "oracle",
+      "privacy_domain"
+    ],
+    "model_change": "retain_and_retest",
+    "unknown_compatibility": "block",
+    "retirement_reasons": [
+      "equivalent_merge",
+      "not_applicable",
+      "project_retired"
+    ],
+    "requires_admin_evidence": true,
+    "capacity_is_retirement_reason": false
+  },
+  "campaign_transitions": [
+    {
+      "event": "admitted",
+      "from": "queued",
+      "to": "importing",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "import_validated",
+      "from": "importing",
+      "to": "scanning",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "scan_completed_and_plan_reserved",
+      "from": "scanning",
+      "to": "dev_evaluating",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "evidence_requires_allowed_repair",
+      "from": "dev_evaluating",
+      "to": "patching",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "patch_applied_within_two_round_budget",
+      "from": "patching",
+      "to": "scanning",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "development_passed_freeze_selected_subject",
+      "from": "dev_evaluating",
+      "to": "finalist_frozen",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "no_further_allowed_repair",
+      "from": "dev_evaluating",
+      "to": "judging",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "build_private_epoch",
+      "from": "finalist_frozen",
+      "to": "protected_building",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "private_epoch_validated_and_sealed",
+      "from": "protected_building",
+      "to": "protected_evaluating",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "protected_plan_finished",
+      "from": "protected_evaluating",
+      "to": "judging",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    },
+    {
+      "event": "gate_and_report_committed",
+      "from": "judging",
+      "to": "completed",
+      "atomic_records": [
+        "transition",
+        "plan_revision_or_result_reference"
+      ],
+      "guard": "registered_event_and_current_generation_and_reserved_budget"
+    }
+  ],
+  "campaign_error_rule": "Any stage with infrastructure/unsupported/budget failure commits incomplete; confirmed failure remains sticky in subsequent Gate. Cancellation wins over late output. No transition silently removes old plan facts."
+}

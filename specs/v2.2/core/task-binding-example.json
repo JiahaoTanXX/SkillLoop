@@ -1,0 +1,38 @@
+{
+  "api_major": 4,
+  "kind": "TaskBinding",
+  "body": {
+    "task_instance_id": "task-1",
+    "run_id": "run-1",
+    "subject_digest": "sha256:421a3793681f18d8048548df37e8ad68f8b3e046fde1d11dffe7ab4c5d671142",
+    "domain_digest": "sha256:def973ea85de2e2c9b9c699e64865686c3f3c5fcab6aeca2ff85b130b564acdb",
+    "tenant_id": "tenant-a",
+    "resources": [
+      {
+        "resource_id": "input:source",
+        "resource_class": "input",
+        "access": "read",
+        "bytes_digest": "sha256:48aed2374cea5f3bbbee1c8742439be758dcc1e999e0e3f0e03c1ee80e3565a0",
+        "tenant_id": "tenant-a"
+      },
+      {
+        "resource_id": "artifact:result",
+        "resource_class": "artifact",
+        "access": "read_write",
+        "bytes_digest": null,
+        "tenant_id": "tenant-a"
+      }
+    ],
+    "slot_bindings": [
+      {
+        "slot": "source",
+        "resource_id": "input:source"
+      },
+      {
+        "slot": "output",
+        "resource_id": "artifact:result"
+      }
+    ]
+  },
+  "digest": "sha256:e0fe6241adfbf36c613ec937257f61da6867415c9ff77fccd483acbb1f50661f"
+}

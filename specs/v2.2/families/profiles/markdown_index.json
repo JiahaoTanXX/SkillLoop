@@ -1,0 +1,30 @@
+{
+  "api_major": 4,
+  "contract_version": 1,
+  "execution": "trusted_reference_only",
+  "max_output_bytes": 16384,
+  "canonical_output": "RFC8785_JCS_plus_one_LF",
+  "tools": [
+    "read_resource",
+    "build_artifact",
+    "write_artifact",
+    "validate_artifact",
+    "prepare_publication",
+    "publish_artifact"
+  ],
+  "family_id": "markdown-index",
+  "profile_id": "markdown_index",
+  "operation": "local_heading_link_index",
+  "input_bindings": {
+    "document": "input:document",
+    "notes": "input:notes"
+  },
+  "limits": {
+    "source_bytes": 4096,
+    "lines": 100,
+    "notes_source_bytes": 1024,
+    "notes_rendered_bytes": 4096,
+    "payload_bytes": 2048,
+    "rendered_token_budget": 2048
+  }
+}

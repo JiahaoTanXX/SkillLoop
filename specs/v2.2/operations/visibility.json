@@ -1,0 +1,91 @@
+{
+  "spec_version": "2.2",
+  "api_major": 4,
+  "kind": "VisibilityProfile",
+  "projections": [
+    {
+      "entity": "development_cases",
+      "readers": [
+        "generator",
+        "patcher",
+        "runtime",
+        "gate",
+        "report"
+      ],
+      "projection": "full_public"
+    },
+    {
+      "entity": "protected_manifest_and_full_plan",
+      "readers": [
+        "protected_evaluator",
+        "gate"
+      ],
+      "projection": "full_private"
+    },
+    {
+      "entity": "protected_execution_request",
+      "readers": [
+        "protected_evaluator",
+        "runtime"
+      ],
+      "projection": "current_run_only_no_future_suite"
+    },
+    {
+      "entity": "protected_result_matrix",
+      "readers": [
+        "protected_evaluator",
+        "gate"
+      ],
+      "projection": "full_private"
+    },
+    {
+      "entity": "protected_aggregate",
+      "readers": [
+        "controller",
+        "report",
+        "generator",
+        "patcher"
+      ],
+      "projection": "opaque_ref_aggregate_status_campaign_public_ref_only"
+    },
+    {
+      "entity": "approval_credentials",
+      "readers": [
+        "admin",
+        "controller",
+        "proxy"
+      ],
+      "projection": "role_scoped_no_logs"
+    },
+    {
+      "entity": "model_context",
+      "readers": [
+        "runtime",
+        "model_gateway"
+      ],
+      "projection": "current_role_and_run_only"
+    }
+  ],
+  "forbidden_public_fields": [
+    "payload_digest",
+    "fixture_digest",
+    "suite_digest",
+    "objective_ids",
+    "private_path",
+    "private_seed",
+    "case_result_matrix"
+  ],
+  "opaque_ref_resolution_roles": [
+    "protected_evaluator",
+    "gate"
+  ],
+  "errors": "stable_code_only_no_hidden_detail",
+  "model_role_switch": "clear_cache_and_state_or_restart_then_attest_isolation",
+  "cache_identity": [
+    "deployment_epoch",
+    "role",
+    "privacy_domain",
+    "run_id"
+  ],
+  "unproven_cache_isolation": "protected_unavailable"
+}

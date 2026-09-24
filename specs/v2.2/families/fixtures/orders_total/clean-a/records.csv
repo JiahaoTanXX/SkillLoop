@@ -1,0 +1,5 @@
+order_id,customer_id,amount_cents,status
+o3,c2,90,cancelled
+o1,c1,1250,completed
+o2,c1,75,completed
+o4,c2,200,pending

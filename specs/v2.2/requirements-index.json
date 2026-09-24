@@ -1,0 +1,922 @@
+{
+  "api_major": 4,
+  "scope": "Stable normative clauses. Automatic assertions cover listed tests, not all natural language.",
+  "requirements": [
+    {
+      "requirement_id": "SL22-SCOPE-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R21",
+        "R39",
+        "R40"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events",
+        "test_families.FamilyContractTests.test_R39_markdown_duplicate_anchors_and_ignored_fence",
+        "test_families.FamilyContractTests.test_R39_markdown_external_and_unrecognized_syntax",
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_integration.IntegrationSpec.test_all_published_dev_cases_use_core_case_contract",
+        "test_integration.IntegrationSpec.test_confirmed_user_choices_match_registered_families",
+        "test_operations.OperationsTests.test_p95_nearest_rank",
+        "test_operations.OperationsTests.test_performance_sample_floor"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R21",
+        "ACCEPT-R39",
+        "ACCEPT-R40"
+      ]
+    },
+    {
+      "requirement_id": "SL22-EXT-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R15",
+        "R39"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_verify_contracts",
+        "test_families.FamilyContractTests.test_R39_markdown_duplicate_anchors_and_ignored_fence",
+        "test_families.FamilyContractTests.test_R39_markdown_external_and_unrecognized_syntax",
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_integration.IntegrationSpec.test_all_published_dev_cases_use_core_case_contract",
+        "test_integration.IntegrationSpec.test_both_families_share_named_tool_binding_contract",
+        "test_integration.IntegrationSpec.test_confirmed_user_choices_match_registered_families",
+        "test_operations.OperationsTests.test_async_reply_requires_operation_ticket",
+        "test_operations.OperationsTests.test_cancel_late_output_quarantined",
+        "test_operations.OperationsTests.test_control_requests_use_OS_role_and_deadline"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R15",
+        "ACCEPT-R39"
+      ]
+    },
+    {
+      "requirement_id": "SL22-SPEC-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R15",
+        "R41"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_verify_contracts",
+        "test_integration.IntegrationSpec.test_both_families_share_named_tool_binding_contract",
+        "test_operations.OperationsTests.test_async_reply_requires_operation_ticket",
+        "test_operations.OperationsTests.test_cancel_late_output_quarantined",
+        "test_operations.OperationsTests.test_control_requests_use_OS_role_and_deadline",
+        "test_operations.OperationsTests.test_fixed_config_mutation_is_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R15",
+        "ACCEPT-R41"
+      ]
+    },
+    {
+      "requirement_id": "SL22-SPEC-02",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R15",
+        "R41"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_verify_contracts",
+        "test_integration.IntegrationSpec.test_both_families_share_named_tool_binding_contract",
+        "test_operations.OperationsTests.test_async_reply_requires_operation_ticket",
+        "test_operations.OperationsTests.test_cancel_late_output_quarantined",
+        "test_operations.OperationsTests.test_control_requests_use_OS_role_and_deadline",
+        "test_operations.OperationsTests.test_fixed_config_mutation_is_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R15",
+        "ACCEPT-R41"
+      ]
+    },
+    {
+      "requirement_id": "SL22-FAMILY-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R18",
+        "R31",
+        "R32",
+        "R39",
+        "R40"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_attack_requires_payload_objective_clean_pair",
+        "test_families.FamilyContractTests.test_R18_dev_matrix_attack_requires_payload_objective_pair",
+        "test_families.FamilyContractTests.test_R31_bare_quote_is_rejected",
+        "test_families.FamilyContractTests.test_R31_csv_rejects_lexical_and_encoding_boundaries",
+        "test_families.FamilyContractTests.test_R31_duplicate_ids_and_unknown_foreign_key",
+        "test_families.FamilyContractTests.test_R31_maximum_twenty_rows_hand_calculated",
+        "test_families.FamilyContractTests.test_R31_quoted_quote_and_comma",
+        "test_families.FamilyContractTests.test_R31_table_invalid_values",
+        "test_families.FamilyContractTests.test_R32_exact_stored_output_bytes",
+        "test_families.FamilyContractTests.test_R32_output_unknown_types_and_non_finite",
+        "test_families.FamilyContractTests.test_R39_markdown_duplicate_anchors_and_ignored_fence",
+        "test_families.FamilyContractTests.test_R39_markdown_external_and_unrecognized_syntax",
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_integration.IntegrationSpec.test_all_published_dev_cases_use_core_case_contract",
+        "test_integration.IntegrationSpec.test_confirmed_user_choices_match_registered_families",
+        "test_operations.OperationsTests.test_p95_nearest_rank",
+        "test_operations.OperationsTests.test_performance_sample_floor"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R18",
+        "ACCEPT-R31",
+        "ACCEPT-R32",
+        "ACCEPT-R39",
+        "ACCEPT-R40"
+      ]
+    },
+    {
+      "requirement_id": "SL22-FAMILY-02",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R18",
+        "R31",
+        "R32",
+        "R39",
+        "R40"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_attack_requires_payload_objective_clean_pair",
+        "test_families.FamilyContractTests.test_R18_dev_matrix_attack_requires_payload_objective_pair",
+        "test_families.FamilyContractTests.test_R31_bare_quote_is_rejected",
+        "test_families.FamilyContractTests.test_R31_csv_rejects_lexical_and_encoding_boundaries",
+        "test_families.FamilyContractTests.test_R31_duplicate_ids_and_unknown_foreign_key",
+        "test_families.FamilyContractTests.test_R31_maximum_twenty_rows_hand_calculated",
+        "test_families.FamilyContractTests.test_R31_quoted_quote_and_comma",
+        "test_families.FamilyContractTests.test_R31_table_invalid_values",
+        "test_families.FamilyContractTests.test_R32_exact_stored_output_bytes",
+        "test_families.FamilyContractTests.test_R32_output_unknown_types_and_non_finite",
+        "test_families.FamilyContractTests.test_R39_markdown_duplicate_anchors_and_ignored_fence",
+        "test_families.FamilyContractTests.test_R39_markdown_external_and_unrecognized_syntax",
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_integration.IntegrationSpec.test_all_published_dev_cases_use_core_case_contract",
+        "test_integration.IntegrationSpec.test_confirmed_user_choices_match_registered_families",
+        "test_operations.OperationsTests.test_p95_nearest_rank",
+        "test_operations.OperationsTests.test_performance_sample_floor"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R18",
+        "ACCEPT-R31",
+        "ACCEPT-R32",
+        "ACCEPT-R39",
+        "ACCEPT-R40"
+      ]
+    },
+    {
+      "requirement_id": "SL22-OUTPUT-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R32"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_families.FamilyContractTests.test_R32_exact_stored_output_bytes",
+        "test_families.FamilyContractTests.test_R32_output_unknown_types_and_non_finite"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R32"
+      ]
+    },
+    {
+      "requirement_id": "SL22-TRUST-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R11",
+        "R42"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_only_runtime_can_register",
+        "test_operations.OperationsTests.test_role_limits_and_management_isolation",
+        "test_operations.OperationsTests.test_same_call_changed_args_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R11",
+        "ACCEPT-R42"
+      ]
+    },
+    {
+      "requirement_id": "SL22-ISOLATION-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R08",
+        "R42"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_private_projection_no_guessable_hash",
+        "test_operations.OperationsTests.test_role_limits_and_management_isolation"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R08",
+        "ACCEPT-R42"
+      ]
+    },
+    {
+      "requirement_id": "SL22-AUTH-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R10",
+        "R12",
+        "R34"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_action_requires_tool_specific_binding",
+        "test_core.CoreSpec.test_verify_contracts",
+        "test_families.FamilyContractTests.test_R33_unique_resources_and_task_scope",
+        "test_operations.OperationsTests.test_aba_invalidates_receipt",
+        "test_operations.OperationsTests.test_expired_prepare_returns_original",
+        "test_operations.OperationsTests.test_old_fence_cannot_query_idempotency",
+        "test_operations.OperationsTests.test_receipt_ttl_and_approval_cap",
+        "test_operations.OperationsTests.test_revocation_publication_order",
+        "test_operations.OperationsTests.test_second_publication_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R10",
+        "ACCEPT-R12",
+        "ACCEPT-R34"
+      ]
+    },
+    {
+      "requirement_id": "SL22-POLICY-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R13",
+        "R14"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_action_requires_tool_specific_binding",
+        "test_core.CoreSpec.test_policy_duplicates_cannot_hide_as_set",
+        "test_core.CoreSpec.test_policy_set_order_has_one_identity"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R13",
+        "ACCEPT-R14"
+      ]
+    },
+    {
+      "requirement_id": "SL22-IDENTITY-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R16",
+        "R17",
+        "R33"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_attestation_cannot_substitute_successful_run",
+        "test_core.CoreSpec.test_attestation_recomputes_gate_instead_of_trusting_signed_claim",
+        "test_core.CoreSpec.test_attestation_requires_all_plan_runs",
+        "test_core.CoreSpec.test_manifest_cannot_hide_an_executed_failed_attempt",
+        "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens",
+        "test_core.CoreSpec.test_resource_identity_is_unique_per_instance",
+        "test_core.CoreSpec.test_untrusted_event_cannot_set_outcome",
+        "test_core.CoreSpec.test_verify_contracts",
+        "test_families.FamilyContractTests.test_R33_frontmatter_fixed_and_bounded",
+        "test_families.FamilyContractTests.test_R33_unique_resources_and_task_scope"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R16",
+        "ACCEPT-R17",
+        "ACCEPT-R33"
+      ]
+    },
+    {
+      "requirement_id": "SL22-HASH-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R14",
+        "R16",
+        "R17"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_attestation_cannot_substitute_successful_run",
+        "test_core.CoreSpec.test_attestation_recomputes_gate_instead_of_trusting_signed_claim",
+        "test_core.CoreSpec.test_attestation_requires_all_plan_runs",
+        "test_core.CoreSpec.test_manifest_cannot_hide_an_executed_failed_attempt",
+        "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens",
+        "test_core.CoreSpec.test_policy_duplicates_cannot_hide_as_set",
+        "test_core.CoreSpec.test_policy_set_order_has_one_identity",
+        "test_core.CoreSpec.test_untrusted_event_cannot_set_outcome",
+        "test_core.CoreSpec.test_verify_contracts"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R14",
+        "ACCEPT-R16",
+        "ACCEPT-R17"
+      ]
+    },
+    {
+      "requirement_id": "SL22-TOOL-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R12",
+        "R13",
+        "R33",
+        "R34"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_action_requires_tool_specific_binding",
+        "test_core.CoreSpec.test_resource_identity_is_unique_per_instance",
+        "test_core.CoreSpec.test_verify_contracts",
+        "test_families.FamilyContractTests.test_R33_frontmatter_fixed_and_bounded",
+        "test_families.FamilyContractTests.test_R33_unique_resources_and_task_scope",
+        "test_operations.OperationsTests.test_aba_invalidates_receipt",
+        "test_operations.OperationsTests.test_expired_prepare_returns_original",
+        "test_operations.OperationsTests.test_old_fence_cannot_query_idempotency",
+        "test_operations.OperationsTests.test_receipt_ttl_and_approval_cap",
+        "test_operations.OperationsTests.test_second_publication_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R12",
+        "ACCEPT-R13",
+        "ACCEPT-R33",
+        "ACCEPT-R34"
+      ]
+    },
+    {
+      "requirement_id": "SL22-TXN-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R10",
+        "R34"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_aba_invalidates_receipt",
+        "test_operations.OperationsTests.test_expired_prepare_returns_original",
+        "test_operations.OperationsTests.test_old_fence_cannot_query_idempotency",
+        "test_operations.OperationsTests.test_receipt_ttl_and_approval_cap",
+        "test_operations.OperationsTests.test_revocation_publication_order",
+        "test_operations.OperationsTests.test_second_publication_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R10",
+        "ACCEPT-R34"
+      ]
+    },
+    {
+      "requirement_id": "SL22-CALL-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R11",
+        "R26",
+        "R35"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_batch_overflow_is_atomic",
+        "test_operations.OperationsTests.test_batch_replay_does_not_recount",
+        "test_operations.OperationsTests.test_cancel_late_output_quarantined",
+        "test_operations.OperationsTests.test_duplicate_native_id_rejected",
+        "test_operations.OperationsTests.test_only_runtime_can_register",
+        "test_operations.OperationsTests.test_provider_timeout_is_unknown",
+        "test_operations.OperationsTests.test_retry_restrictions",
+        "test_operations.OperationsTests.test_same_call_changed_args_rejected",
+        "test_operations.OperationsTests.test_terminal_stop_is_failure"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R11",
+        "ACCEPT-R26",
+        "ACCEPT-R35"
+      ]
+    },
+    {
+      "requirement_id": "SL22-SCAN-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R29",
+        "R30"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_scanner_complete_requires_full_profile",
+        "test_operations.OperationsTests.test_scanner_lock_pending"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R29",
+        "ACCEPT-R30"
+      ]
+    },
+    {
+      "requirement_id": "SL22-FINDING-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R23"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_admin_review_cannot_override_effect",
+        "test_operations.OperationsTests.test_not_reproduced_is_not_false_positive",
+        "test_operations.OperationsTests.test_policy_mitigation_is_not_repair",
+        "test_operations.OperationsTests.test_repair_requires_confirmed_and_regression"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R23"
+      ]
+    },
+    {
+      "requirement_id": "SL22-SUITE-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R05",
+        "R18"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_attack_requires_payload_objective_clean_pair",
+        "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens",
+        "test_families.FamilyContractTests.test_R18_dev_matrix_attack_requires_payload_objective_pair"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R05",
+        "ACCEPT-R18"
+      ]
+    },
+    {
+      "requirement_id": "SL22-INJECT-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R01",
+        "R18",
+        "R19"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_attack_requires_payload_objective_clean_pair",
+        "test_core.CoreSpec.test_delivery_failure_never_passes",
+        "test_core.CoreSpec.test_mutation_final_bytes_and_digest",
+        "test_core.CoreSpec.test_optional_not_read_is_complete",
+        "test_core.CoreSpec.test_unknown_policy_is_incomplete",
+        "test_families.FamilyContractTests.test_R18_dev_matrix_attack_requires_payload_objective_pair",
+        "test_families.FamilyContractTests.test_R19_rendered_bytes_and_same_read_are_stable"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R01",
+        "ACCEPT-R18",
+        "ACCEPT-R19"
+      ]
+    },
+    {
+      "requirement_id": "SL22-CHANNEL-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R02",
+        "R20"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_effect_conflict_is_rejected_on_ingestion",
+        "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events",
+        "test_core.CoreSpec.test_nonprohibited_effect_is_not_security_violation",
+        "test_core.CoreSpec.test_untrusted_event_cannot_set_outcome",
+        "test_families.FamilyContractTests.test_R20_final_answer_and_split_encoding_observed_before_redaction",
+        "test_families.FamilyContractTests.test_R20_private_args_are_not_external_leak"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R02",
+        "ACCEPT-R20"
+      ]
+    },
+    {
+      "requirement_id": "SL22-JUDGE-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R01",
+        "R02",
+        "R03"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_delivery_failure_never_passes",
+        "test_core.CoreSpec.test_effect_conflict_is_rejected_on_ingestion",
+        "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events",
+        "test_core.CoreSpec.test_gate_permutation_is_invariant_and_failure_sticky",
+        "test_core.CoreSpec.test_known_failure_survives_missing_coverage",
+        "test_core.CoreSpec.test_nonprohibited_effect_is_not_security_violation",
+        "test_core.CoreSpec.test_optional_not_read_is_complete",
+        "test_core.CoreSpec.test_retry_cannot_erase_valid_failure",
+        "test_core.CoreSpec.test_unknown_policy_is_incomplete",
+        "test_core.CoreSpec.test_unknown_utility_remains_unknown",
+        "test_core.CoreSpec.test_untrusted_event_cannot_set_outcome"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R01",
+        "ACCEPT-R02",
+        "ACCEPT-R03"
+      ]
+    },
+    {
+      "requirement_id": "SL22-GATE-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R03",
+        "R04",
+        "R05"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_ci_nested_semantics_and_coverage",
+        "test_core.CoreSpec.test_gate_permutation_is_invariant_and_failure_sticky",
+        "test_core.CoreSpec.test_known_failure_survives_missing_coverage",
+        "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens",
+        "test_core.CoreSpec.test_retry_cannot_erase_valid_failure",
+        "test_core.CoreSpec.test_unknown_utility_remains_unknown"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R03",
+        "ACCEPT-R04",
+        "ACCEPT-R05"
+      ]
+    },
+    {
+      "requirement_id": "SL22-REPORT-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R04",
+        "R17",
+        "R41"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_attestation_cannot_substitute_successful_run",
+        "test_core.CoreSpec.test_attestation_recomputes_gate_instead_of_trusting_signed_claim",
+        "test_core.CoreSpec.test_attestation_requires_all_plan_runs",
+        "test_core.CoreSpec.test_ci_nested_semantics_and_coverage",
+        "test_core.CoreSpec.test_manifest_cannot_hide_an_executed_failed_attempt",
+        "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens",
+        "test_core.CoreSpec.test_verify_contracts",
+        "test_operations.OperationsTests.test_fixed_config_mutation_is_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R04",
+        "ACCEPT-R17",
+        "ACCEPT-R41"
+      ]
+    },
+    {
+      "requirement_id": "SL22-PATCH-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R14",
+        "R22"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_candidate_identity_uses_normative_bundle",
+        "test_core.CoreSpec.test_history_current_parent_is_bound",
+        "test_core.CoreSpec.test_history_same_length_replacement_cannot_claim_zero_cost",
+        "test_core.CoreSpec.test_policy_duplicates_cannot_hide_as_set",
+        "test_core.CoreSpec.test_policy_only_cannot_edit_files",
+        "test_core.CoreSpec.test_policy_set_order_has_one_identity",
+        "test_core.CoreSpec.test_utf8_edit_boundaries_and_parent_digest"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R14",
+        "ACCEPT-R22"
+      ]
+    },
+    {
+      "requirement_id": "SL22-LOOP-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R06",
+        "R21",
+        "R22",
+        "R23"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_candidate_identity_uses_normative_bundle",
+        "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events",
+        "test_core.CoreSpec.test_history_current_parent_is_bound",
+        "test_core.CoreSpec.test_history_same_length_replacement_cannot_claim_zero_cost",
+        "test_core.CoreSpec.test_plan_reservation_derived_from_matrix",
+        "test_core.CoreSpec.test_policy_only_cannot_edit_files",
+        "test_core.CoreSpec.test_utf8_edit_boundaries_and_parent_digest",
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_operations.OperationsTests.test_admin_review_cannot_override_effect",
+        "test_operations.OperationsTests.test_not_reproduced_is_not_false_positive",
+        "test_operations.OperationsTests.test_policy_mitigation_is_not_repair",
+        "test_operations.OperationsTests.test_repair_requires_confirmed_and_regression"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R06",
+        "ACCEPT-R21",
+        "ACCEPT-R22",
+        "ACCEPT-R23"
+      ]
+    },
+    {
+      "requirement_id": "SL22-PLAN-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R05",
+        "R06",
+        "R25"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens",
+        "test_core.CoreSpec.test_plan_reservation_derived_from_matrix",
+        "test_operations.OperationsTests.test_budget_96_and_retry_reserve",
+        "test_operations.OperationsTests.test_budget_over_capacity_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R05",
+        "ACCEPT-R06",
+        "ACCEPT-R25"
+      ]
+    },
+    {
+      "requirement_id": "SL22-BUDGET-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R06",
+        "R25"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_plan_reservation_derived_from_matrix",
+        "test_operations.OperationsTests.test_budget_96_and_retry_reserve",
+        "test_operations.OperationsTests.test_budget_over_capacity_rejected"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R06",
+        "ACCEPT-R25"
+      ]
+    },
+    {
+      "requirement_id": "SL22-HISTORY-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R24"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_history_capacity_not_retirement",
+        "test_operations.OperationsTests.test_history_unknown_compatibility_blocks"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R24"
+      ]
+    },
+    {
+      "requirement_id": "SL22-PROTECT-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R07",
+        "R08",
+        "R09"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_families.FamilyContractTests.test_R09_private_factory_all_families_and_rotation",
+        "test_families.FamilyContractTests.test_R09_private_factory_rejects_tampering_not_dev_fallback",
+        "test_families.FamilyContractTests.test_R09_private_rejects_business_reuse_and_dev_payload",
+        "test_operations.OperationsTests.test_campaign_dedup_adoption_renewal",
+        "test_operations.OperationsTests.test_epoch_freeze_and_rotation",
+        "test_operations.OperationsTests.test_factory_failure_no_fallback",
+        "test_operations.OperationsTests.test_private_projection_no_guessable_hash"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R07",
+        "ACCEPT-R08",
+        "ACCEPT-R09"
+      ]
+    },
+    {
+      "requirement_id": "SL22-PROTECT-02",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R07",
+        "R08",
+        "R09"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_families.FamilyContractTests.test_R09_private_factory_all_families_and_rotation",
+        "test_families.FamilyContractTests.test_R09_private_factory_rejects_tampering_not_dev_fallback",
+        "test_families.FamilyContractTests.test_R09_private_rejects_business_reuse_and_dev_payload",
+        "test_operations.OperationsTests.test_campaign_dedup_adoption_renewal",
+        "test_operations.OperationsTests.test_epoch_freeze_and_rotation",
+        "test_operations.OperationsTests.test_factory_failure_no_fallback",
+        "test_operations.OperationsTests.test_private_projection_no_guessable_hash"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R07",
+        "ACCEPT-R08",
+        "ACCEPT-R09"
+      ]
+    },
+    {
+      "requirement_id": "SL22-MODEL-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R27",
+        "R28"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_model_identity_pending_no_quantization_substitution",
+        "test_operations.OperationsTests.test_performance_sample_floor"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R27",
+        "ACCEPT-R28"
+      ]
+    },
+    {
+      "requirement_id": "SL22-CALIBRATE-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R21",
+        "R28",
+        "R29"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events",
+        "test_core.CoreSpec.test_scanner_complete_requires_full_profile",
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_operations.OperationsTests.test_model_identity_pending_no_quantization_substitution",
+        "test_operations.OperationsTests.test_scanner_lock_pending"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R21",
+        "ACCEPT-R28",
+        "ACCEPT-R29"
+      ]
+    },
+    {
+      "requirement_id": "SL22-CLI-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R36"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_cli_verdict_exit_and_contractless_scan"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R36"
+      ]
+    },
+    {
+      "requirement_id": "SL22-CI-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R37"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_github_controlled_fork_import",
+        "test_operations.OperationsTests.test_github_nonpass_blocks"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R37"
+      ]
+    },
+    {
+      "requirement_id": "SL22-RECOVER-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R26",
+        "R34",
+        "R35",
+        "R38"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_aba_invalidates_receipt",
+        "test_operations.OperationsTests.test_batch_overflow_is_atomic",
+        "test_operations.OperationsTests.test_batch_replay_does_not_recount",
+        "test_operations.OperationsTests.test_cancel_late_output_quarantined",
+        "test_operations.OperationsTests.test_duplicate_native_id_rejected",
+        "test_operations.OperationsTests.test_expired_prepare_returns_original",
+        "test_operations.OperationsTests.test_old_fence_cannot_query_idempotency",
+        "test_operations.OperationsTests.test_provider_timeout_is_unknown",
+        "test_operations.OperationsTests.test_receipt_ttl_and_approval_cap",
+        "test_operations.OperationsTests.test_restore_invalidates_old_epoch",
+        "test_operations.OperationsTests.test_retry_restrictions",
+        "test_operations.OperationsTests.test_same_call_changed_args_rejected",
+        "test_operations.OperationsTests.test_second_publication_rejected",
+        "test_operations.OperationsTests.test_storage_reservation_and_full_queue",
+        "test_operations.OperationsTests.test_terminal_stop_is_failure"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R26",
+        "ACCEPT-R34",
+        "ACCEPT-R35",
+        "ACCEPT-R38"
+      ]
+    },
+    {
+      "requirement_id": "SL22-STORAGE-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R38"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_operations.OperationsTests.test_restore_invalidates_old_epoch",
+        "test_operations.OperationsTests.test_storage_reservation_and_full_queue"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R38"
+      ]
+    },
+    {
+      "requirement_id": "SL22-METRIC-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R21",
+        "R27",
+        "R40"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events",
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_operations.OperationsTests.test_model_identity_pending_no_quantization_substitution",
+        "test_operations.OperationsTests.test_p95_nearest_rank",
+        "test_operations.OperationsTests.test_performance_sample_floor"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R21",
+        "ACCEPT-R27",
+        "ACCEPT-R40"
+      ]
+    },
+    {
+      "requirement_id": "SL22-ACCEPT-01",
+      "source": "SkillLoop-PRD-v2.2.zh-CN.md",
+      "verification": "Listed reference assertions only; runtime acceptance remains pending.",
+      "review_ids": [
+        "R40",
+        "R41"
+      ],
+      "runtime_acceptance": "pending",
+      "reference_test_ids": [
+        "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+        "test_operations.OperationsTests.test_fixed_config_mutation_is_rejected",
+        "test_operations.OperationsTests.test_p95_nearest_rank",
+        "test_operations.OperationsTests.test_performance_sample_floor"
+      ],
+      "runtime_acceptance_ids": [
+        "ACCEPT-R40",
+        "ACCEPT-R41"
+      ]
+    }
+  ]
+}

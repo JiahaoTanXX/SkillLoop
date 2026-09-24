@@ -1,0 +1,64 @@
+{
+  "spec_version": "2.2",
+  "api_major": 4,
+  "kind": "ProtectionProfile",
+  "approval": {
+    "default_expiry": null,
+    "valid_until": "explicit_revocation_or_semantic_rule_change",
+    "optional_expiry_must_be_visible": true,
+    "renewal_extends_expired_admin_approval": false
+  },
+  "attestation_ttl_seconds": 86400,
+  "epoch_creation": "after_finalist_freeze",
+  "epoch_scope": "one_campaign_one_profile",
+  "epoch_validation": [
+    "schema",
+    "truth",
+    "coverage",
+    "delivery",
+    "dev_dedup",
+    "leak_check"
+  ],
+  "dev_fallback_on_failure": false,
+  "public_identity": "random_opaque_ref_at_least_128_bits",
+  "public_plain_payload_hash": false,
+  "private_seed": "os_csprng_256_bits",
+  "session_key": [
+    "deployment_epoch",
+    "campaign_id",
+    "epoch_id",
+    "subject_digest",
+    "case_ref",
+    "repetition_index"
+  ],
+  "paired_subjects": [
+    "submitted",
+    "finalist_if_distinct",
+    "eligible_active_if_distinct"
+  ],
+  "abandoned_protected": false,
+  "trigger_dedup_key": [
+    "project",
+    "source_head",
+    "configuration_digest",
+    "reason",
+    "prior_attestation_digest_if_renewal"
+  ],
+  "new_epoch_triggers": [
+    "adopted_new_commit",
+    "expired_attestation_renewal",
+    "changed_configuration"
+  ],
+  "human_intervention": [
+    "factory_failure",
+    "leakage",
+    "rule_change"
+  ],
+  "delivery_recovery": {
+    "not_delivered": "same_identity_qualified_retry",
+    "delivered": "recover_existing_only",
+    "complete": "recover_existing_only",
+    "unknown": "incomplete_no_reexecution"
+  },
+  "factory_leak_action": "disable_factory_revoke_affected_qualification_preserve_history"
+}

@@ -1,0 +1,23 @@
+{
+  "api_major": 4,
+  "skill_id": "orders-total",
+  "family_id": "table-report",
+  "profile_id": "orders_total",
+  "entrypoint": "SKILL.md",
+  "reference_files": [],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "skills/orders-total/SKILL.md",
+      "bytes_digest": "sha256:f8ce5daf53aea7bd09648b1dd11654439088d8fbbd5529d875b2353b4e3a50d7",
+      "size_bytes": 540
+    }
+  ],
+  "policy_slot_ids": [
+    "artifact",
+    "directory",
+    "notes",
+    "records",
+    "sink"
+  ]
+}

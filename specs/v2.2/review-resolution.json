@@ -1,0 +1,1226 @@
+{
+  "api_major": 4,
+  "document_version": "2.2",
+  "review_path": "reviews/v2.1-2026-09-23/REVIEW.zh-CN.md",
+  "review_sha256": "b2517d55c8a95ce6fe19fb8dc3dfaa1a17d9c8a6ff69b9434a278f863736ea77",
+  "interpretation": "Design, structure, listed counterexamples and actual runtime acceptance are separate statuses. This document is not a runtime security attestation.",
+  "items": [
+    {
+      "review_id": "R01",
+      "priority": "P1",
+      "review_issue": "实证不一致：不完整攻击/未知策略可以被归约成安全成功。",
+      "decision": "§8.4、9：投递、策略、证据和重复共同决定 completeness",
+      "counterexample_or_acceptance": "delivery_failed/unknown policy 沿 Run→Case→Gate 传播不完整",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_delivery_failure_never_passes",
+            "test_core.CoreSpec.test_unknown_policy_is_incomplete",
+            "test_core.CoreSpec.test_optional_not_read_is_complete"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R01"
+    },
+    {
+      "review_id": "R02",
+      "priority": "P1",
+      "review_issue": "实证不一致：安全结论有两套可矛盾的事实来源。",
+      "decision": "§9：注册目标与可信事件统一派生 prohibited effect",
+      "counterexample_or_acceptance": "禁止 effect=true 不能同时安全通过；非安全 effect 不误判泄漏",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_effect_conflict_is_rejected_on_ingestion",
+            "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events",
+            "test_core.CoreSpec.test_nonprohibited_effect_is_not_security_violation",
+            "test_core.CoreSpec.test_untrusted_event_cannot_set_outcome"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R02"
+    },
+    {
+      "review_id": "R03",
+      "priority": "P1",
+      "review_issue": "实证不一致：业务失败与未知结果相互混淆，破坏 fail 优先级。",
+      "decision": "§7.3、9：utility 三态独立于 coverage",
+      "counterexample_or_acceptance": "已证实失败加缺测仍 fail；null 不变业务失败",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_unknown_utility_remains_unknown",
+            "test_core.CoreSpec.test_known_failure_survives_missing_coverage",
+            "test_core.CoreSpec.test_retry_cannot_erase_valid_failure",
+            "test_core.CoreSpec.test_gate_permutation_is_invariant_and_failure_sticky"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R03"
+    },
+    {
+      "review_id": "R04",
+      "priority": "P1",
+      "review_issue": "实证不一致：CI 报告的嵌套语义和证据计数没有闭合。",
+      "decision": "§9：递归语义、权威索引计数、逐 subject 报告",
+      "counterexample_or_acceptance": "嵌套缺测 pass、零完成 pass 拒绝；候选完整不受原提交缺测污染",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_ci_nested_semantics_and_coverage"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R04"
+    },
+    {
+      "review_id": "R05",
+      "priority": "P1",
+      "review_issue": "规范缺口：最低“数量矩阵”不能证明跑了指定基础套件。",
+      "decision": "§8.3、11：权威 suite/plan 的精确 required 集",
+      "counterexample_or_acceptance": "九个任意 token、错目标/fixture/重复数不能凑通过",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R05"
+    },
+    {
+      "review_id": "R06",
+      "priority": "P1",
+      "review_issue": "实证与规范缺口：ExecutionPlan 无法唯一描述多候选的实际执行矩阵。",
+      "decision": "§11：逐 subject/case/repetition/phase 计划与预算",
+      "counterexample_or_acceptance": "被淘汰候选无保护 pass；18 项预留 1 次执行拒绝",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_plan_reservation_derived_from_matrix"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R06"
+    },
+    {
+      "review_id": "R07",
+      "priority": "P1",
+      "review_issue": "规范冲突风险：保护查询限制与正常续评路径没有协调。",
+      "decision": "§12：采用、续评新 campaign/epoch，去重触发",
+      "counterexample_or_acceptance": "候选通过→新提交→通过→到期续评全路径，换 job 不清账",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_campaign_dedup_adoption_renewal",
+            "test_operations.OperationsTests.test_epoch_freeze_and_rotation"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R07"
+    },
+    {
+      "review_id": "R08",
+      "priority": "P1",
+      "review_issue": "规范缺口：隐藏保护信息可能通过计划和请求元数据提前暴露。",
+      "decision": "§4、12：实体/角色/阶段投影与私有解析权限",
+      "counterexample_or_acceptance": "低熵哈希、错误响应、报告、缓存不能旁路读保护内容",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_private_projection_no_guessable_hash"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R08"
+    },
+    {
+      "review_id": "R09",
+      "priority": "P1",
+      "review_issue": "规范缺口：保护套件的创建、轮换与使用后失效没有协议。",
+      "decision": "§12：批准 factory 后自动构建与轮换",
+      "counterexample_or_acceptance": "不合格题库不能被 dev 替补，规则变更需新批准",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_factory_failure_no_fallback",
+            "test_families.FamilyContractTests.test_R09_private_factory_all_families_and_rotation",
+            "test_families.FamilyContractTests.test_R09_private_factory_rejects_tampering_not_dev_fallback",
+            "test_families.FamilyContractTests.test_R09_private_rejects_business_reuse_and_dev_payload"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R09"
+    },
+    {
+      "review_id": "R10",
+      "priority": "P1",
+      "review_issue": "规范缺口：撤销/取消与发布的原子性跨越了未定义的状态存储。",
+      "decision": "§7.2：撤销/批准/fence 与发布同库生效",
+      "counterexample_or_acceptance": "撤销/发布交错 barrier，生效确认对应事务提交",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_revocation_publication_order"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R10"
+    },
+    {
+      "review_id": "R11",
+      "priority": "P1",
+      "review_issue": "规范缺口：可信 runtime 与 victim 的权限边界未落到进程/RPC。",
+      "decision": "§4、7.3：可信 runtime 登记调用，proxy 核对",
+      "counterexample_or_acceptance": "模型无 socket、未登记/同 ID 换参/旧 fence 拒绝",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_only_runtime_can_register",
+            "test_operations.OperationsTests.test_same_call_changed_args_rejected"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R11"
+    },
+    {
+      "review_id": "R12",
+      "priority": "P1",
+      "review_issue": "规范缺口：approved_cap 与语义授权范围只有名字，没有可批准的完整对象。",
+      "decision": "§5：完整批准域、slot binding、确定性 cap 展开",
+      "counterexample_or_acceptance": "同 slot 错租户/资源/目的地/实例拒绝",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_verify_contracts",
+            "test_core.CoreSpec.test_action_requires_tool_specific_binding",
+            "test_families.FamilyContractTests.test_R33_unique_resources_and_task_scope"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R12"
+    },
+    {
+      "review_id": "R13",
+      "priority": "P1",
+      "review_issue": "实证与规范缺口：策略元组没有按工具校验参数语义。",
+      "decision": "§5、7.1：逐工具严格动作元组与命名输入",
+      "counterexample_or_acceptance": "空 read 绑定、错方向/未知参数/check_set 拒绝",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_action_requires_tool_specific_binding"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R13"
+    },
+    {
+      "review_id": "R14",
+      "priority": "P2",
+      "review_issue": "实证不一致：集合没有规范排序，等价权限可伪装为新候选。",
+      "decision": "§2、5、10：集合排序去重后哈希与语义 no_change",
+      "counterexample_or_acceptance": "重排 action/slot/义务摘要不变，不计修复",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_policy_set_order_has_one_identity",
+            "test_core.CoreSpec.test_policy_duplicates_cannot_hide_as_set"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R14"
+    },
+    {
+      "review_id": "R15",
+      "priority": "P1",
+      "review_issue": "规范缺口：宣称跨模块共享协议，但多个核心对象与 RPC 尚不存在。",
+      "decision": "§2：实际跨模块对象与 RPC 可解析合同",
+      "counterexample_or_acceptance": "核心引用不存在/版本不兼容/取消错误均有唯一返回",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_verify_contracts",
+            "test_integration.IntegrationSpec.test_both_families_share_named_tool_binding_contract",
+            "test_operations.OperationsTests.test_async_reply_requires_operation_ticket",
+            "test_operations.OperationsTests.test_cancel_late_output_quarantined",
+            "test_operations.OperationsTests.test_control_requests_use_OS_role_and_deadline"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R15"
+    },
+    {
+      "review_id": "R16",
+      "priority": "P1",
+      "review_issue": "规范缺口：执行记录仍存在潜在自引用，多个摘要缺精确投影。",
+      "decision": "§6：无环摘要 DAG 与精确投影金样",
+      "counterexample_or_acceptance": "结果正文不包含自身执行摘要；事件改变向后传播",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_verify_contracts",
+            "test_core.CoreSpec.test_untrusted_event_cannot_set_outcome"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R16"
+    },
+    {
+      "review_id": "R17",
+      "priority": "P1",
+      "review_issue": "规范缺口：一个 run 的指纹与整个 subject 的通过证明层级混用。",
+      "decision": "§6、9：subject 总证明覆盖完整计划和执行索引",
+      "counterexample_or_acceptance": "用单个成功 run 代替整场、删失败重试均拒绝",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_attestation_cannot_substitute_successful_run",
+            "test_core.CoreSpec.test_attestation_recomputes_gate_instead_of_trusting_signed_claim",
+            "test_core.CoreSpec.test_attestation_requires_all_plan_runs",
+            "test_core.CoreSpec.test_manifest_cannot_hide_an_executed_failed_attempt",
+            "test_core.CoreSpec.test_pass_requires_exact_manifest_not_nine_arbitrary_tokens",
+            "test_core.CoreSpec.test_verify_contracts"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R17"
+    },
+    {
+      "review_id": "R18",
+      "priority": "P1",
+      "review_issue": "实证与规范缺口：基础九例只有数量描述，没有可直接执行的套件合同。",
+      "decision": "§3、8.3：实际 dev fixture、攻击、对照与登记目标",
+      "counterexample_or_acceptance": "attack 无 payload/objective/pair、重复冒充变体拒绝",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_R18_dev_matrix_attack_requires_payload_objective_pair",
+            "test_core.CoreSpec.test_attack_requires_payload_objective_clean_pair"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R18"
+    },
+    {
+      "review_id": "R19",
+      "priority": "P1",
+      "review_issue": "规范缺口：投递长度、内容哈希与工具返回的语义没有协调。",
+      "decision": "§8.4：原资源/payload/展示字节分离，最终长度预检",
+      "counterexample_or_acceptance": "Unicode/append 超限、重复读取重传、未读有确定结果",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_R19_rendered_bytes_and_same_read_are_stable",
+            "test_core.CoreSpec.test_mutation_final_bytes_and_digest"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R19"
+    },
+    {
+      "review_id": "R20",
+      "priority": "P1",
+      "review_issue": "规范缺口：泄漏目标与所有输出通道没有封闭定义。",
+      "decision": "§8.4：通道接收者、原始取证与公开脱敏",
+      "counterexample_or_acceptance": "最终回答泄漏被查；私有工具参数不误判；canary 碰撞拒绝",
+      "specification_paths": [
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_R20_private_args_are_not_external_leak",
+            "test_families.FamilyContractTests.test_R20_final_answer_and_split_encoding_observed_before_redaction",
+            "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R20"
+    },
+    {
+      "review_id": "R21",
+      "priority": "P1",
+      "review_issue": "待验证风险：strict 起点令核心攻击效果不可达，可能无法证明修补循环的价值。",
+      "decision": "§1、13、16：严格环境 utility 恢复，三种收益独立",
+      "counterexample_or_acceptance": "无自然改善明确尚未证实，不弱化权限制造成果",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+            "test_core.CoreSpec.test_effect_truth_comes_from_authorized_events"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R21"
+    },
+    {
+      "review_id": "R22",
+      "priority": "P1",
+      "review_issue": "实证与规范缺口：补丁只有摘要和限额，缺应用语义与身份约束检查。",
+      "decision": "§10：结构字节补丁与可信应用、跨轮累计",
+      "counterexample_or_acceptance": "policy_only 改代码、重复 frontmatter key、伪父、先增后删拒绝",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_candidate_identity_uses_normative_bundle",
+            "test_core.CoreSpec.test_history_current_parent_is_bound",
+            "test_core.CoreSpec.test_history_same_length_replacement_cannot_claim_zero_cost",
+            "test_core.CoreSpec.test_policy_only_cannot_edit_files",
+            "test_core.CoreSpec.test_utf8_edit_boundaries_and_parent_digest"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R22"
+    },
+    {
+      "review_id": "R23",
+      "priority": "P1",
+      "review_issue": "规范缺口：finding 何时“关闭”仍无完整状态转移。",
+      "decision": "§8.2：验证/处置分轴与有证据转移",
+      "counterexample_or_acceptance": "未复现不变误报；预防缓解不计已复现修复；超范围转人工",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_not_reproduced_is_not_false_positive",
+            "test_operations.OperationsTests.test_repair_requires_confirmed_and_regression",
+            "test_operations.OperationsTests.test_policy_mitigation_is_not_repair",
+            "test_operations.OperationsTests.test_admin_review_cannot_override_effect"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R23"
+    },
+    {
+      "review_id": "R24",
+      "priority": "P1",
+      "review_issue": "规范缺口：“关键历史全部必测”的历史集合未定义。",
+      "decision": "§11：跨 campaign 历史兼容/退役规则",
+      "counterexample_or_acceptance": "不因容量删失败；不适用须证据，超限可恢复但不假绿",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_history_capacity_not_retirement",
+            "test_operations.OperationsTests.test_history_unknown_compatibility_blocks"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R24"
+    },
+    {
+      "review_id": "R25",
+      "priority": "P1",
+      "review_issue": "规范缺口：预算尚不能证明完整评估会放得下。",
+      "decision": "§11：可执行 runs/tokens/时间/磁盘预算",
+      "counterexample_or_acceptance": "六类代表计划、动态追加、日志超限与余量预留",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_budget_96_and_retry_reserve",
+            "test_operations.OperationsTests.test_budget_over_capacity_rejected",
+            "test_core.CoreSpec.test_plan_reservation_derived_from_matrix"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R25"
+    },
+    {
+      "review_id": "R26",
+      "priority": "P1",
+      "review_issue": "规范缺口：campaign/run 的异常状态机缺少足够可执行规则。",
+      "decision": "§7.3、15：异常 transition 与独立机制记录",
+      "counterexample_or_acceptance": "无 publish、解析失败、取消迟到、未知副作用、租约失效",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_terminal_stop_is_failure",
+            "test_operations.OperationsTests.test_provider_timeout_is_unknown",
+            "test_operations.OperationsTests.test_retry_restrictions",
+            "test_operations.OperationsTests.test_cancel_late_output_quarantined"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R26"
+    },
+    {
+      "review_id": "R27",
+      "priority": "P1",
+      "review_issue": "规范缺口：配对实验的模型和环境等价条件不够具体。",
+      "decision": "§13、16：固定 ModelConfig 与配对执行",
+      "counterexample_or_acceptance": "seed 不支持不伪造，模型/模板改变失效，样本结论不过度外推",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/deployment.zh-CN.md",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_model_identity_pending_no_quantization_substitution",
+            "test_operations.OperationsTests.test_performance_sample_floor"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R27"
+    },
+    {
+      "review_id": "R28",
+      "priority": "P1",
+      "review_issue": "待验证风险：关键平台可行性验证应前置，不能等到底座全部完成。",
+      "decision": "§0、13：平台实验前置，模型已定/后端推荐可验证",
+      "counterexample_or_acceptance": "最大输入、工具路径、拒绝恢复、峰值内存与 token 实测",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/deployment.zh-CN.md",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_model_identity_pending_no_quantization_substitution"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R28"
+    },
+    {
+      "review_id": "R29",
+      "priority": "P1",
+      "review_issue": "待验证风险：固定扫描器 commit 不等于固定可复现的离线扫描环境。",
+      "decision": "§8.1、13：扫描器环境/规则/离线情报锁与 smoke",
+      "counterexample_or_acceptance": "未覆盖依赖不能 complete；ARM64 原始结果待实际验收",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/deployment.zh-CN.md",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_scanner_lock_pending",
+            "test_core.CoreSpec.test_scanner_complete_requires_full_profile"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R29"
+    },
+    {
+      "review_id": "R30",
+      "priority": "P1",
+      "review_issue": "实证不一致：ScannerReport 的 complete 语义没有可执行约束。",
+      "decision": "§8.1：逐 analyzer 权威清单、状态/依据/证据",
+      "counterexample_or_acceptance": "exit=2/无报告/空覆盖却 complete 拒绝",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_core.CoreSpec.test_scanner_complete_requires_full_profile"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R30"
+    },
+    {
+      "review_id": "R31",
+      "priority": "P2",
+      "review_issue": "实证不一致：CSV 解析比声明的 RFC4180 子集更宽。",
+      "decision": "§3.1：严格 CSV 词法与固定边界",
+      "counterexample_or_acceptance": "裸双引号、BOM/换行/空白/控制字符均有金样",
+      "specification_paths": [
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_R31_bare_quote_is_rejected",
+            "test_families.FamilyContractTests.test_R31_quoted_quote_and_comma",
+            "test_families.FamilyContractTests.test_R31_csv_rejects_lexical_and_encoding_boundaries",
+            "test_families.FamilyContractTests.test_R31_maximum_twenty_rows_hand_calculated",
+            "test_families.FamilyContractTests.test_R31_table_invalid_values",
+            "test_families.FamilyContractTests.test_R31_duplicate_ids_and_unknown_foreign_key"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R31"
+    },
+    {
+      "review_id": "R32",
+      "priority": "P2",
+      "review_issue": "规范缺口：手写 report.json 怎样满足“精确参考输出”未定义。",
+      "decision": "§3.3：唯一 JCS+LF 输出语言与实际字节 receipt",
+      "counterexample_or_acceptance": "重复 key、1.0/1e0、额外字段、无 LF、不规范 key 顺序拒绝",
+      "specification_paths": [
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_R32_exact_stored_output_bytes",
+            "test_families.FamilyContractTests.test_R32_output_unknown_types_and_non_finite"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R32"
+    },
+    {
+      "review_id": "R33",
+      "priority": "P2",
+      "review_issue": "实证与规范缺口：资源注册表没有唯一性、生命周期与加载合同。",
+      "decision": "§5、6：loader/资源生命周期与唯一键",
+      "counterexample_or_acceptance": "同 ID 不同字节拒绝；reference manifest 与资源容量一致",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_R33_unique_resources_and_task_scope",
+            "test_families.FamilyContractTests.test_R33_frontmatter_fixed_and_bounded",
+            "test_core.CoreSpec.test_resource_identity_is_unique_per_instance"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R33"
+    },
+    {
+      "review_id": "R34",
+      "priority": "P1",
+      "review_issue": "规范缺口：receipt/grant/幂等的边界故障尚未定义完整。",
+      "decision": "§7.2：TTL/版本防 ABA/逐错误幂等合同",
+      "counterexample_or_acceptance": "原 grant 过期不静默续期，旧 fence 查历史须可信恢复接口",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_receipt_ttl_and_approval_cap",
+            "test_operations.OperationsTests.test_aba_invalidates_receipt",
+            "test_operations.OperationsTests.test_expired_prepare_returns_original",
+            "test_operations.OperationsTests.test_old_fence_cannot_query_idempotency",
+            "test_operations.OperationsTests.test_second_publication_rejected"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R34"
+    },
+    {
+      "review_id": "R35",
+      "priority": "P1",
+      "review_issue": "规范缺口：逻辑工具计数与幂等身份仍缺权威分配规则。",
+      "decision": "§7.3：call_id 与原生 ID 分开、批次原子预留",
+      "counterexample_or_acceptance": "重复 ID/并发超额/换参/中途失败有固定记账",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_batch_overflow_is_atomic",
+            "test_operations.OperationsTests.test_batch_replay_does_not_recount",
+            "test_operations.OperationsTests.test_same_call_changed_args_rejected",
+            "test_operations.OperationsTests.test_duplicate_native_id_rejected"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R35"
+    },
+    {
+      "review_id": "R36",
+      "priority": "P2",
+      "review_issue": "规范缺口：CLI 虽称固定契约，命令输出和退出行为尚不完整。",
+      "decision": "§14：逐 CLI flags/output/exit/权限表",
+      "counterexample_or_acceptance": "scan 不强求契约，普通身份管理 socket 拒绝",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_cli_verdict_exit_and_contractless_scan"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R36"
+    },
+    {
+      "review_id": "R37",
+      "priority": "P1",
+      "review_issue": "规范缺口：GitHub CI 的触发、权限与实际执行拓扑尚未交付。",
+      "decision": "§14：真实受控 GitHub 服务、SHA/generation/最小凭据",
+      "counterexample_or_acceptance": "fork/force-push/重复触发/config 更新，PR 脚本不执行",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_github_nonpass_blocks",
+            "test_operations.OperationsTests.test_github_controlled_fork_import"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R37"
+    },
+    {
+      "review_id": "R38",
+      "priority": "P1",
+      "review_issue": "待验证风险：无 GC、有限磁盘与单活跃作业缺少可恢复运营路径。",
+      "decision": "§15：预留、队列、归档与新 deployment epoch 恢复",
+      "counterexample_or_acceptance": "磁盘失败不通过，旧备份不复活凭证，完整恢复手册",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_storage_reservation_and_full_queue",
+            "test_operations.OperationsTests.test_restore_invalidates_old_epoch"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R38"
+    },
+    {
+      "review_id": "R39",
+      "priority": "P2",
+      "review_issue": "范围未收口：G1/G2/G3 是路线目标，尚不是可直接施工的后续规格。",
+      "decision": "§0、1、3：两个家族首版必做，三份完整契约和 Skill",
+      "counterexample_or_acceptance": "两表格契约配置复用＋文档不同语义＋合同和实跑验收",
+      "specification_paths": [
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_families.FamilyContractTests.test_R39_markdown_duplicate_anchors_and_ignored_fence",
+            "test_families.FamilyContractTests.test_R39_markdown_external_and_unrecognized_syntax",
+            "test_families.FamilyContractTests.test_six_independent_literal_goldens",
+            "test_integration.IntegrationSpec.test_all_published_dev_cases_use_core_case_contract",
+            "test_integration.IntegrationSpec.test_confirmed_user_choices_match_registered_families"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R39"
+    },
+    {
+      "review_id": "R40",
+      "priority": "P1",
+      "review_issue": "规范缺口：M1 完成与产品效果成功的验收仍不充分。",
+      "decision": "§1、3、16：实际 Skill、独立金样、指标和测试索引",
+      "counterexample_or_acceptance": "工程/业务/效果分开；未知分母、false refusal、p95 明确",
+      "specification_paths": [
+        "specs/v2.2/families/README.zh-CN.md",
+        "scripts/spec_v22_families.py",
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_performance_sample_floor",
+            "test_operations.OperationsTests.test_p95_nearest_rank",
+            "test_families.FamilyContractTests.test_six_independent_literal_goldens"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R40"
+    },
+    {
+      "review_id": "R41",
+      "priority": "P2",
+      "review_issue": "实证与规范缺口：“正文/配置差异必使检查失败”尚未实现。",
+      "decision": "§2、16：入口指针、常量/配置区分、分层关闭状态",
+      "counterexample_or_acceptance": "改常量拒绝；检查范围明确；不声称自动验证全部自然语言",
+      "specification_paths": [
+        "specs/v2.2/protocol.schema.json",
+        "scripts/spec_v22_core.py",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_fixed_config_mutation_is_rejected"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R41"
+    },
+    {
+      "review_id": "R42",
+      "priority": "P2",
+      "review_issue": "待验证风险：隔离配置方向正确，但可信假设与资源限制没有冻结。",
+      "decision": "§4、13、15：可信假设和固定 OCI/服务资源上限",
+      "counterexample_or_acceptance": "逐角色合法/拒绝 RPC、超消息/PID/内存/管理面访问验收",
+      "specification_paths": [
+        "specs/v2.2/operations/operations.zh-CN.md",
+        "scripts/spec_v22_operations.py",
+        "specs/v2.2/deployment.zh-CN.md",
+        "specs/v2.2/operations/acceptance.json"
+      ],
+      "decision_status": "decided",
+      "structural_expression": "specified_and_checked",
+      "counterexample_verification": "listed_reference_assertions_passed",
+      "runtime_acceptance": "pending",
+      "verification_evidence": [
+        {
+          "report": "specs/v2.2/verification-report.json",
+          "test_ids": [
+            "test_operations.OperationsTests.test_role_limits_and_management_isolation"
+          ],
+          "scope": "reference_only; runtime_scenarios_remain_pending"
+        }
+      ],
+      "runtime_evidence": [],
+      "runtime_acceptance_id": "ACCEPT-R42"
+    }
+  ]
+}

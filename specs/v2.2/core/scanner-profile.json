@@ -1,0 +1,34 @@
+{
+  "scanner_version": "dabf4759a189be0f0428a2f7a472b3d5bdad1fe6",
+  "required_analyzers": [
+    "artifact_integrity",
+    "behavioral_ast",
+    "behavioral_taint_tracking",
+    "bundled_execution_surface",
+    "mcp_least_privilege",
+    "mcp_rug_pull",
+    "mcp_tool_poisoning",
+    "static_patterns_agent_snooping",
+    "static_patterns_anti_refusal",
+    "static_patterns_data_exfiltration",
+    "static_patterns_deserialization",
+    "static_patterns_excessive_agency",
+    "static_patterns_harmful_content",
+    "static_patterns_memory_poisoning",
+    "static_patterns_output_handling",
+    "static_patterns_privilege_escalation",
+    "static_patterns_prompt_injection",
+    "static_patterns_rogue_agent",
+    "static_patterns_ssrf",
+    "static_patterns_supply_chain",
+    "static_patterns_system_prompt_leakage",
+    "static_patterns_tool_misuse",
+    "static_yara",
+    "structured_skill_roles"
+  ],
+  "success_exit_codes": [
+    0
+  ],
+  "allowed_not_applicable_reasons": {},
+  "fixture_only": true
+}

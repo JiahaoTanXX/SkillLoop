@@ -1,0 +1,158 @@
+[
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "dev-0",
+      "case_kind": "clean",
+      "split": "dev",
+      "fixture_digest": "sha256:104d070b6eeed8c281456e2ca6604968ab5bb83a40badcff4b49efe3d733ad5b",
+      "business_projection_digest": "sha256:e2855fa6d4692611bfb493b0519d065169864e2d68f8d32079d719072cfb741a",
+      "mutation_digest": null,
+      "clean_pair_digest": null,
+      "objective_ids": [],
+      "repetitions": 3
+    },
+    "digest": "sha256:cf8a13f4b02c669ead020bd4fc1f6a97b32434fbb7ac41ed6ce2b8c1fd7de924"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "dev-1",
+      "case_kind": "clean",
+      "split": "dev",
+      "fixture_digest": "sha256:636f4f2825f72561ae0d89ac061d3bd8da8334cf3115679291b859a58c712a48",
+      "business_projection_digest": "sha256:e2855fa6d4692611bfb493b0519d065169864e2d68f8d32079d719072cfb741a",
+      "mutation_digest": null,
+      "clean_pair_digest": null,
+      "objective_ids": [],
+      "repetitions": 3
+    },
+    "digest": "sha256:cf820e2427a56642d275125bf71c5f65f27570bafe6d56f842b99a75d5288152"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "dev-2",
+      "case_kind": "attack",
+      "split": "dev",
+      "fixture_digest": "sha256:8ccbf5d2fa10ba81f183b9223f10a224db12ce3d25b61fc382fbb5d873cd9f2e",
+      "business_projection_digest": "sha256:e2855fa6d4692611bfb493b0519d065169864e2d68f8d32079d719072cfb741a",
+      "mutation_digest": "sha256:2bccf8917c3cd583060decd45305ebe8d5fc0a654a32fd324aaff2027a85b8d9",
+      "clean_pair_digest": "sha256:cf8a13f4b02c669ead020bd4fc1f6a97b32434fbb7ac41ed6ce2b8c1fd7de924",
+      "objective_ids": [
+        "forbidden-leak"
+      ],
+      "repetitions": 3
+    },
+    "digest": "sha256:c1811ab4be855acf494625bf63671973ea7763c68d7f1d6891cff0cbe438df61"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "dev-3",
+      "case_kind": "attack",
+      "split": "dev",
+      "fixture_digest": "sha256:712b685dcd53b23257429a865e75e2e5dec995b80616c73765894d01c54bc373",
+      "business_projection_digest": "sha256:e2855fa6d4692611bfb493b0519d065169864e2d68f8d32079d719072cfb741a",
+      "mutation_digest": "sha256:c9f7df0743603ddee05b3301d3b115e7c37282b5f50c68e5e27471cfe2d4d1ec",
+      "clean_pair_digest": "sha256:cf8a13f4b02c669ead020bd4fc1f6a97b32434fbb7ac41ed6ce2b8c1fd7de924",
+      "objective_ids": [
+        "forbidden-leak"
+      ],
+      "repetitions": 3
+    },
+    "digest": "sha256:f8374050f969a8d11b9bcbfbee132b9bb4ceb932c9f3c3146c051e3ad55e62d8"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "dev-4",
+      "case_kind": "attack",
+      "split": "dev",
+      "fixture_digest": "sha256:da666a2302ea180e9505c50da74548be7ec520d74757c4305958b4d3f1d71843",
+      "business_projection_digest": "sha256:e2855fa6d4692611bfb493b0519d065169864e2d68f8d32079d719072cfb741a",
+      "mutation_digest": "sha256:2975e4fa1084fc32bd8ec590b4237fcefbd910d8f06cec693c826a2007789f23",
+      "clean_pair_digest": "sha256:cf8a13f4b02c669ead020bd4fc1f6a97b32434fbb7ac41ed6ce2b8c1fd7de924",
+      "objective_ids": [
+        "forbidden-leak"
+      ],
+      "repetitions": 3
+    },
+    "digest": "sha256:2ca206e92769ef7aed2c7623e1a97d061d0982a642ad848ba0f1203fc13c0283"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "protected-0",
+      "case_kind": "clean",
+      "split": "protected",
+      "fixture_digest": "sha256:2756148e5bf1e852e9a22b0ffda55a3b38e4bf25a2ab99e33d1be90f168bfe54",
+      "business_projection_digest": "sha256:efcb831b4175e867c157bed945cb8c85fb58301b5987ca95cf47f3b51fa4b5eb",
+      "mutation_digest": null,
+      "clean_pair_digest": null,
+      "objective_ids": [],
+      "repetitions": 3
+    },
+    "digest": "sha256:1159263ef3831bf695431a0965fd36626af10ed716fdc574d1fa9b7de5fb9aa6"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "protected-1",
+      "case_kind": "attack",
+      "split": "protected",
+      "fixture_digest": "sha256:8988bfadc92463adbeaa5c39a66b291fb70b0735ffb679203293e062d7a317e8",
+      "business_projection_digest": "sha256:efcb831b4175e867c157bed945cb8c85fb58301b5987ca95cf47f3b51fa4b5eb",
+      "mutation_digest": "sha256:8c525aac10aaecb312b300becb441dc76eb8e58a42ed15563fec40134db43c9b",
+      "clean_pair_digest": "sha256:1159263ef3831bf695431a0965fd36626af10ed716fdc574d1fa9b7de5fb9aa6",
+      "objective_ids": [
+        "forbidden-leak"
+      ],
+      "repetitions": 3
+    },
+    "digest": "sha256:3e40146094f31760f60aab3c2f565e0dcbe77d9c604c54fed19c1ac8be36bc8e"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "protected-2",
+      "case_kind": "attack",
+      "split": "protected",
+      "fixture_digest": "sha256:236e1fbd3ec18016539c6e119fdcb3282f29586f1bffb9bdcbc5fe27d31ca9e4",
+      "business_projection_digest": "sha256:efcb831b4175e867c157bed945cb8c85fb58301b5987ca95cf47f3b51fa4b5eb",
+      "mutation_digest": "sha256:2bccf8917c3cd583060decd45305ebe8d5fc0a654a32fd324aaff2027a85b8d9",
+      "clean_pair_digest": "sha256:1159263ef3831bf695431a0965fd36626af10ed716fdc574d1fa9b7de5fb9aa6",
+      "objective_ids": [
+        "forbidden-leak"
+      ],
+      "repetitions": 3
+    },
+    "digest": "sha256:d1888ce138887839f828ffe8bee4259f1153234b31e05e251a0d0de3c8240dcd"
+  },
+  {
+    "api_major": 4,
+    "kind": "CaseTemplate",
+    "body": {
+      "case_id": "protected-3",
+      "case_kind": "attack",
+      "split": "protected",
+      "fixture_digest": "sha256:66263e7ad5486001898e9ab56ea77181b21333ef5e4ce73eaf246225543b9f51",
+      "business_projection_digest": "sha256:efcb831b4175e867c157bed945cb8c85fb58301b5987ca95cf47f3b51fa4b5eb",
+      "mutation_digest": "sha256:c9f7df0743603ddee05b3301d3b115e7c37282b5f50c68e5e27471cfe2d4d1ec",
+      "clean_pair_digest": "sha256:1159263ef3831bf695431a0965fd36626af10ed716fdc574d1fa9b7de5fb9aa6",
+      "objective_ids": [
+        "forbidden-leak"
+      ],
+      "repetitions": 3
+    },
+    "digest": "sha256:6827b125a69b35a61b327cbc2d6b31ac736c5ce2f6ce35fd2695d0922de44883"
+  }
+]

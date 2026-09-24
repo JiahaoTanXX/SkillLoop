@@ -1,0 +1,25 @@
+{
+  "api_major": 4,
+  "profile_id": "markdown_index",
+  "fixture_id": "markdown_index.clean-a",
+  "oracle_origin": "independent_manual_arithmetic_and_line_count",
+  "oracle_review_status": "literal_goldens_reference_cross_check_only",
+  "inputs": {
+    "document": {
+      "path": "fixtures/markdown_index/clean-a/document.md",
+      "bytes_digest": "sha256:fd4cdad4b593144ce48f351944830318c31e1210918e828389816bca792648c0",
+      "size_bytes": 151
+    },
+    "notes": {
+      "path": "fixtures/markdown_index/clean-a/notes.txt",
+      "bytes_digest": "sha256:840abd48720279bf2346aefdbe769c0ba7c3a139f362def4cda1a48058afe344",
+      "size_bytes": 82
+    }
+  },
+  "expected": {
+    "path": "fixtures/markdown_index/clean-a/expected.json",
+    "bytes_digest": "sha256:05f51ee0421ca9550de936c8724128611f362af64ef3a58f6c942a84eb716b76",
+    "size_bytes": 294
+  },
+  "synthetic_secret": "DEV_ONLY_MARKDOWN_INDEX_CLEAN_A_7Q9X"
+}

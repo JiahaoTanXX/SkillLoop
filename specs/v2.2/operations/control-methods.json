@@ -1,0 +1,409 @@
+{
+  "spec_version": "2.2",
+  "api_major": 4,
+  "kind": "ControlMethodRegistry",
+  "schema": "control.schema.json",
+  "digest_lookup": "authenticated_protected_store_only; content hash never authenticates issuer",
+  "request_reply_digest_projection": "JCS({api_major,kind,body}); digest omitted",
+  "methods": [
+    {
+      "method": "activate_approval",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ApprovalResult",
+      "allowed_roles": [
+        "controller"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "revoke_approval",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ApprovalResult",
+      "allowed_roles": [
+        "controller"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "start_run",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "Lease",
+      "allowed_roles": [
+        "controller"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "cancel_run",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "CancellationResult",
+      "allowed_roles": [
+        "controller"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "recover_operation",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "RecoveryResult",
+      "allowed_roles": [
+        "controller"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": false,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "reserve_campaign",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "CampaignInspection",
+      "allowed_roles": [
+        "controller"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "register_call_batch",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "RegistrationResult",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": false,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "read_resource",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ToolResult",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "build_artifact",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ToolResult",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "write_artifact",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ToolResult",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "validate_artifact",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ToolResult",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "prepare_publication",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ToolResult",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "publish_artifact",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ToolResult",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "record_terminal_output",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ObjectAck",
+      "allowed_roles": [
+        "runtime"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "create_epoch",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "EpochRecord",
+      "allowed_roles": [
+        "protected_evaluator"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "reserve_protected_session",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ProtectedSession",
+      "allowed_roles": [
+        "protected_evaluator"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "resolve_private_case",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "PrivateCaseAccess",
+      "allowed_roles": [
+        "protected_evaluator"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "read_private_evidence",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "EvidenceIndex",
+      "allowed_roles": [
+        "protected_evaluator",
+        "gate"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "read_authoritative_manifest",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "SuiteManifest",
+      "allowed_roles": [
+        "gate"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "write_gate_result",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ObjectAck",
+      "allowed_roles": [
+        "gate"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "read_dev_evidence",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "EvidenceIndex",
+      "allowed_roles": [
+        "generator",
+        "patcher"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "write_attack_proposal",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ObjectAck",
+      "allowed_roles": [
+        "generator"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "write_patch_proposal",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ObjectAck",
+      "allowed_roles": [
+        "patcher"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "read_import_snapshot",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "SourceSnapshot",
+      "allowed_roles": [
+        "scanner"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "write_scan_report",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ObjectAck",
+      "allowed_roles": [
+        "scanner"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "read_public_projection",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "PublicReport",
+      "allowed_roles": [
+        "report"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "approve_domain",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ApprovalResult",
+      "allowed_roles": [
+        "admin"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "approve_factory",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ApprovalResult",
+      "allowed_roles": [
+        "admin"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "review_finding",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "FindingDisposition",
+      "allowed_roles": [
+        "admin"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "retire_history",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "HistoryRetirement",
+      "allowed_roles": [
+        "admin"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "export",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ArchiveManifest",
+      "allowed_roles": [
+        "admin"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "archive",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "ArchiveResult",
+      "allowed_roles": [
+        "admin"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "restore",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "RestoreResult",
+      "allowed_roles": [
+        "admin"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "infer_current_context",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "InferenceResult",
+      "allowed_roles": [
+        "runtime",
+        "generator",
+        "patcher",
+        "model_gateway"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": true,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    },
+    {
+      "method": "get_operation",
+      "request_params_schema": "control.schema.json#/$defs/ControlRequest",
+      "result_kind": "OperationStatus",
+      "allowed_roles": [
+        "controller",
+        "runtime",
+        "protected_evaluator",
+        "gate",
+        "generator",
+        "patcher",
+        "scanner",
+        "report",
+        "admin",
+        "model_gateway"
+      ],
+      "timeout_seconds": 10,
+      "async_allowed": false,
+      "cancellation": "stop_new_effects_then_persist_cancel; late_reply_quarantined"
+    }
+  ]
+}

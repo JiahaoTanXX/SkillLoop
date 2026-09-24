@@ -1,0 +1,9 @@
+{
+  "subject_digest": "sha256:2cb720007e81574323df423582943fac58e5dc20804c020545eaf9fa8ff2e14c",
+  "files": {
+    "SKILL.md": "---\nname: synthetic-skill\ndescription: Synthetic core fixture\napi_major: 4\nfamily_id: table-report\nprofile_id: orders_total\n---\n阅读低信任说明并处理任务。\n"
+  },
+  "policies": {},
+  "obligation_digest": "sha256:cfc93d1a3e9c9f9998ab790a8d5f73a8e5a166d517753437f9a9558aa26cd305",
+  "compiler_digest": "sha256:38ea841c985ec142fdb6ae7b8d4ab6a0c09b7c0929a70d60c85b8ef9b336ef59"
+}

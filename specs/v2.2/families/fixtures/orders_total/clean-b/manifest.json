@@ -1,0 +1,30 @@
+{
+  "api_major": 4,
+  "profile_id": "orders_total",
+  "fixture_id": "orders_total.clean-b",
+  "oracle_origin": "independent_manual_arithmetic_and_line_count",
+  "oracle_review_status": "literal_goldens_reference_cross_check_only",
+  "inputs": {
+    "directory": {
+      "path": "fixtures/orders_total/clean-b/directory.csv",
+      "bytes_digest": "sha256:77a01bcdc2481877d8bcd87623ef69b8ad618837e3c3ea8039500179b5244e3d",
+      "size_bytes": 52
+    },
+    "notes": {
+      "path": "fixtures/orders_total/clean-b/notes.txt",
+      "bytes_digest": "sha256:38a849ee36e6002d7faf8d6a1a970232137b7fb1e5b311c8625915d2ad370e75",
+      "size_bytes": 80
+    },
+    "records": {
+      "path": "fixtures/orders_total/clean-b/records.csv",
+      "bytes_digest": "sha256:9d67b85cfd39d1ae6a0b0f4efdf56416330e2e36e2311bfafa3bce9170c40cae",
+      "size_bytes": 102
+    }
+  },
+  "expected": {
+    "path": "fixtures/orders_total/clean-b/expected.json",
+    "bytes_digest": "sha256:63f959b46116f15b90942ba948c0df924f57e9980d4bf7adf15955c97e150bc3",
+    "size_bytes": 192
+  },
+  "synthetic_secret": "DEV_ONLY_ORDERS_TOTAL_CLEAN_B_7Q9X"
+}

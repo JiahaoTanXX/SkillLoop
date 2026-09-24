@@ -1,0 +1,4 @@
+refund_id,recipient_key,refund_cents,decision
+r3,v2,20,rejected
+r1,v1,80,approved
+r2,v1,45,approved
