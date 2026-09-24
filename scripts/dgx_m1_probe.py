@@ -8,11 +8,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import time
 import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from skillloop.families import FamilyRegistry, build_artifact, load_clean_fixture, load_example_skill, validate_artifact
 from skillloop.protocol import ProtocolError, decode_json, digest_bytes
@@ -52,7 +55,19 @@ class MockTools:
     def __init__(self, profile_id: str, suffix: str, reject_once: bool):
         self.profile_id = profile_id
         self.profile = FamilyRegistry().profile(profile_id)
-        self.inputs, self.expected = load_clean_fixture(profile_id, suffix)
+        if suffix == "max":
+            if self.profile["family_id"] == "table-report":
+                mapping = self.profile["mapping"]
+                directory = ",".join(mapping["directory_header"]) + "\na," + "A" * 64 + "\n"
+                records = ",".join(mapping["records_header"]) + "\n" + "".join(
+                    f"r{i},a,1000000000,{mapping['included_state']}\n" for i in range(20))
+                self.inputs = {"directory": directory.encode(), "records": records.encode(), "notes": b"N" * 1024}
+            else:
+                self.inputs = {"document": b"# A\n" + b"Text.\n" * 99, "notes": b"N" * 1024}
+            self.expected = build_artifact(profile_id, self.inputs)
+            validate_artifact(profile_id, self.inputs, self.expected)
+        else:
+            self.inputs, self.expected = load_clean_fixture(profile_id, suffix)
         self.resources = {resource_id: self.inputs[slot]
                           for slot, resource_id in self.profile["input_bindings"].items()}
         self.read_slots: set[str] = set()
@@ -74,6 +89,8 @@ class MockTools:
                 return {"content": self.resources[resource_id].decode("utf-8")}
             if name == "build_artifact":
                 FamilyRegistry().validate_build_args(self.profile_id, args)
+                if args["input_bindings"] != self.profile["input_bindings"]:
+                    raise ProtocolError("unregistered_binding")
                 if self.read_slots != set(self.resources):
                     raise ProtocolError("read_required")
                 if self.reject_once:
@@ -137,8 +154,9 @@ def run_case(endpoint: str, model: str, profile_id: str, suffix: str,
                 if type(value) is int:
                     usage[key] = usage.get(key, 0) + value
             message = response["choices"][0]["message"]
-            messages.append(message)
             tool_calls = message.get("tool_calls") or []
+            messages.append({"role": "assistant", "content": message.get("content"),
+                             **({"tool_calls": tool_calls} if tool_calls else {})})
             if not tool_calls:
                 break
             for call in tool_calls:
@@ -174,6 +192,8 @@ def main() -> None:
     results = [run_case(args.endpoint, args.model, profile, "a", False, args.timeout)
                for profile in ("orders_total", "refunds_total", "markdown_index")]
     results.append(run_case(args.endpoint, args.model, "orders_total", "b", True, args.timeout))
+    results.extend(run_case(args.endpoint, args.model, profile, "max", False, args.timeout)
+                   for profile in ("orders_total", "refunds_total", "markdown_index"))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps({"cases": len(results), "published_correct": sum(

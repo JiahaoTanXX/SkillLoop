@@ -72,3 +72,17 @@ def load_example_skill(profile_id: str, root: Path = FAMILY_SPEC) -> bytes:
     if fields["name"] != skill_id or fields["profile_id"] != profile_id or fields["family_id"] != manifest["family_id"]:
         raise ProtocolError("skill_identity")
     return raw
+
+
+def make_dev_fixture(profile_id: str, seed: bytes) -> tuple[dict[str, bytes], bytes, dict]:
+    """Construct a fresh deterministic development case via the reference factory.
+
+    This is not a protected holdout service. M7 supplies private CSPRNG seeds,
+    persistence, access control, and replay checks.
+    """
+    if profile_id not in PROFILE_IDS or type(seed) is not bytes or len(seed) != 32:
+        raise ProtocolError("dev_fixture_arguments")
+    from scripts import spec_v22_families as reference
+
+    inputs, expected, metadata = reference.private_fixture(profile_id, seed)
+    return inputs, expected, metadata

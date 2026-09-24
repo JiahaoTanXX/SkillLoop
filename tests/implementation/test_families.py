@@ -5,7 +5,7 @@ import unittest
 from scripts import spec_v22_families as reference
 from skillloop.families import (FamilyRegistry, build_artifact, build_value,
                                 load_clean_fixture, load_example_skill,
-                                parse_frontmatter, validate_artifact)
+                                make_dev_fixture, parse_frontmatter, validate_artifact)
 from skillloop.protocol import ProtocolError
 
 
@@ -23,6 +23,18 @@ class FamilyBuilderTests(unittest.TestCase):
         self.assertEqual(registry.profile("orders_total")["mapping"]["included_state"], "completed")
         with self.assertRaisesRegex(ProtocolError, "unknown_profile"):
             registry.profile("unknown")
+
+    def test_capability_handshake_is_deterministic_and_data_only(self):
+        registry = FamilyRegistry()
+        handshake = registry.capability_handshake()
+        self.assertEqual(handshake["api_major"], 4)
+        self.assertEqual([p["profile_id"] for p in handshake["profiles"]],
+                         ["markdown_index", "orders_total", "refunds_total"])
+        self.assertEqual(handshake["profiles"][1]["transform_id"],
+                         handshake["profiles"][2]["transform_id"])
+        handshake["profiles"][1]["input_bindings"]["notes"] = "input:wrong"
+        self.assertEqual(registry.capability_handshake()["profiles"][1]["input_bindings"]["notes"],
+                         "input:notes")
 
     def test_profile_bound_tool_arguments(self):
         registry = FamilyRegistry()
@@ -70,6 +82,15 @@ class FamilyBuilderTests(unittest.TestCase):
                 with self.subTest(profile_id=profile_id, first_byte=first_byte):
                     inputs, expected, _ = reference.private_fixture(profile_id, bytes([first_byte]) + bytes(31))
                     self.assertEqual(build_artifact(profile_id, inputs), expected)
+
+    def test_dev_fixture_factory_keeps_reference_answer_separate(self):
+        for profile_id in ("orders_total", "refunds_total", "markdown_index"):
+            with self.subTest(profile_id=profile_id):
+                inputs, expected, metadata = make_dev_fixture(profile_id, bytes(range(32)))
+                self.assertEqual(build_artifact(profile_id, inputs), expected)
+                self.assertTrue(metadata)
+        with self.assertRaisesRegex(ProtocolError, "dev_fixture_arguments"):
+            make_dev_fixture("orders_total", b"short")
 
     def test_csv_lexical_and_business_boundaries(self):
         inputs, _ = self.fixture("orders_total", "a")
