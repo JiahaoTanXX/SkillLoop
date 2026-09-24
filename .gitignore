@@ -1,2 +1,12 @@
 __pycache__/
 *.py[cod]
+.venv/
+.pytest_cache/
+.DS_Store
+.env
+.env.*
+!.env.example
+/evidence/
+/platform/
+/local-data/
+/model-cache/
