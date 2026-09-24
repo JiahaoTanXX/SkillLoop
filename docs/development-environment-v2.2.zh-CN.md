@@ -40,6 +40,29 @@
 
 M0、M2 的纯合同实现现在就能开始；M1 的模型与扫描器 spike 可在获得 DGX SSH 权限后并行进行。M3 可以先写纯事务逻辑，但真 SQLite/UDS 验收必须在 DGX；M4 起的真实 Agent 路径依赖 M1、M3 完成。首版不需要把日常编辑器全部迁到 DGX，也不应把 Mac 上的模拟隔离结果当作 Linux 安全验收。
 
+## 代码如何到 DGX
+
+GitHub 仓库是代码传递通道；模型权重、密钥、原始证据和 SQLite 数据库留在 DGX 的独立目录。首次在 DGX 建立代码副本，以下命令只检出源码和运行当前的规范检查，不代表生产服务已存在：
+
+```sh
+mkdir -p "$HOME/skillloop"
+git clone https://github.com/JiahaoTanXX/SkillLoop.git "$HOME/skillloop/source"
+cd "$HOME/skillloop/source"
+git fetch origin main
+SKILLLOOP_COMMIT="PASTE_FULL_COMMIT_SHA_FROM_LOCAL"
+git checkout --detach "$SKILLLOOP_COMMIT"
+git rev-parse HEAD
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r specs/v2.2/requirements-verify.txt
+.venv/bin/python scripts/verify_specs_v22.py
+```
+
+`SKILLLOOP_COMMIT` 的值由本地 `git rev-parse HEAD` 得到。私有仓库需要给 DGX 配置只读 deploy key 或其他受控 Git 凭据，不把个人 token 写进脚本。第一次 clone 后，每次本地改动执行 `git commit`、`git push`；DGX 在干净代码目录执行 `git fetch origin main`、设置新的 `SKILLLOOP_COMMIT` 并 `git checkout --detach "$SKILLLOOP_COMMIT"`，再运行对应 milestone 的安装/测试/部署命令。正式运行记录必须保存 `git rev-parse HEAD`，不能仅记 `main`。DGX 不直接编辑这份源码；若需要热修，先提交回 GitHub，再部署新的 SHA。
+
+建议把目录分开：`~/skillloop/source` 仅存 Git 代码；`~/skillloop/model-cache` 存只读模型文件；`~/skillloop/data` 存 Proxy 数据库；`~/skillloop/evidence` 存原始取证；`~/skillloop/private` 存保护题库。后四者不在 Git 工作树内，按服务角色限制读写并单独备份。远程服务启动后，调试访问通过 SSH tunnel；不要为方便本地调用而把模型管理口或数据库直接暴露到公网。
+
+生产容器部署要等 M3/M4 实现服务入口、Dockerfile、依赖锁和迁移脚本后进行：DGX 检出准确 SHA，在 DGX 的 ARM64 环境构建镜像并锁定 digest，运行迁移与集成测试，通过后用该 digest 启动/切换受控服务。Mac 上的构建产物不能直接充当 DGX 的生产镜像。每次切换前记录旧版本与回滚点；包含模型、scanner、权限或 Gate 语义变化时重新评估，不能只重启进程沿用绿色结果。
+
 ## DGX 接入检查清单
 
 先只做只读探测并记录到 `platform/<deployment_epoch>/` 的私有目录：
