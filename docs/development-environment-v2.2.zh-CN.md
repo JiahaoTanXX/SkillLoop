@@ -1,6 +1,6 @@
 # SkillLoop V2.2 开发位置与环境方案
 
-状态：已选实施方案，待验证 DGX 实机信息。依据 [系统设计](system-design-v2.2.zh-CN.md)、[Milestones](milestones-v2.2.zh-CN.md)、[部署验收规范](../specs/v2.2/deployment.zh-CN.md)。本文件定义在哪里开发、怎样同步以及何时可以进入下一阶段；不把尚未连接的远程节点视为已配置完成。
+状态：已选实施方案，待验证 DGX 实机信息。依据 [系统设计](system-design-v2.2.zh-CN.md)、[Milestones](milestones-v2.2.zh-CN.md)、[部署验收规范](../specs/v2.2/deployment.zh-CN.md)。本文件定义在哪里开发、怎样同步以及何时可以进入下一阶段；不把尚未连接的远程节点视为已配置完成。PRD 的目标节点是 DGX Spark；如果现有远程节点是其他 DGX 型号，须先修订架构、容器和模型校准 profile，再开始对应平台验收。
 
 ## 结论：本地开发，DGX 验证和运行
 
@@ -20,7 +20,7 @@
 | --- | --- |
 | 代码版本 | GitHub `JiahaoTanXX/SkillLoop` 为源代码中心；每个 milestone 的实现与验收都绑定 commit SHA |
 | Python | 本地与 DGX 都先使用 Python 3.12 独立 `.venv`；在依赖锁中记录精确版本。当前仓库的 V2.2 参考检查依赖见 `specs/v2.2/requirements-verify.txt` |
-| DGX 系统 | Linux/aarch64；先确认实际 OS、驱动、Docker/NVIDIA Container Toolkit、磁盘和远程访问，再填 DeploymentLock |
+| DGX 系统 | PRD 目标为 DGX Spark 的 Linux/aarch64；先确认远程节点的确切型号、OS、架构、驱动、Docker/NVIDIA Container Toolkit、磁盘和远程访问，再填 DeploymentLock |
 | 模型 | 官方 `Qwen/Qwen3.8-27B-FP8`，首选 SGLang；0.5.19、16K/2K、并发 1 是 PRD 的首轮候选配置，实测后锁定权重 revision、tokenizer/template、镜像 manifest digest 和采样参数 |
 | 数据库 | 单机 SQLite WAL + FULL；Proxy 独占权威文件，模型调用不占写事务 |
 | 进程通信 | Linux `AF_UNIX/SOCK_SEQPACKET` + `SO_PEERCRED`；按注册角色分 socket/UID，模型只有推理接口 |
