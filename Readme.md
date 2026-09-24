@@ -6,6 +6,7 @@
 - 实施文档：[系统设计](docs/system-design-v2.2.zh-CN.md)与[分阶段 Milestones](docs/milestones-v2.2.zh-CN.md)。
 - 开发位置与环境：[本地 + DGX 开发方案](docs/development-environment-v2.2.zh-CN.md)。
 - 当前实施与重跑命令：[M0/M2 实施记录](docs/implementation-status-m0-m2.zh-CN.md)。
+- DGX 接入与模型锁：[M1 平台记录](docs/dgx-m1-access-report.zh-CN.md)。
 - 首版验收：表格报告与 Markdown 索引两个家族；订单、退款、文档三份被测 Skill。
 - 接口、样例与检查：[V2.2 规范附件](specs/v2.2/README.md)。
 - 固定模型及推荐后端：[Qwen3.8-27B-FP8 与 SGLang 部署验收](specs/v2.2/deployment.zh-CN.md)。
