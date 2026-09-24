@@ -32,10 +32,13 @@ TOOLS = [
     _tool("build_artifact", {"input_bindings": {"type": "object"}, "output_id": {"type": "string"},
                              "transform_id": {"type": "string"}, "expected_version": {"type": "integer"},
                              "idempotency_key": {"type": "string"}}),
-    _tool("write_artifact", {"output_id": {"type": "string"}, "content": {"type": "string"}}),
+    _tool("write_artifact", {"output_id": {"type": "string"}, "expected_version": {"type": "integer"},
+                             "content": {"type": "string"}}),
     _tool("validate_artifact", {"output_id": {"type": "string"}}),
-    _tool("prepare_publication", {"output_id": {"type": "string"}}),
-    _tool("publish_artifact", {"output_id": {"type": "string"}}),
+    _tool("prepare_publication", {"output_id": {"type": "string"},
+                                  "destination_id": {"type": "string"}}),
+    _tool("publish_artifact", {"output_id": {"type": "string"},
+                               "destination_id": {"type": "string"}}),
 ]
 
 
@@ -58,12 +61,14 @@ class MockTools:
         if suffix == "max":
             if self.profile["family_id"] == "table-report":
                 mapping = self.profile["mapping"]
-                directory = ",".join(mapping["directory_header"]) + "\na," + "A" * 64 + "\n"
+                directory = ",".join(mapping["directory_header"]) + "\n" + "".join(
+                    f"a{i:031d},{'A' * 64}\n" for i in range(20))
                 records = ",".join(mapping["records_header"]) + "\n" + "".join(
-                    f"r{i},a,1000000000,{mapping['included_state']}\n" for i in range(20))
+                    f"r{i:031d},a{i:031d},1000000000,{mapping['included_state']}\n" for i in range(20))
                 self.inputs = {"directory": directory.encode(), "records": records.encode(), "notes": b"N" * 1024}
             else:
-                self.inputs = {"document": b"# A\n" + b"Text.\n" * 99, "notes": b"N" * 1024}
+                self.inputs = {"document": b"# A\n" + (b"X" * 40 + b"\n") * 99,
+                               "notes": b"N" * 1024}
             self.expected = build_artifact(profile_id, self.inputs)
             validate_artifact(profile_id, self.inputs, self.expected)
         else:
@@ -73,6 +78,7 @@ class MockTools:
         self.read_slots: set[str] = set()
         self.built: bytes | None = None
         self.stored: bytes | None = None
+        self.version = 0
         self.validated = False
         self.prepared = False
         self.published = False
@@ -93,21 +99,35 @@ class MockTools:
                     raise ProtocolError("unregistered_binding")
                 if self.read_slots != set(self.resources):
                     raise ProtocolError("read_required")
+                if self.version != 0:
+                    raise ProtocolError("artifact_exists")
                 if self.reject_once:
                     self.reject_once = False
                     raise ProtocolError("temporary_mock_rejection_retry")
                 self.built = build_artifact(self.profile_id, self.inputs)
-                return {"content": self.built.decode("utf-8"), "digest": digest_bytes(self.built)}
-            if set(args) != ({"output_id", "content"} if name == "write_artifact" else {"output_id"}):
+                self.stored = self.built
+                self.version = 1
+                return {"version": self.version, "digest": digest_bytes(self.stored)}
+            required = ({"output_id", "expected_version", "content"} if name == "write_artifact" else
+                        {"output_id", "destination_id"} if name in ("prepare_publication", "publish_artifact")
+                        else {"output_id"})
+            if set(args) != required:
                 raise ProtocolError("tool_arguments")
             if args["output_id"] != "artifact:report":
                 raise ProtocolError("unregistered_artifact")
+            if name in ("prepare_publication", "publish_artifact") and args["destination_id"] != "sink:report":
+                raise ProtocolError("unregistered_destination")
             if name == "write_artifact":
+                if type(args["expected_version"]) is not int or args["expected_version"] != self.version:
+                    raise ProtocolError("stale_version")
+                if type(args["content"]) is not str:
+                    raise ProtocolError("tool_arguments")
                 raw = args["content"].encode("utf-8")
-                if self.built is None or raw != self.built:
-                    raise ProtocolError("unexpected_artifact_bytes")
                 self.stored = raw
-                return {"digest": digest_bytes(raw)}
+                self.version += 1
+                self.validated = False
+                self.prepared = False
+                return {"version": self.version, "digest": digest_bytes(raw)}
             if name == "validate_artifact":
                 if self.stored is None:
                     raise ProtocolError("missing_artifact")
@@ -125,7 +145,7 @@ class MockTools:
                 self.published = True
                 return {"published": True}
             raise ProtocolError("unknown_tool")
-        except (ProtocolError, KeyError, TypeError, ValueError) as exc:
+        except (ProtocolError, KeyError, TypeError, ValueError, AttributeError) as exc:
             self.rejections += 1
             return {"error": str(exc)}
 
@@ -139,10 +159,13 @@ def run_case(endpoint: str, model: str, profile_id: str, suffix: str,
         {"role": "user", "content": load_example_skill(profile_id).decode("utf-8") + "\n\n" +
          "For this task, input bindings are " + json.dumps(mock.profile["input_bindings"], sort_keys=True) +
          ". Build with output_id artifact:report, transform_id " + mock.profile["operation"] +
-         ", expected_version 0 and any nonempty idempotency_key. Write the exact build content; then validate, "
-         "prepare, and publish. Read every named input before building."},
+         ", expected_version 0 and any nonempty idempotency_key. Build stores the artifact and returns its "
+         "version and digest. Then validate, prepare, and publish to destination_id sink:report. "
+         "Read every named input before building."},
     ]
     usage: dict[str, int] = {}
+    usage_by_turn: list[dict[str, int]] = []
+    finish_reasons: list[str | None] = []
     calls: list[str] = []
     latency = 0.0
     error: str | None = None
@@ -150,10 +173,15 @@ def run_case(endpoint: str, model: str, profile_id: str, suffix: str,
         try:
             response, elapsed = _request(endpoint, model, messages, timeout)
             latency += elapsed
+            turn_usage = {key: value for key, value in response.get("usage", {}).items()
+                          if type(value) is int}
+            usage_by_turn.append(turn_usage)
             for key, value in response.get("usage", {}).items():
                 if type(value) is int:
                     usage[key] = usage.get(key, 0) + value
-            message = response["choices"][0]["message"]
+            choice = response["choices"][0]
+            finish_reasons.append(choice.get("finish_reason"))
+            message = choice["message"]
             tool_calls = message.get("tool_calls") or []
             messages.append({"role": "assistant", "content": message.get("content"),
                              **({"tool_calls": tool_calls} if tool_calls else {})})
@@ -167,7 +195,7 @@ def run_case(endpoint: str, model: str, profile_id: str, suffix: str,
                     if type(args) is not dict:
                         raise ProtocolError("tool_args_not_object")
                     result = mock.call(name, args)
-                except (ProtocolError, KeyError, TypeError, ValueError) as exc:
+                except (ProtocolError, KeyError, TypeError, ValueError, AttributeError) as exc:
                     mock.rejections += 1
                     result = {"error": str(exc)}
                 messages.append({"role": "tool", "tool_call_id": call["id"], "content": json.dumps(result)})
@@ -179,6 +207,7 @@ def run_case(endpoint: str, model: str, profile_id: str, suffix: str,
     return {"profile_id": profile_id, "fixture": suffix, "reject_once": reject_once,
             "published": mock.published, "correct_bytes": mock.stored == mock.expected,
             "calls": calls, "rejections": mock.rejections, "usage": usage,
+            "usage_by_turn": usage_by_turn, "finish_reasons": finish_reasons,
             "latency_seconds": round(latency, 2), "error": error}
 
 
@@ -188,13 +217,25 @@ def main() -> None:
     parser.add_argument("--model", required=True)
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--output", type=Path, required=True)
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--only-max", action="store_true")
+    selection.add_argument("--only-short", action="store_true")
     args = parser.parse_args()
-    results = [run_case(args.endpoint, args.model, profile, "a", False, args.timeout)
-               for profile in ("orders_total", "refunds_total", "markdown_index")]
-    results.append(run_case(args.endpoint, args.model, "orders_total", "b", True, args.timeout))
-    results.extend(run_case(args.endpoint, args.model, profile, "max", False, args.timeout)
-                   for profile in ("orders_total", "refunds_total", "markdown_index"))
+    cases = [] if args.only_max else [(profile, "a", False)
+                                      for profile in ("orders_total", "refunds_total", "markdown_index")]
+    if not args.only_max:
+        cases.append(("orders_total", "b", True))
+    if not args.only_short:
+        cases.extend((profile, "max", False) for profile in ("orders_total", "refunds_total", "markdown_index"))
     args.output.parent.mkdir(parents=True, exist_ok=True)
+    results = []
+    for profile_id, suffix, reject_once in cases:
+        case = run_case(args.endpoint, args.model, profile_id, suffix, reject_once, args.timeout)
+        results.append(case)
+        args.output.with_suffix(".partial.json").write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
+        print(json.dumps({"profile_id": profile_id, "fixture": suffix, "published": case["published"],
+                          "correct_bytes": case["correct_bytes"], "error": case["error"]},
+                         ensure_ascii=False), flush=True)
     args.output.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps({"cases": len(results), "published_correct": sum(
         case["published"] and case["correct_bytes"] for case in results),

@@ -12,7 +12,7 @@ python3 -m venv .venv
 
 2026-09-24 本地执行结果：参考规范 104 项、实现测试 19 项均通过；R01–R42 均有参考测试 ID、命令和预定证据路径。`specs/v2.2/verification-report.json` 仅是参考规范结果，不是 Runtime 验收。
 
-DGX 上使用 Python 3.12.3 和相同固定依赖复跑初版实现提交 `a2f3c01`，得到 104 + 17 项通过；新增 handshake 与开发 fixture factory 的 19 项版本还需在 DGX 重跑。两端 `unicodedata.unidata_version` 均为 15.0.0；后续变更该版本需重新验证 Markdown/CSV 的 Unicode 语义和金样。
+DGX 上使用 Python 3.12.3 和相同固定依赖复跑提交 `1f8b2a670835524ecac58b2e03f8d64b0751e0c4`，得到 104 + 19 项通过。该提交归档的本地和 DGX SHA-256 均为 `17f4a28f06566ee09311287094953178111124557c0e4d7671bcfbee1750638e`。两端 `unicodedata.unidata_version` 均为 15.0.0；后续变更该版本需重新验证 Markdown/CSV 的 Unicode 语义和金样。
 
 ## 已实施
 

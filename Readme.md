@@ -7,13 +7,14 @@
 - 开发位置与环境：[本地 + DGX 开发方案](docs/development-environment-v2.2.zh-CN.md)。
 - 当前实施与重跑命令：[M0/M2 实施记录](docs/implementation-status-m0-m2.zh-CN.md)。
 - DGX 接入与模型锁：[M1 平台记录](docs/dgx-m1-access-report.zh-CN.md)。
+- 扫描器 ARM64 镜像：[固定构建输入与 smoke](deploy/scanner/README.md)。
 - 首版验收：表格报告与 Markdown 索引两个家族；订单、退款、文档三份被测 Skill。
 - 接口、样例与检查：[V2.2 规范附件](specs/v2.2/README.md)。
 - 固定模型及推荐后端：[Qwen3.8-27B-FP8 与 SGLang 部署验收](specs/v2.2/deployment.zh-CN.md)。
 - 本轮审查：[R01–R42](reviews/v2.1-2026-09-23/REVIEW.zh-CN.md)。
 - 历史快照：[V2.1](SkillLoop-PRD-v2.1.zh-CN.md)、[V2.0](SkillLoop-PRD-v2.0.zh-CN.md)。
 
-当前已有 API 4 严格线格式、两个家族三个 profile 的离线构建器及参考 oracle 交叉检查。真实 Agent、隔离部署、扫描集成、GitHub 服务和模型攻防效果仍按验收矩阵确认。
+当前已有 API 4 严格线格式、两个家族三个 profile 的离线构建器及参考 oracle 交叉检查；DGX 上的固定 Qwen 模型已完成三 profile 正常与边界输入的 mock 工具调用，扫描器 ARM64 镜像已完成离线 smoke。真实 Agent、权威 Proxy、完整离线扫描情报、隔离部署、GitHub 服务和模型攻防效果仍按验收矩阵确认。
 
 ## 仓库导航
 

@@ -1,6 +1,6 @@
 # SkillLoop V2.2 开发 Milestones
 
-状态：待实施，2026-09-24。以 [系统设计](system-design-v2.2.zh-CN.md)为实施蓝图，以 [PRD V2.2](../SkillLoop-PRD-v2.2.zh-CN.md)、[API 4 规范](../specs/v2.2/README.md)和 [验收索引](../specs/v2.2/operations/acceptance.json)为验收依据。当前仓库有规范、样例与参考测试，没有生产 Runtime、Proxy、DGX 实测或 GitHub 服务；以下 milestone 均未标记完成。
+状态：2026-09-24。以 [系统设计](system-design-v2.2.zh-CN.md)为实施蓝图，以 [PRD V2.2](../SkillLoop-PRD-v2.2.zh-CN.md)、[API 4 规范](../specs/v2.2/README.md)和 [验收索引](../specs/v2.2/operations/acceptance.json)为验收依据。M0 规范与线协议基线、M2 离线业务合同已实现并在本地与 DGX 复跑；[实现记录](implementation-status-m0-m2.zh-CN.md)界定了尚待后续里程碑验证的生产部分。M1 [平台实测](dgx-m1-access-report.zh-CN.md)进行中。M3 之后的生产 Runtime、Proxy 和 GitHub 服务尚未实施。
 
 ## 使用方法
 
