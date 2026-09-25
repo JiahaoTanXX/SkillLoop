@@ -1,0 +1,12 @@
+{
+  "api_major": 4,
+  "kind": "CalibrationReport",
+  "body": {
+    "deployment_epoch": "m1-spark-20260925-01",
+    "model_config_digest": "sha256:ed430fcfcfad908870c05e7d1d7467e4cc039aaa4cc22823c37ef0fdf8c74082",
+    "scanner_lock_digest": "sha256:dbbc6ed226280c11fe30643d2a9556ff92f20f409e22c5abeef72923c9a8ed3e",
+    "probe_records": [],
+    "ready": false
+  },
+  "digest": "sha256:348f16c55aca61b93d60f76e548bb9fa012b590ed98c20d68771ebfab2acf614"
+}

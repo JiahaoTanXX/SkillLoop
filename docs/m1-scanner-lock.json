@@ -1,0 +1,14 @@
+{
+  "kind": "M1ScannerLock",
+  "body": {
+    "source_commit": "dabf4759a189be0f0428a2f7a472b3d5bdad1fe6",
+    "image_manifest_digest": "sha256:165f1d7ae6e878970136b78bda4fb9b7cc5a52d305734f7d3b6318d6434ffe9c",
+    "image_archive_sha256": "sha256:88af38d185603b3dd2c54e4a4c9ce54fef4ce3dd381bca5e31796f824bb54d0b",
+    "dependency_lock_digest": "sha256:1786cdbe3b2a9bd5de91e5493c5cb17278e14de9b5373cff8b57fdebac0432f0",
+    "rules_digest": "sha256:f1137fe1cc4b140d6b13abac94c215dd92c1b41ab62dfef102ab62fbdd699699",
+    "offline_intelligence_lock_digest": "sha256:71f4477faeedb299c5fe0dcf48dfdae0e85718f37ea44ed9b3104a83660a1745",
+    "osv_engine_digest": "sha256:2c71403eb443d05891c4f268c3ad771cf4f16e5443463fd7851ef8f454d3c7e4",
+    "coverage_mode": "static-no-llm"
+  },
+  "digest": "sha256:dbbc6ed226280c11fe30643d2a9556ff92f20f409e22c5abeef72923c9a8ed3e"
+}
