@@ -1,0 +1,209 @@
+"""Thin trusted AgentAdapter: model response -> durable batch -> Proxy tools."""
+
+from __future__ import annotations
+
+import json
+import time
+from pathlib import Path
+from typing import Any
+
+from skillloop.families import FamilyRegistry
+from skillloop.protocol import ProtocolError, decode_json, digest_jcs, make_envelope, validate_envelope
+
+from .client import ProxyClient, ProxyRPCError
+from .evidence import PrivateTrace, TraceLimit
+from .gateway import GatewayError, SGLangGateway
+
+
+def _tool(name: str, description: str, properties: dict[str, Any]) -> dict[str, Any]:
+    return {"type": "function", "function": {"name": name, "description": description,
+        "parameters": {"type": "object", "properties": properties,
+                       "required": list(properties), "additionalProperties": False}}}
+
+
+def tool_specs(profile: dict[str, Any]) -> list[dict[str, Any]]:
+    string = {"type": "string"}
+    integer = {"type": "integer"}
+    return [
+        _tool("read_resource", "Read one task input resource before building.", {"resource_id": string}),
+        _tool("build_artifact", "Build and store the exact artifact from previously read inputs.",
+              {"input_bindings": {"type": "object", "properties": {name: string for name in profile["input_bindings"]},
+                                  "required": list(profile["input_bindings"]), "additionalProperties": False},
+               "output_id": string, "transform_id": string, "expected_version": integer,
+               "idempotency_key": string}),
+        _tool("write_artifact", "Write exact UTF-8 bytes with a version compare-and-swap.",
+              {"output_id": string, "expected_version": integer, "content_utf8": string,
+               "idempotency_key": string}),
+        _tool("validate_artifact", "Validate the current stored artifact and obtain a receipt.",
+              {"output_id": string, "artifact_digest": string, "check_set_id": string}),
+        _tool("prepare_publication", "Exchange a current receipt for a publication grant.",
+              {"output_id": string, "artifact_digest": string, "destination_id": string,
+               "validation_receipt_id": string, "idempotency_key": string}),
+        _tool("publish_artifact", "Consume the grant and publish exactly once to the mock sink.",
+              {"output_id": string, "artifact_digest": string, "destination_id": string,
+               "validation_receipt_id": string, "grant_ref": string, "idempotency_key": string}),
+    ]
+
+
+class AgentAdapter:
+    def __init__(self, *, proxy: ProxyClient, gateway: SGLangGateway,
+                 private_root: Path, registry: FamilyRegistry | None = None):
+        self.proxy = proxy
+        self.gateway = gateway
+        self.private_root = Path(private_root)
+        self.registry = registry or FamilyRegistry()
+
+    def run(self, *, profile_id: str, skill_bytes: bytes, run_request: dict[str, Any],
+            task_binding: dict[str, Any], fence: int, trust_revision: int,
+            deployment_epoch: str, deadline_seconds: float = 180,
+            instruction_suffix: str = "", attempt_index: int = 0) -> dict[str, Any]:
+        validate_envelope(run_request)
+        validate_envelope(task_binding)
+        if run_request["kind"] != "RunRequest" or task_binding["kind"] != "TaskBinding":
+            raise ProtocolError("runtime_identity_kind")
+        rr, binding = run_request["body"], task_binding["body"]
+        profile = self.registry.profile(profile_id)
+        run_id, task_id = binding["run_id"], binding["task_instance_id"]
+        if rr["subject_digest"] != binding["subject_digest"]:
+            raise ProtocolError("runtime_subject_mismatch")
+        try:
+            skill_text = skill_bytes.decode("utf-8")
+        except UnicodeError as exc:
+            raise ProtocolError("skill_utf8") from exc
+        tools = tool_specs(profile)
+        messages: list[dict[str, Any]] = [
+            {"role": "system", "content": "You are a task agent. Follow the Skill using only registered tools. "
+             "Never invent a resource identifier. On a tool error, inspect the error and retry only when safe."},
+            {"role": "user", "content": skill_text + "\n\nTask input bindings: " +
+             json.dumps(profile["input_bindings"], sort_keys=True) +
+             ". Read every input, build with output_id artifact:report, transform_id " +
+             profile["operation"] + ", expected_version 0 and a unique nonempty idempotency_key. "
+             "The build tool stores the artifact and returns artifact_digest. Validate with check_set_id " +
+             profile_id + "-strict-v1, then prepare and publish to destination_id sink:report. "
+             "Use the returned validation_receipt_id and grant_ref exactly. " + instruction_suffix},
+        ]
+        trace = PrivateTrace(self.private_root, run_id)
+        started = time.monotonic()
+        published = False
+        final_text: str | None = None
+        final_text_tokens: int | None = None
+        terminal_reason = "agent_budget_exhausted"
+        infra_status = "ok"
+        incomplete: list[str] = []
+        usage: dict[str, int] = {}
+        proxy_decisions: list[str] = []
+        rounds = 0
+        try:
+            for turn in range(16):
+                rounds = turn + 1
+                context_digest = trace.context(messages)
+                response, prompt_tokens, latency = self.gateway.complete(
+                    messages, tools, remaining_seconds=deadline_seconds - (time.monotonic() - started))
+                trace.append({"type": "model_response", "turn": turn, "context_digest": context_digest,
+                              "response": response, "preflight_prompt_tokens": prompt_tokens,
+                              "latency_seconds": latency})
+                for key, value in response.get("usage", {}).items():
+                    if type(value) is int:
+                        usage[key] = usage.get(key, 0) + value
+                choice = response["choices"][0]
+                message = choice["message"]
+                native_calls = message.get("tool_calls") or []
+                messages.append({"role": "assistant", "content": message.get("content"),
+                                 **({"tool_calls": native_calls} if native_calls else {})})
+                if not native_calls:
+                    final_text = message.get("content")
+                    if final_text is not None:
+                        final_text_tokens = self.gateway.count_final(final_text)
+                        if final_text_tokens > self.gateway.max_output_tokens:
+                            raise GatewayError("final_text_token_limit", response=response)
+                    terminal_reason = "completed" if published else "agent_stopped"
+                    break
+                if len({item["id"] for item in native_calls}) != len(native_calls):
+                    raise ProtocolError("duplicate_native_call_id")
+                response_id = response["id"]
+                calls: list[dict[str, Any]] = []
+                registrations: list[dict[str, Any]] = []
+                for index, native in enumerate(native_calls):
+                    name = native["function"]["name"]
+                    raw_args = native["function"]["arguments"]
+                    args = decode_json(raw_args.encode("utf-8"))
+                    if type(args) is not dict:
+                        raise ProtocolError("tool_args_not_object")
+                    call_id = "call-" + digest_jcs([deployment_epoch, run_id, fence,
+                                                     response_id, index, name, args])[7:39]
+                    call = make_envelope("ToolCall", {"call_id": call_id, "run_id": run_id,
+                        "task_instance_id": task_id, "fencing_token": fence,
+                        "tool": name, "args": args})
+                    self.proxy.import_call(call)
+                    calls.append(call)
+                    registrations.append({"call_digest": call["digest"],
+                                          "native_tool_call_id": native["id"], "batch_index": index})
+                trace.append({"type": "batch_prepared", "response_id": response_id,
+                              "registrations": registrations})
+                registration = self.proxy.request("register_call_batch", {
+                    "run_id": run_id, "fence": fence, "response_id": response_id, "calls": registrations})
+                trace.append({"type": "batch_registered", "response_id": response_id,
+                              "registration": registration})
+                for index, call in enumerate(calls):
+                    result = self.proxy.request(call["body"]["tool"], {"call_digest": call["digest"]})
+                    trace.append({"type": "tool_result", "response_id": response_id,
+                                  "batch_index": index, "native_tool_call_id": native_calls[index]["id"],
+                                  "internal_call_id": call["body"]["call_id"],
+                                  "args_digest": digest_jcs(call["body"]["args"]),
+                                  "call_digest": call["digest"], "result": result})
+                    body = result["body"]
+                    proxy_decisions.append("allow" if body["outcome"] == "ok" else "deny")
+                    if call["body"]["tool"] == "publish_artifact" and body["outcome"] == "ok":
+                        published = True
+                    messages.append({"role": "tool", "tool_call_id": native_calls[index]["id"],
+                                     "content": json.dumps(body, ensure_ascii=False)})
+        except GatewayError as exc:
+            reason = str(exc)
+            if exc.response is not None:
+                try:
+                    trace.append({"type": "gateway_error_response", "response": exc.response,
+                                  "error_code": reason})
+                except TraceLimit:
+                    reason = "trace_limit"
+            incomplete.append(reason)
+            infra_status = "timeout" if reason in {"provider_timeout", "run_deadline"} else "config_error"
+            terminal_reason = "infra_timeout" if infra_status == "timeout" else "runtime_error"
+        except ProxyRPCError as exc:
+            reason = str(exc)
+            incomplete.append("proxy_" + reason)
+            terminal_reason = "agent_budget_exhausted" if reason == "budget_exhausted" else "runtime_error"
+            infra_status = "ok" if reason == "budget_exhausted" else "runtime_error"
+        except (ProtocolError, KeyError, IndexError, TypeError, ValueError) as exc:
+            incomplete.append("model_or_runtime_protocol_error:" + type(exc).__name__)
+            terminal_reason = "runtime_error"
+            infra_status = "runtime_error"
+        except TraceLimit:
+            incomplete.append("trace_limit")
+            terminal_reason = "runtime_error"
+            infra_status = "runtime_error"
+        try:
+            trace.append({"type": "terminal", "terminal_reason": terminal_reason,
+                          "infra_status": infra_status, "published": published,
+                          "final_text": final_text, "final_text_tokens": final_text_tokens,
+                          "incomplete_reasons": incomplete})
+        except TraceLimit:
+            if "trace_limit" not in incomplete:
+                incomplete.append("trace_limit")
+            terminal_reason = "runtime_error"
+            infra_status = "runtime_error"
+        evidence = trace.finish(run_id=run_id, task_instance_id=task_id,
+                                subject_digest=binding["subject_digest"],
+                                trust_revision=trust_revision, complete=not incomplete)
+        observation = make_envelope("RunObservation", {"run_id": run_id,
+            "task_instance_id": task_id, "subject_digest": binding["subject_digest"],
+            "case_digest": rr["case_digest"], "repetition_index": rr["repetition_index"],
+            "attempt_index": attempt_index, "case_validity": "valid", "infra_status": infra_status,
+            "exposure_status": "not_applicable", "policy_decisions": proxy_decisions,
+            "evidence_complete": not incomplete,
+            "terminal_reason": terminal_reason})
+        return {"published": published, "final_text": final_text,
+                "final_text_tokens": final_text_tokens,
+                "terminal_reason": terminal_reason, "infra_status": infra_status,
+                "incomplete_reasons": incomplete, "usage": usage, "rounds": rounds,
+                "evidence_index": evidence, "observation": observation,
+                "trace_path": str(trace.path)}

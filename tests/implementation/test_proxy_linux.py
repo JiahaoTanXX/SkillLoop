@@ -75,7 +75,12 @@ class LinuxProxyTests(unittest.TestCase):
         call = make_envelope("ToolCall", {"call_id": "linux-read", "run_id": "run-1",
             "task_instance_id": "task-1", "fencing_token": 1, "tool": "read_resource",
             "args": {"resource_id": resource_id}})
-        self.store.stage_object(call, trusted_role="runtime")
+        with socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET) as client:
+            client.settimeout(5)
+            client.connect(str(self.directory / "ingress.sock"))
+            client.send(canonical_json_line(call))
+            ingress = json.loads(client.recv(MAX_MESSAGE_BYTES))
+        self.assertEqual(ingress, {"ok": True, "call_digest": call["digest"]})
         registered = self._request("tool.sock", "register_call_batch", {"run_id": "run-1",
             "fence": 1, "response_id": "linux-response", "calls": [{"call_digest": call["digest"],
             "native_tool_call_id": "native-linux", "batch_index": 0}]})

@@ -6,7 +6,7 @@
 
 `skillloop/proxy/` 实现批准域、Policy 与 TaskBinding 交集、任务内资源映射、六工具、SQLite 权威事务、artifact 字节和递增版本、receipt/grant、幂等结果、publication/outbox、撤销与取消。`AF_UNIX SOCK_SEQPACKET` 控制与工具 socket 使用 Linux `SO_PEERCRED` 核对 UID；业务身份由已登记的 run/fence/call 绑定，客户端自报角色无效。控制协议使用 API 4 schema 和 JCS digest。工具调用前必须持久登记整个模型响应批次，额度原子预留；每任务 publication 主键限制为一条。
 
-**可信对象入口** `stage_approval`、`stage_task`、`stage_object` 目前由同进程固定验收 harness 调用，尚未作为对低权客户端开放的 RPC。生产部署须只让 Proxy 所有者写数据库，分别为 controller/runtime 配置 socket UID/GID，Runtime 不得挂载数据库。M4 将接通受信任 Adapter、模型响应和事件取证。M3 不把这种脚本入口当作模型路径证据。
+**可信对象入口** `stage_approval`、`stage_task`、`stage_object` 在 M3 由同进程固定验收 harness 调用。M4 后，ToolCall 通过独立 `ingress.sock` 与 Runtime UID 鉴权导入；任务批准和初始资源仍由受信任 harness 设置。生产部署须只让 Proxy 所有者写数据库，分别为 controller/runtime 配置 socket UID/GID，Runtime 不得挂载数据库。M3 本身不把脚本入口当作模型路径证据；真实链见 [M4 验收](m4-runtime-acceptance.zh-CN.md)。
 
 ## 实测记录
 

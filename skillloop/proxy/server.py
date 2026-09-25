@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from skillloop.protocol import ProtocolError, canonical_json_line
+from skillloop.protocol import ProtocolError, canonical_json_line, parse_envelope
 
 from .store import ProxyError, ProxyStore
 from .wire import make_control, parse_control
@@ -53,7 +53,8 @@ class ProxyServer:
     def __enter__(self) -> "ProxyServer":
         self.directory.mkdir(parents=True, exist_ok=True)
         for role, name, gid in (("controller", "control.sock", self.controller_gid),
-                                ("runtime", "tool.sock", self.runtime_gid)):
+                                ("runtime", "tool.sock", self.runtime_gid),
+                                ("runtime_ingress", "ingress.sock", self.runtime_gid)):
             path = self.directory / name
             if path.exists():
                 raise RuntimeError("socket_path_exists")
@@ -73,18 +74,19 @@ class ProxyServer:
             self._selector.unregister(listener)
             listener.close()
         self._selector.close()
-        for name in ("control.sock", "tool.sock"):
+        for name in ("control.sock", "tool.sock", "ingress.sock"):
             (self.directory / name).unlink(missing_ok=True)
 
     def serve_forever(self) -> None:
         while not self._stop.is_set():
             for key, _mask in self._selector.select(timeout=0.2):
                 connection, _address = key.fileobj.accept()
+                role_bucket = "runtime" if key.data == "runtime_ingress" else key.data
                 with self._lock:
-                    if self._active[key.data] >= 16:
+                    if self._active[role_bucket] >= 16:
                         connection.close()
                         continue
-                    self._active[key.data] += 1
+                    self._active[role_bucket] += 1
                 threading.Thread(target=self._handle, args=(connection, key.data), daemon=True).start()
 
     def stop(self) -> None:
@@ -106,6 +108,13 @@ class ProxyServer:
                 self._send(connection, {"ok": False, "error_code": "invalid_args"})
                 return
             try:
+                if socket_role == "runtime_ingress":
+                    call = parse_envelope(raw)
+                    if call["kind"] != "ToolCall":
+                        raise ProxyError("denied")
+                    digest = self.store.stage_object(call, trusted_role="runtime")
+                    self._send(connection, {"ok": True, "call_digest": digest})
+                    return
                 request = parse_control(raw)
                 result = self.dispatch(request, socket_role)
                 self._send(connection, {"ok": True, "result": result})
@@ -117,7 +126,7 @@ class ProxyServer:
         finally:
             connection.close()
             with self._lock:
-                self._active[socket_role] -= 1
+                self._active["runtime" if socket_role == "runtime_ingress" else socket_role] -= 1
 
     @staticmethod
     def _send(connection: socket.socket, value: dict[str, Any]) -> None:
