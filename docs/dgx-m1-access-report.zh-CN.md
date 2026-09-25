@@ -84,6 +84,8 @@ DGX 私有原始记录保留在 `~/skillloop/platform/`，未提交模型权重�
 
 ## M1 结论与剩余门槛
 
+2026-09-25 已完成官方 PyPI/npm 离线情报与 OSV-Scanner 的本地候选适配；固定输入、测试结果及 DGX 待验收项见 [M1 离线扫描器候选记录](m1-offline-scanner-candidate.zh-CN.md)。该候选尚未在 DGX ARM64 容器验收，不能改变下文的非 ready 结论。
+
 固定模型、SGLang ARM64 镜像和三 profile 的 mock 工具可行性已在 DGX Spark 实测；原生单/多工具、解析拒绝、客户端超时、三份短路径与最大输入、一次模拟工具拒绝恢复均有结果。当前机器可承载并发 1 的这批测试；16K 上下文与 2K 输出保留为待扩大样本校准的初值。
 
 M1 的**模型可行性和 ARM64 扫描器打包可行性已确认，完整部署 readiness 仍未通过**：SkillSpector 尚缺经批准的完整离线 OSV 情报锁及可分发的正式 OCI 身份；同进程角色隔离尚无证明，后续选择独立容器生命周期并验证；生产 Runtime/Proxy 的调用预算、tokenizer 预检、取消、凭证和证据链要在 M3/M4 实测。扫描器的 `partial` 不得变成 complete，ModelConfig 与 DeploymentLock 均保持非 ready。M3 的本地事务实现可按依赖关系开始，但不能据此启动正式评估。

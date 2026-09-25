@@ -1,0 +1,24 @@
+{
+  "source": "https://google.github.io/osv.dev/data/",
+  "engine": "https://github.com/google/osv-scanner/releases/tag/v2.6.0",
+  "files": [
+    {
+      "name": "osv-scanner",
+      "path": "osv-scanner",
+      "bytes": 53608608,
+      "sha256": "2c71403eb443d05891c4f268c3ad771cf4f16e5443463fd7851ef8f454d3c7e4"
+    },
+    {
+      "name": "PyPI",
+      "path": "osv-scalibr/PyPI/all.zip",
+      "bytes": 34650593,
+      "sha256": "db970c784398bcf053473c9f9a3323f8d5d72b8c9fc0ed2960a26ccc074fcf25"
+    },
+    {
+      "name": "npm",
+      "path": "osv-scalibr/npm/all.zip",
+      "bytes": 216612852,
+      "sha256": "7cd52c5e0836e11f2afebc068ba10575c62d8effe7982382b5b39032c91c0cd8"
+    }
+  ]
+}

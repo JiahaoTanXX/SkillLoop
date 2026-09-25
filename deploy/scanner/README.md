@@ -20,3 +20,16 @@ docker image inspect skillloop/skillspector:m1 --format '{{.Id}} {{.Os}}/{{.Arch
 ```
 
 Run with no network, a read-only root filesystem, and only the input Skill mounted read-only. Use a separate writable report directory and a temporary filesystem for runtime scratch space. The first M1 container smokes are recorded in [the platform report](../../docs/dgx-m1-access-report.zh-CN.md). The local image ID is a measured build result; a production deployment needs an immutable registry or transferred OCI archive identity, an approved offline intelligence source, and a full coverage check.
+
+## M1 offline OSV candidate
+
+`Dockerfile.offline` adds the official OSV-Scanner 2.6.0 Linux ARM64 binary and `offline_osv.py` to the same pinned SkillSpector wheel and dependency export. The official OSV PyPI and npm `all.zip` snapshots are **runtime inputs**, not repository files or Docker build context. Their byte counts and SHA-256 values, along with the engine binary, are pinned in `offline-osv-lock.json`. The snapshot date is 2026-09-24 UTC; refreshing either snapshot requires a new lock and acceptance run.
+
+Download on a networked local machine from the [official OSV data dumps](https://google.github.io/osv.dev/data/) and the [official OSV-Scanner v2.6.0 release](https://github.com/google/osv-scanner/releases/tag/v2.6.0). Copy the two ZIP files and Linux ARM64 executable to the assigned DGX account, verify SHA-256 and byte counts against `offline-osv-lock.json`, then place the ZIP files at these exact container paths:
+
+```text
+/osv-data/osv-scalibr/PyPI/all.zip
+/osv-data/osv-scalibr/npm/all.zip
+```
+
+The container receives `/osv-data` and the Skill input read-only, plus a private tmpfs for bounded scratch files. Build from the existing pinned wheel/dependency context plus `Dockerfile.offline`, `offline_osv.py`, `offline-osv-lock.json`, and the verified `osv-scanner-linux-arm64` binary. The entrypoint verifies the engine and both data archives before scanning. It replaces the upstream SC4 HTTP lookup with `osv-scanner scan source --offline` against only those local archives. Unpinned or unsupported coordinates, missing archives, scanner errors, timeouts, and output limits must produce a coverage gap or fail preflight. This candidate requires DGX container smoke tests and a portable OCI archive digest before M1 deployment readiness can pass.
