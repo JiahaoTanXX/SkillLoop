@@ -40,7 +40,7 @@
 4. 失败时在本地修复并形成新 commit，DGX 重新检出、重跑。不得把旧 SHA 的绿色结果挪给新 SHA。
 5. 通过后合并。后续模型/镜像/模板/规则变化产生新配置身份与重评，不沿用旧证明。
 
-M0/M2 合同、[M1 平台](m1-platform-acceptance.zh-CN.md)、[M3 SQLite/UDS Proxy](m3-proxy-acceptance.zh-CN.md)与[M4 真实模型 Runtime](m4-runtime-acceptance.zh-CN.md)已完成阶段验收。M5 完整开发攻击矩阵在 DGX 验证；M6 校准前生产 ModelConfig/DeploymentLock 仍为 `ready=false`。日常编辑器保持在本地，Mac 上的模拟隔离结果不充当 Linux 安全验收。
+M0/M2 合同、[M1 平台](m1-platform-acceptance.zh-CN.md)、[M3 SQLite/UDS Proxy](m3-proxy-acceptance.zh-CN.md)与[M4 真实模型 Runtime](m4-runtime-acceptance.zh-CN.md)已完成阶段验收。[M5 公开开发矩阵](m5-development-acceptance.zh-CN.md)的 45 次必需运行已通过完整验收；M6 校准前生产 ModelConfig/DeploymentLock 仍为 `ready=false`。日常编辑器保持在本地，Mac 上的模拟隔离结果不充当 Linux 安全验收。
 
 ## 代码如何到 DGX
 
@@ -79,8 +79,8 @@ df -h
 git --version
 ```
 
-上述接入检查和 GPU 容器 smoke 已通过；实际摘要与剩余限制见 M1 平台报告。不要把 token、私钥或完整环境变量写入日志。当前只是平台可行性测试，尚未启动正式评估。
+上述接入检查和 GPU 容器 smoke 已通过；实际摘要与剩余限制见 M1 平台报告。不要把 token、私钥或完整环境变量写入日志。M5 已完成公开开发矩阵验收，私有保护评估仍待 M7。
 
 ## 开发开始条件
 
-M0–M4 的阶段门槛已通过，M5 已可在固定模型与可信 Proxy 上运行开发套件。后续开发仍以当前 milestone 的完整验收为前置条件；M6 的预算校准、M7 的私有保护评估与 M8 的 GitHub 集成通过前，不能发布正式安全绿色检查。
+M0–M5 的阶段门槛已通过，公开开发套件的 45 次必需运行均有完整 DGX 证据；下一阶段为 M6。后续开发仍以当前 milestone 的完整验收为前置条件；M6 的预算校准、M7 的私有保护评估与 M8 的 GitHub 集成通过前，不能发布正式安全绿色检查。

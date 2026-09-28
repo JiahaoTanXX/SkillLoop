@@ -15,7 +15,7 @@
 - 本轮审查：[R01–R42](reviews/v2.1-2026-09-23/REVIEW.zh-CN.md)。
 - 历史快照：[V2.1](SkillLoop-PRD-v2.1.zh-CN.md)、[V2.0](SkillLoop-PRD-v2.0.zh-CN.md)。
 
-M0/M2 线格式和业务合同、M1 平台、M3 可信事务 Proxy、M4 真实模型 Runtime 已通过阶段验收。M5 扫描覆盖、开发套件、槽位变异和可信判定已实现，完整 DGX 开发矩阵待验收。生产 `ready` 保持 false，M6–M8 的修补、保护评估和 GitHub 服务仍需逐级验证。
+M0–M5 已通过阶段验收。M5 在 DGX 完成 15 个案例、45 次必需运行，4 次原始不完整尝试保留并按预留计划补齐，实际共 49 次；业务产物正确、禁止 effect 为 0。[验收记录](docs/m5-development-acceptance.zh-CN.md)与[证据清单](milestones/M5/evidence-manifest.json)绑定精确实现提交。生产 `ready` 保持 false，M6–M8 的修补、保护评估和 GitHub 服务仍需逐级验证。
 
 ## 仓库导航
 
@@ -24,8 +24,9 @@ M0/M2 线格式和业务合同、M1 平台、M3 可信事务 Proxy、M4 真实�
 | `SkillLoop-PRD-v2.2.zh-CN.md` | 产品与语义规范 | 当前版本 |
 | `specs/v2.2/` | API 4 schema、家族 fixture、运行与部署规范 | 参考规范，生产验收待完成 |
 | `scripts/`、`tests/spec_v22/` | 规范参考函数与反例检查 | 可执行的规范检查 |
-| `skillloop/`、`tests/implementation/` | 线格式、业务家族、Proxy、Runtime、发现与判定 | M0–M4 验收通过；M5 完整验收待完成 |
-| `docs/` | 系统设计、milestones、开发环境 | 实施计划 |
+| `skillloop/`、`tests/implementation/` | 线格式、业务家族、Proxy、Runtime、发现与判定 | M0–M5 阶段验收通过 |
+| `docs/` | 系统设计、milestones、开发环境及阶段验收 | 实施与验收记录 |
+| `milestones/M5/` | 源码摘要、45 次矩阵 gate 与脱敏统计 | M5 完成 |
 | `reviews/` | 历史审查与复现材料 | 追溯资料 |
 
 原始运行证据、模型缓存、密钥和本地数据不提交到此仓库；公开报告只保存脱敏结果与不透明证据引用。后续生产代码按系统设计逐阶段加入。

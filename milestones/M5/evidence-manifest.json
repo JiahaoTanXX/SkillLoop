@@ -1,6 +1,6 @@
 {
   "milestone": "M5",
-  "status": "pending",
+  "status": "pass",
   "implementation_commit": "ff2f8ac9abf8fba1049040c7fe43da577525d735",
   "source_archive_sha256": "0c7a7c07290fd992b54b191e3324d8ea548dde7dcc39d0e398093a649c982536",
   "source_index_digest": "sha256:7f6e5931cbf678430f5dbc62dde67bd81bb278e83a2ecf9718babe886d3a969c",
@@ -13,7 +13,9 @@
       "execution_plan_digest": "sha256:0474074ca58a37f40616f8665e59a1cf79bbf66e36d3f4c1f45a6c6543085807",
       "required_cases": 5,
       "required_runs": 15,
-      "maximum_attempts": 30
+      "maximum_attempts": 30,
+      "actual_attempts": 16,
+      "complete_attempts": 15
     },
     "refunds_total": {
       "skill_digest": "sha256:0a7c90d08c4e895dbdfdc5feaf60d6c95aadca83e665dcda30578ee66c057f7d",
@@ -21,7 +23,9 @@
       "execution_plan_digest": "sha256:bff5fc8d99cf8ebf4b71e5f52ee88735b45ce40b139109724d2c63f64c996751",
       "required_cases": 5,
       "required_runs": 15,
-      "maximum_attempts": 30
+      "maximum_attempts": 30,
+      "actual_attempts": 16,
+      "complete_attempts": 15
     },
     "markdown_index": {
       "skill_digest": "sha256:658d280364a6aef6f094f84ddbaa38176ec0caa4f0722864b0ea070064328b76",
@@ -29,7 +33,9 @@
       "execution_plan_digest": "sha256:555ae9f41ce3e481e9be9b353df558cef49e722a54d81b4176ae309736b420a2",
       "required_cases": 5,
       "required_runs": 15,
-      "maximum_attempts": 30
+      "maximum_attempts": 30,
+      "actual_attempts": 17,
+      "complete_attempts": 15
     }
   },
   "required_case_count": 15,
@@ -44,6 +50,25 @@
     "dgx_skipped": 0
   },
   "private_evidence_root": "~/skillloop/platform/m5/",
-  "gate": null,
-  "production_ready": false
+  "gate": {
+    "status": "pass",
+    "development_verdict": "pass",
+    "case_count": 15,
+    "run_count": 45,
+    "attempt_count": 49,
+    "missing": [],
+    "incomplete": [],
+    "known_failures": [],
+    "digest": "sha256:44bcbb57ead2c6dd026f9522495339fe42f0183e27a86c8745d8234f8dd42979"
+  },
+  "production_ready": false,
+  "completed_at_utc": "2026-09-28T07:47:42.585837+00:00",
+  "gate_file_digest": "sha256:425b224c134ecaee5ab759582eae8bd3f5af2e1492a9132a7d12188b6f3a3334",
+  "statistics_digest": "sha256:a1a5ce88b74fb84ea4e9a0286ebe545446e6549239c008ce3343e521c5838bba",
+  "preserved_incomplete_attempts": 4,
+  "model_health": {
+    "http_status": 200,
+    "container_running": true,
+    "oom_killed": false
+  }
 }

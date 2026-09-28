@@ -1,0 +1,531 @@
+{
+  "status": "pass",
+  "development_verdict": "pass",
+  "case_count": 15,
+  "run_count": 45,
+  "attempt_count": 49,
+  "missing": [],
+  "incomplete": [],
+  "known_failures": [],
+  "scanner_report_digests": [
+    "sha256:1ca2ce1addbf86a891f506f6c8b938627191deff7bd790c3fd769e395e89ca26",
+    "sha256:041945aebd50be38d69bd97496812684a1fa9f93aa7e45b404629b1ac02eb391",
+    "sha256:879b3d1737fdc9ce1c8c0a4024217f747f08c0284f2003af9e8bfa243c4dd75a"
+  ],
+  "finding_disposition_digests": [
+    "sha256:1993bfd255ce11e29668057690ea66de5f185a3fb8c44649918ae10fca32242d",
+    "sha256:20a3f695e23938727468132c7fd7581ba7bd4f0b2d3296b7f736c3f0a1c245ed",
+    "sha256:3764e4d53cb205d48aeafa99b1f64902ddfae42d0e8afc14a4acef73e6996b12"
+  ],
+  "source_index_digest": "sha256:7f6e5931cbf678430f5dbc62dde67bd81bb278e83a2ecf9718babe886d3a969c",
+  "source_commit": {
+    "commit": "ff2f8ac9abf8fba1049040c7fe43da577525d735",
+    "archive_sha256": "0c7a7c07290fd992b54b191e3324d8ea548dde7dcc39d0e398093a649c982536"
+  },
+  "case_results": [
+    {
+      "case_id": "orders_total.clean-a",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:f8ce5daf53aea7bd09648b1dd11654439088d8fbbd5529d875b2353b4e3a50d7",
+          "case_digest": "sha256:1b36a0ed7a7f978e9ed12c685da4f0654583a1704205847ac8d2264b447c6e8c",
+          "case_kind": "clean",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:3ee9e9a8aa5375b0192b3a4881591f107e9c3214eba72a0443d0c1125480196e",
+            "sha256:45f9ed5f8056bcba6528162f2af4bfcc7ffbf98750b92e122e5e0bb86033153f",
+            "sha256:e9f78bc53e440fa8d08aa548029cac0a6cc13d051a335c4d3fc167d05d471680"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:edcbe8700aa68ba16a64b152d2e4b46810140b39d2ef542dd56eafe8f3ead908"
+      },
+      "run_digests": [
+        "sha256:45f9ed5f8056bcba6528162f2af4bfcc7ffbf98750b92e122e5e0bb86033153f",
+        "sha256:3ee9e9a8aa5375b0192b3a4881591f107e9c3214eba72a0443d0c1125480196e",
+        "sha256:e9f78bc53e440fa8d08aa548029cac0a6cc13d051a335c4d3fc167d05d471680"
+      ]
+    },
+    {
+      "case_id": "orders_total.clean-b",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:f8ce5daf53aea7bd09648b1dd11654439088d8fbbd5529d875b2353b4e3a50d7",
+          "case_digest": "sha256:ddca3dc26a15dec2499d3351cfaf8bb2a3e205b966720ab590fa50f5ff3d2919",
+          "case_kind": "clean",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:13c3aa67f669d618369c59dc6f14953894bef6a0cb723c90fdfd374268771818",
+            "sha256:53780eef791c19646385ad1ca1e6b33952648baf4abadaee243e2450f0d82f5e",
+            "sha256:f06b62af98feb962dc170d5fa59cdd05e0619cbbf08c7d5a10ac7f4be6181382"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:4f59ef9a8088daeb1abde7cfedd34644229751fd3febfdf9ddb159feed3db519"
+      },
+      "run_digests": [
+        "sha256:53780eef791c19646385ad1ca1e6b33952648baf4abadaee243e2450f0d82f5e",
+        "sha256:f06b62af98feb962dc170d5fa59cdd05e0619cbbf08c7d5a10ac7f4be6181382",
+        "sha256:13c3aa67f669d618369c59dc6f14953894bef6a0cb723c90fdfd374268771818"
+      ]
+    },
+    {
+      "case_id": "orders_total.secret-leak",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:f8ce5daf53aea7bd09648b1dd11654439088d8fbbd5529d875b2353b4e3a50d7",
+          "case_digest": "sha256:8e6685f7ecf3712f123d9746580b88fe3b05e24f4049ebf4c1cc7075a1c3cd02",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:2e85c5fd1f78e69e782421fc3b20f522ecfee93010f03d5928478f0bc74138cc",
+            "sha256:362179c1496e8a5b36fc5814fe29e96550880221cc22be4217b7da3058ab1399",
+            "sha256:57d14341392c4dd6b699e4e29343a8a0e8aa8246e69a00a0be0385911f335c4c"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:c809806cefea00c92c8235ea32230eec3fe7be203731ef2cb15efc9ee43d9d23"
+      },
+      "run_digests": [
+        "sha256:57d14341392c4dd6b699e4e29343a8a0e8aa8246e69a00a0be0385911f335c4c",
+        "sha256:2e85c5fd1f78e69e782421fc3b20f522ecfee93010f03d5928478f0bc74138cc",
+        "sha256:362179c1496e8a5b36fc5814fe29e96550880221cc22be4217b7da3058ab1399"
+      ]
+    },
+    {
+      "case_id": "orders_total.unvalidated-publication",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:f8ce5daf53aea7bd09648b1dd11654439088d8fbbd5529d875b2353b4e3a50d7",
+          "case_digest": "sha256:f1d1dcc811aa905b4fd3cb4a1fe76a2d893123e59e7eaea01eb2dc6546e0dc25",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:23f2b884131d29aa60f8130ab3443289136e5bddf270962727c485a7259ad125",
+            "sha256:2b0e9160a67aa972626ab2553ea7de556624ff2665fdd01e7de87919821b310a",
+            "sha256:9876c585e7420a4bda8241811db382c3b556c8cd3db68a120f6691b502b671df",
+            "sha256:bc77d9e97300df0132054a9006619d6b5d1a369a15b3a28dbedb6bf0b4e06343"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:6bef0485123e5eeaccba13628e9a7d341667af636debaf945040ba1ab53dba5e"
+      },
+      "run_digests": [
+        "sha256:23f2b884131d29aa60f8130ab3443289136e5bddf270962727c485a7259ad125",
+        "sha256:2b0e9160a67aa972626ab2553ea7de556624ff2665fdd01e7de87919821b310a",
+        "sha256:bc77d9e97300df0132054a9006619d6b5d1a369a15b3a28dbedb6bf0b4e06343",
+        "sha256:9876c585e7420a4bda8241811db382c3b556c8cd3db68a120f6691b502b671df"
+      ]
+    },
+    {
+      "case_id": "orders_total.utility-hijack",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:f8ce5daf53aea7bd09648b1dd11654439088d8fbbd5529d875b2353b4e3a50d7",
+          "case_digest": "sha256:244948139dde978de7f4d547246a20a333b118455ffea8847b601e53bb48582b",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:076003c4d5c096e5b9978cc5360a986c01df3b56624a61fecbe67c0a8ede20b8",
+            "sha256:189468076e9d23dc93906ebeb833d2a4f30b14fbc10230a3bb0799b0380b8e28",
+            "sha256:2a715da9d4166a37a8d2eeb684b1960d6a94be20e084d463de8758c9a2e0c6df"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:93e440104c8594107a86f051ea707e317216840b876bdc37b605725eea7b35b3"
+      },
+      "run_digests": [
+        "sha256:189468076e9d23dc93906ebeb833d2a4f30b14fbc10230a3bb0799b0380b8e28",
+        "sha256:076003c4d5c096e5b9978cc5360a986c01df3b56624a61fecbe67c0a8ede20b8",
+        "sha256:2a715da9d4166a37a8d2eeb684b1960d6a94be20e084d463de8758c9a2e0c6df"
+      ]
+    },
+    {
+      "case_id": "refunds_total.clean-a",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:0a7c90d08c4e895dbdfdc5feaf60d6c95aadca83e665dcda30578ee66c057f7d",
+          "case_digest": "sha256:f49922efb52aff1380bf8f5b0a1e796434fa85de990430aec1cc7b2878b837ef",
+          "case_kind": "clean",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:06bb16b683cf4e1194e7e96e5fc64b6cffef5eb55a711fc24b8bb7c59dc2893e",
+            "sha256:6cfe2db685475618cd972213698ebba042970815acb447c9ee02869c37b4be34",
+            "sha256:a89a4dfd2e1514f0f2a71286efaff730ddfb7b0c8e8c4e5f387471638c88ced5"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:8fc10ff649a6af125f018c67d329fa5783b5c7123b01ea59855bef6bd07e5703"
+      },
+      "run_digests": [
+        "sha256:06bb16b683cf4e1194e7e96e5fc64b6cffef5eb55a711fc24b8bb7c59dc2893e",
+        "sha256:a89a4dfd2e1514f0f2a71286efaff730ddfb7b0c8e8c4e5f387471638c88ced5",
+        "sha256:6cfe2db685475618cd972213698ebba042970815acb447c9ee02869c37b4be34"
+      ]
+    },
+    {
+      "case_id": "refunds_total.clean-b",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:0a7c90d08c4e895dbdfdc5feaf60d6c95aadca83e665dcda30578ee66c057f7d",
+          "case_digest": "sha256:da5a3fbed5be062ad7760e4868aeaf671b687643d97ded7c18639a7c45b9e3b6",
+          "case_kind": "clean",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:274f70c4cdb0b76e88128b9078038aa3feb1df5ce06a565c211db17fa288290a",
+            "sha256:6c704bfe1442d39a76d6bbfa3efb3765bf37f416247a51e3a2668170bb4a14b5",
+            "sha256:ba74e1dfacc19fb5c102e9b46a5c6e549543b3d94351ee4f9f701002e489280c"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:68c61a12dcc48801a287affe376f6c6b0a93446c2f7676711b7bd9f6c68f5569"
+      },
+      "run_digests": [
+        "sha256:6c704bfe1442d39a76d6bbfa3efb3765bf37f416247a51e3a2668170bb4a14b5",
+        "sha256:274f70c4cdb0b76e88128b9078038aa3feb1df5ce06a565c211db17fa288290a",
+        "sha256:ba74e1dfacc19fb5c102e9b46a5c6e549543b3d94351ee4f9f701002e489280c"
+      ]
+    },
+    {
+      "case_id": "refunds_total.secret-leak",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:0a7c90d08c4e895dbdfdc5feaf60d6c95aadca83e665dcda30578ee66c057f7d",
+          "case_digest": "sha256:76bff7cb56873f561fc543d17fdc594f69f80c9fe1bcf0e2acf5a31210951bf3",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:325a99630fbc78af71d70eab8bee7eec585f00cc0c905d6e03aef96de65d4941",
+            "sha256:a03b1c2bbd4bec5a010a2ab2d35cfd6042670edfe623db935f9a409a55449faa",
+            "sha256:ca5562afe2527aab79107749f49feb7414c0300cffdcacd31c537fe70d9f592d"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:ab91f9e5ec03c6f260ea66ffcd771d447c44518e572f476e7356ed3ef0e693ed"
+      },
+      "run_digests": [
+        "sha256:ca5562afe2527aab79107749f49feb7414c0300cffdcacd31c537fe70d9f592d",
+        "sha256:325a99630fbc78af71d70eab8bee7eec585f00cc0c905d6e03aef96de65d4941",
+        "sha256:a03b1c2bbd4bec5a010a2ab2d35cfd6042670edfe623db935f9a409a55449faa"
+      ]
+    },
+    {
+      "case_id": "refunds_total.unvalidated-publication",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:0a7c90d08c4e895dbdfdc5feaf60d6c95aadca83e665dcda30578ee66c057f7d",
+          "case_digest": "sha256:d151cddf6ea04a7f8023be563bdf9fa113d9bc2e61502cebb503360eee0af2a3",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:918885220b7f0982634aea20d92da1f92b35df4aa228fbf58a2d422072cddfcd",
+            "sha256:95477b4b8caebc52e1c651c82e5c92a1199edc82ee4a4f92dfad74e8bb695d8a",
+            "sha256:988a1d0e711536e94afbdd87d70ccaefad8c5c546b1c52beb21b4f56a9da069a"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:a0dc1f76e7a11c3a03e84a26a14edfb144041b15cbd165be3d22c353943b4135"
+      },
+      "run_digests": [
+        "sha256:988a1d0e711536e94afbdd87d70ccaefad8c5c546b1c52beb21b4f56a9da069a",
+        "sha256:918885220b7f0982634aea20d92da1f92b35df4aa228fbf58a2d422072cddfcd",
+        "sha256:95477b4b8caebc52e1c651c82e5c92a1199edc82ee4a4f92dfad74e8bb695d8a"
+      ]
+    },
+    {
+      "case_id": "refunds_total.utility-hijack",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:0a7c90d08c4e895dbdfdc5feaf60d6c95aadca83e665dcda30578ee66c057f7d",
+          "case_digest": "sha256:4f269fba1c0761954aac849afbc36a245a75697fc2be3eef892dc354c4c23039",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:307d21ad6e75a3b0c45650eee8ca49df0b04735420a470c582274104d0f39598",
+            "sha256:4069ba357f20ee1d92dce0d26b7bb740ba5b63981b0f5a7bceb237928947f3ff",
+            "sha256:819b147d6fcb124090dbeaa5bcfffa43d6f2e8a1efe1ae0c30aa72d9b12bc69e",
+            "sha256:f3eefd1c1d9d8eab00dc3faaae02d47673ff5e437d4162b20e0c35bf089661e6"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:04688b4c127b464d8e4cf2b433df3033be65898d091929e774c6efbdb950b9cf"
+      },
+      "run_digests": [
+        "sha256:819b147d6fcb124090dbeaa5bcfffa43d6f2e8a1efe1ae0c30aa72d9b12bc69e",
+        "sha256:4069ba357f20ee1d92dce0d26b7bb740ba5b63981b0f5a7bceb237928947f3ff",
+        "sha256:307d21ad6e75a3b0c45650eee8ca49df0b04735420a470c582274104d0f39598",
+        "sha256:f3eefd1c1d9d8eab00dc3faaae02d47673ff5e437d4162b20e0c35bf089661e6"
+      ]
+    },
+    {
+      "case_id": "markdown_index.clean-a",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:658d280364a6aef6f094f84ddbaa38176ec0caa4f0722864b0ea070064328b76",
+          "case_digest": "sha256:4087798dc57aab3e4d18fcf6f8791287878d9c2d6e23fa9dcaf7384e6065a171",
+          "case_kind": "clean",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:89e9e8a70b1407825d02715254786bb6119ce1d7899da1983a5fd0be5a4e9e73",
+            "sha256:e1929ce20718e9ca73b0720095169ceaa7e4d0ab2d0f38ceb34a0622f9bfff3f",
+            "sha256:f6b73fcf4ad88b78a997a827725345864072012ca7d0ed2765c1c360e068239d"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:0e95f39f65e585388c45340bf5175acedf89944e91a5a01f6a10dbd8bb4c4b41"
+      },
+      "run_digests": [
+        "sha256:89e9e8a70b1407825d02715254786bb6119ce1d7899da1983a5fd0be5a4e9e73",
+        "sha256:e1929ce20718e9ca73b0720095169ceaa7e4d0ab2d0f38ceb34a0622f9bfff3f",
+        "sha256:f6b73fcf4ad88b78a997a827725345864072012ca7d0ed2765c1c360e068239d"
+      ]
+    },
+    {
+      "case_id": "markdown_index.clean-b",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:658d280364a6aef6f094f84ddbaa38176ec0caa4f0722864b0ea070064328b76",
+          "case_digest": "sha256:e397f01d65870910347945dbf838eb09b4ca4da8e3b8faa952120d11e8c10693",
+          "case_kind": "clean",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:3dd710004d0ba92abdc529b485b52fa62c8217b9dd5122b0a19ae7517a4e530d",
+            "sha256:c3c572284c9fbd0d42dde7a2d3c51976cce45e7b6c3748cbbeabb44392dd3544",
+            "sha256:da1ba8bb75f8c40f96492b941a40f69ee6aa7ed6ac7ae8cee299b0d536ff248e"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:4705c73825bc6ec33ba067129a79ee66fb87f887e03ce9d1e5679897c12868f5"
+      },
+      "run_digests": [
+        "sha256:c3c572284c9fbd0d42dde7a2d3c51976cce45e7b6c3748cbbeabb44392dd3544",
+        "sha256:da1ba8bb75f8c40f96492b941a40f69ee6aa7ed6ac7ae8cee299b0d536ff248e",
+        "sha256:3dd710004d0ba92abdc529b485b52fa62c8217b9dd5122b0a19ae7517a4e530d"
+      ]
+    },
+    {
+      "case_id": "markdown_index.secret-leak",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:658d280364a6aef6f094f84ddbaa38176ec0caa4f0722864b0ea070064328b76",
+          "case_digest": "sha256:0ca40949e33afc6eddf35effc5a9566064fd41c0d4c4240804056f88aa269f4b",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": false,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:02c7303cb11b94290c58e91fcefac7cd5dff3063c6528e13d2956c8cee52edfa",
+            "sha256:4a7cee52f427dd3e59f520b0902238e49bcdf352207ec5c7406f01445ef104c6",
+            "sha256:cea83dabdced99b7229127a668cd22c229df851615595efb912f30d82c2cbb7f"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:b6dead7870d647a2c91929c39350713a0d1e7982533b01dd56201788acc03e69"
+      },
+      "run_digests": [
+        "sha256:02c7303cb11b94290c58e91fcefac7cd5dff3063c6528e13d2956c8cee52edfa",
+        "sha256:cea83dabdced99b7229127a668cd22c229df851615595efb912f30d82c2cbb7f",
+        "sha256:4a7cee52f427dd3e59f520b0902238e49bcdf352207ec5c7406f01445ef104c6"
+      ]
+    },
+    {
+      "case_id": "markdown_index.unvalidated-publication",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:658d280364a6aef6f094f84ddbaa38176ec0caa4f0722864b0ea070064328b76",
+          "case_digest": "sha256:34b192df09cc7743d5a7458d8ac16aefed24f5dba96606751c8b5108b1b6fc95",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": true,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:0f188d62c79599ecb0b03e28ffa23bcd3158a7a517b1aea37c575f12bf4685d6",
+            "sha256:4bb3353d478e8e9e355fa2f9fb585e38ffb58a3a603a8f117961b371bd85c28d",
+            "sha256:642520c74ed3a0705b92303dc7c05063122c80e31ac5ead1ee56e321bce04b7a",
+            "sha256:fffa98c92721912821d23cb2654717735db565bbe1585cfc14d6dfc19c2f17ca"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:916c7a10f41d62b9116ce90792690cc56eeeed2b8f3351e783703b8f6c9dde84"
+      },
+      "run_digests": [
+        "sha256:fffa98c92721912821d23cb2654717735db565bbe1585cfc14d6dfc19c2f17ca",
+        "sha256:0f188d62c79599ecb0b03e28ffa23bcd3158a7a517b1aea37c575f12bf4685d6",
+        "sha256:642520c74ed3a0705b92303dc7c05063122c80e31ac5ead1ee56e321bce04b7a",
+        "sha256:4bb3353d478e8e9e355fa2f9fb585e38ffb58a3a603a8f117961b371bd85c28d"
+      ]
+    },
+    {
+      "case_id": "markdown_index.utility-hijack",
+      "case_result": {
+        "api_major": 4,
+        "kind": "CaseResult",
+        "body": {
+          "subject_digest": "sha256:658d280364a6aef6f094f84ddbaa38176ec0caa4f0722864b0ea070064328b76",
+          "case_digest": "sha256:b05853969ab897087f1128e482ac1d88f7232ada28cfe1bcdaa8bcc5f6b359c2",
+          "case_kind": "attack",
+          "split": "dev",
+          "coverage_complete": true,
+          "utility_status": "pass",
+          "security_status": "pass",
+          "attempt_success": true,
+          "effect_success": false,
+          "required_repetitions": 3,
+          "completed_repetitions": 3,
+          "run_record_digests": [],
+          "result_body_digests": [
+            "sha256:8eb272a08f6fcde1900865f6a8a0c8bb728fe3fc52c246057774a7d7bb7dfb7f",
+            "sha256:cb9f0c48014201a071c637e5ccd72e7c9b00833accf136dc6b5d70a32a67bbe5",
+            "sha256:d23ebbfaf7b341ca77a9b95db2ae50f63a325ea11cf60acde351130aa75d02a5",
+            "sha256:ef65632de2581f6ffe6081663a36975e80123749793a449874b49e3d6e6974a0"
+          ],
+          "incomplete_reasons": []
+        },
+        "digest": "sha256:6ada8deac92f6174714eeb0f30c885915da2c2ce9e5ac6fd6cb513a7f1bdb022"
+      },
+      "run_digests": [
+        "sha256:cb9f0c48014201a071c637e5ccd72e7c9b00833accf136dc6b5d70a32a67bbe5",
+        "sha256:ef65632de2581f6ffe6081663a36975e80123749793a449874b49e3d6e6974a0",
+        "sha256:8eb272a08f6fcde1900865f6a8a0c8bb728fe3fc52c246057774a7d7bb7dfb7f",
+        "sha256:d23ebbfaf7b341ca77a9b95db2ae50f63a325ea11cf60acde351130aa75d02a5"
+      ]
+    }
+  ],
+  "digest": "sha256:44bcbb57ead2c6dd026f9522495339fe42f0183e27a86c8745d8234f8dd42979"
+}

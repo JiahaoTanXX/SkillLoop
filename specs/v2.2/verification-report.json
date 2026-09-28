@@ -193,7 +193,7 @@
   ],
   "input_sha256": {
     "PRD.md": "4f65cd1c6087041b3d0acd586fddff6994b6e6e5d41a5b95f85f64fed617ada5",
-    "Readme.md": "6ab7df3fdd70912dbb2cf84c02f32f22001e1310ce12427ef553877fb4faa89b",
+    "Readme.md": "e516fc30be025caa37d5197b77674657cbce2f2e2a508408ced3f835e27b599b",
     "SkillLoop-PRD-v2.2.zh-CN.md": "886088619148bafa8c9b6da85f5f8928b63eb7ed3584843b7ba6aa4a86390942",
     "scripts/spec_v22_core.py": "bab903e615c5deab029abf74bacbbb2063bcaddfb5306ce9c4ba029c0afb29fb",
     "scripts/spec_v22_families.py": "adba029830626ead19d11eabf1a7fe22cf36d7a6109a2ea47f361ecf6ee0f216",
@@ -293,7 +293,7 @@
     "review_items": 42,
     "normative_clause_ids": 39,
     "migrated_counterexamples": 15,
-    "relative_links": 76,
+    "relative_links": 78,
     "json_files_checked": 55,
     "review_source_preserved": true
   },
