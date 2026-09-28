@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import tempfile
 import unittest
+import json
 from pathlib import Path
 
+from skillloop.discovery.mutation import compile_mutation, make_dev_mutation
+from skillloop.families import FamilyRegistry, load_clean_fixture
+from skillloop.protocol import digest_bytes, make_envelope
 from skillloop.runtime.adapter import AgentAdapter
 from skillloop.runtime.evidence import MAX_TRACE_BYTES, PrivateTrace, TraceLimit
 from skillloop.runtime.gateway import GatewayError
@@ -36,6 +40,56 @@ class UnusedProxy:
 
     def request(self, _method, _params):
         raise AssertionError("unexpected tool call")
+
+
+class TwoReadGateway:
+    max_output_tokens = 2048
+
+    def __init__(self, resource_id, expected_text):
+        self.resource_id = resource_id
+        self.expected_text = expected_text
+        self.round = 0
+
+    def complete(self, messages, _tools, *, remaining_seconds):
+        self.round += 1
+        if self.round == 1:
+            calls = [{"id": f"native-{n}", "type": "function", "function": {
+                "name": "read_resource", "arguments": json.dumps({"resource_id": self.resource_id})}}
+                for n in (1, 2)]
+            message = {"role": "assistant", "content": None, "tool_calls": calls}
+        else:
+            reads = [json.loads(item["content"])["data"] for item in messages if item["role"] == "tool"]
+            assert len(reads) == 2
+            assert all(item["content_utf8"] == self.expected_text for item in reads)
+            assert len({item["rendered_bytes_digest"] for item in reads}) == 1
+            message = {"role": "assistant", "content": "Read both notes."}
+        return ({"id": f"response-{self.round}", "choices": [{"message": message}],
+                 "usage": {"prompt_tokens": 100, "completion_tokens": 8}}, 100, 0.01)
+
+    def count_final(self, text):
+        return 8
+
+
+class SourceOnlyProxy:
+    def __init__(self, source):
+        self.source = source
+        self.calls = {}
+        self.responses = []
+
+    def import_call(self, call):
+        self.calls[call["digest"]] = call
+
+    def request(self, method, params):
+        if method == "register_call_batch":
+            return {"registered": len(params["calls"])}
+        assert method == "read_resource"
+        call = self.calls[params["call_digest"]]
+        result = make_envelope("ToolResult", {"call_id": call["body"]["call_id"],
+            "tool": method, "outcome": "ok", "data": {"content_utf8": self.source.decode(),
+            "source_bytes_digest": digest_bytes(self.source),
+            "rendered_bytes_digest": digest_bytes(self.source)}})
+        self.responses.append(result)
+        return result
 
 
 class RuntimeTests(unittest.TestCase):
@@ -73,6 +127,47 @@ class RuntimeTests(unittest.TestCase):
             trace.append({"content": "A" * MAX_TRACE_BYTES})
         self.assertEqual(trace.size, 0)
         trace.file.close()
+
+    def test_mutation_repeats_only_in_model_view_not_proxy_source(self):
+        profile = FamilyRegistry().profile("orders_total")
+        source = load_clean_fixture("orders_total", "a")[0]["notes"]
+        payload = b"Injected note.\n"
+        mutation = compile_mutation(make_dev_mutation(profile_id="orders_total",
+            source_bytes=source, payload_bytes=payload), source_bytes=source,
+            profile_id="orders_total", count_tokens=lambda _: 50)
+        proxy = SourceOnlyProxy(source)
+        gateway = TwoReadGateway(profile["input_bindings"]["notes"], (source + payload).decode())
+        result = AgentAdapter(proxy=proxy, gateway=gateway,
+            private_root=Path(self.temp.name) / "mutated").run(
+            profile_id="orders_total", skill_bytes=b"Use the registered tools.",
+            run_request=self.request, task_binding=self.binding,
+            fence=1, trust_revision=1, deployment_epoch="test", rendered_mutation=mutation)
+        self.assertEqual(result["exposure_status"], "exposed")
+        self.assertEqual(result["mutation_reads"], 2)
+        self.assertTrue(all(item["body"]["data"]["content_utf8"] == source.decode()
+                            for item in proxy.responses))
+
+    def test_prepared_delivery_without_model_response_is_not_claimed_exposed(self):
+        profile = FamilyRegistry().profile("orders_total")
+        source = load_clean_fixture("orders_total", "a")[0]["notes"]
+        mutation = compile_mutation(make_dev_mutation(profile_id="orders_total",
+            source_bytes=source, payload_bytes=b"Injected note.\n"), source_bytes=source,
+            profile_id="orders_total", count_tokens=lambda _: 50)
+        class FailedAfterRead(TwoReadGateway):
+            def complete(self, messages, tools, *, remaining_seconds):
+                if self.round:
+                    raise GatewayError("context_exceeded")
+                return super().complete(messages, tools, remaining_seconds=remaining_seconds)
+        result = AgentAdapter(proxy=SourceOnlyProxy(source),
+            gateway=FailedAfterRead(profile["input_bindings"]["notes"], mutation.rendered_utf8),
+            private_root=Path(self.temp.name) / "not-exposed").run(
+            profile_id="orders_total", skill_bytes=b"Use the registered tools.",
+            run_request=self.request, task_binding=self.binding,
+            fence=1, trust_revision=1, deployment_epoch="test", rendered_mutation=mutation)
+        self.assertEqual(result["mutation_reads"], 2)
+        self.assertEqual(result["exposed_reads"], 0)
+        self.assertEqual(result["exposure_status"], "context_exceeded")
+        self.assertFalse(result["evidence_index"]["body"]["complete"])
 
 
 if __name__ == "__main__":

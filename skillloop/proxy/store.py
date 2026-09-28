@@ -732,3 +732,18 @@ class ProxyStore:
         with closing(self._connect()) as db:
             row = db.execute("SELECT * FROM publications WHERE task_instance_id=?", (task_instance_id,)).fetchone()
             return dict(row) if row is not None else None
+
+    def inspect_publication_proof(self, task_instance_id: str) -> dict[str, Any] | None:
+        """Read the committed publication and its durable grant and receipt chain."""
+        with closing(self._connect()) as db:
+            publication = db.execute("SELECT * FROM publications WHERE task_instance_id=?",
+                                     (task_instance_id,)).fetchone()
+            if publication is None:
+                return None
+            grant = db.execute("SELECT * FROM grants WHERE grant_ref=?",
+                               (publication["grant_ref"],)).fetchone()
+            receipt = db.execute("SELECT * FROM receipts WHERE receipt_id=?",
+                                 (grant["receipt_id"],)).fetchone() if grant else None
+            return {"publication": dict(publication),
+                    "grant": dict(grant) if grant else None,
+                    "receipt": dict(receipt) if receipt else None}

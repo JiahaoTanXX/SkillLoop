@@ -27,10 +27,15 @@ def stamp(offset_seconds: int = 0) -> str:
         "%Y-%m-%dT%H:%M:%SZ")
 
 
-def fixture(profile_id: str = "orders_total") -> tuple[dict, dict, dict, dict, dict, dict[str, bytes]]:
+def fixture(profile_id: str = "orders_total", *, suffix: str = "a",
+            subject_digest: str | None = None, case_digest: str | None = None,
+            suite_digest: str | None = None, plan_digest: str | None = None,
+            repetition_index: int = 0, run_id: str = "run-1",
+            task_instance_id: str = "task-1", config_digest: str | None = None,
+            initial_world_digest: str | None = None) -> tuple[dict, dict, dict, dict, dict, dict[str, bytes]]:
     registry = FamilyRegistry()
     profile = registry.profile(profile_id)
-    inputs, _expected = load_clean_fixture(profile_id, "a")
+    inputs, _expected = load_clean_fixture(profile_id, suffix)
     contract = digest_jcs(profile)
     slots = [{"slot": name, "resource_class": "input", "allowed_access": ["read"],
               "tenant_id": "tenant-a"} for name in profile["input_bindings"]]
@@ -70,15 +75,16 @@ def fixture(profile_id: str = "orders_total") -> tuple[dict, dict, dict, dict, d
     slot_bindings = [{"slot": name, "resource_id": resource_id} for name, resource_id in profile["input_bindings"].items()]
     slot_bindings += [{"slot": "output", "resource_id": "artifact:report"},
                       {"slot": "destination", "resource_id": "sink:report"}]
-    subject = digest_jcs({"profile_id": profile_id, "skill": "clean-a"})
-    binding = make_envelope("TaskBinding", {"task_instance_id": "task-1", "run_id": "run-1",
+    subject = subject_digest or digest_jcs({"profile_id": profile_id, "skill": "clean-a"})
+    binding = make_envelope("TaskBinding", {"task_instance_id": task_instance_id, "run_id": run_id,
         "subject_digest": subject, "domain_digest": domain["digest"], "tenant_id": "tenant-a",
         "resources": resources, "slot_bindings": slot_bindings})
     synthetic = digest_jcs("m3-local-fixture")
     run_request = make_envelope("RunRequest", {"subject_digest": subject,
-        "case_digest": synthetic, "suite_digest": synthetic, "plan_digest": synthetic,
-        "config_digest": synthetic, "authorization_domain_digest": domain["digest"],
-        "initial_world_digest": synthetic, "repetition_index": 0})
+        "case_digest": case_digest or synthetic, "suite_digest": suite_digest or synthetic,
+        "plan_digest": plan_digest or synthetic,
+        "config_digest": config_digest or synthetic, "authorization_domain_digest": domain["digest"],
+        "initial_world_digest": initial_world_digest or synthetic, "repetition_index": repetition_index})
     approval = make_envelope("ApprovalRecord", {"approval_id": "approval-1",
         "authorization_domain_digest": domain["digest"], "contract_digest": contract,
         "factory_rule_digest": synthetic, "config_digest": synthetic, "issuer": "administrator",

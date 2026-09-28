@@ -40,7 +40,7 @@
 4. 失败时在本地修复并形成新 commit，DGX 重新检出、重跑。不得把旧 SHA 的绿色结果挪给新 SHA。
 5. 通过后合并。后续模型/镜像/模板/规则变化产生新配置身份与重评，不沿用旧证明。
 
-M0、M2 的纯合同实现已完成首轮本地/DGX 复跑；M1 模型与扫描器 spike 在 DGX 进行中。M3 可以接着在本地写事务逻辑，但真实 SQLite/UDS 验收必须在 DGX；M4 起的真实 Agent 路径依赖 M1、M3 完成。日常编辑器保持在本地，Mac 上的模拟隔离结果不充当 Linux 安全验收。
+M0/M2 合同、[M1 平台](m1-platform-acceptance.zh-CN.md)、[M3 SQLite/UDS Proxy](m3-proxy-acceptance.zh-CN.md)与[M4 真实模型 Runtime](m4-runtime-acceptance.zh-CN.md)已完成阶段验收。M5 完整开发攻击矩阵在 DGX 验证；M6 校准前生产 ModelConfig/DeploymentLock 仍为 `ready=false`。日常编辑器保持在本地，Mac 上的模拟隔离结果不充当 Linux 安全验收。
 
 ## 代码如何到 DGX
 
@@ -83,4 +83,4 @@ git --version
 
 ## 开发开始条件
 
-M0/M2 已有离线实现，固定模型在目标节点已能完成三 profile 的最大输入与短路径 mock 工具调用；完整 M1 readiness 仍取决于预算校准、扫描覆盖和角色隔离证据。可以开始不依赖 M1 的 M3 实现；M3/M4 的真实权限和 Agent 路径通过前不能宣称系统可运行，M7/M8 的保护与 CI 通过前不能发布正式安全绿色检查。具体实施以每个 milestone 的出门条件逐级推进。
+M0–M4 的阶段门槛已通过，M5 已可在固定模型与可信 Proxy 上运行开发套件。后续开发仍以当前 milestone 的完整验收为前置条件；M6 的预算校准、M7 的私有保护评估与 M8 的 GitHub 集成通过前，不能发布正式安全绿色检查。

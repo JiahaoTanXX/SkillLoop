@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Any
 
 from skillloop.families import FamilyRegistry
-from skillloop.protocol import ProtocolError, decode_json, digest_jcs, make_envelope, validate_envelope
+from skillloop.protocol import ProtocolError, decode_json, digest_bytes, digest_jcs, make_envelope, validate_envelope
+from skillloop.discovery.mutation import RenderedMutation
 
 from .client import ProxyClient, ProxyRPCError
 from .evidence import PrivateTrace, TraceLimit
@@ -56,7 +57,8 @@ class AgentAdapter:
     def run(self, *, profile_id: str, skill_bytes: bytes, run_request: dict[str, Any],
             task_binding: dict[str, Any], fence: int, trust_revision: int,
             deployment_epoch: str, deadline_seconds: float = 180,
-            instruction_suffix: str = "", attempt_index: int = 0) -> dict[str, Any]:
+            instruction_suffix: str = "", attempt_index: int = 0,
+            rendered_mutation: RenderedMutation | None = None) -> dict[str, Any]:
         validate_envelope(run_request)
         validate_envelope(task_binding)
         if run_request["kind"] != "RunRequest" or task_binding["kind"] != "TaskBinding":
@@ -92,6 +94,9 @@ class AgentAdapter:
         incomplete: list[str] = []
         usage: dict[str, int] = {}
         proxy_decisions: list[str] = []
+        mutation_reads = 0
+        exposed_reads = 0
+        exposed = False
         rounds = 0
         try:
             for turn in range(16):
@@ -99,6 +104,12 @@ class AgentAdapter:
                 context_digest = trace.context(messages)
                 response, prompt_tokens, latency = self.gateway.complete(
                     messages, tools, remaining_seconds=deadline_seconds - (time.monotonic() - started))
+                if rendered_mutation is not None and mutation_reads > exposed_reads:
+                    exposed = True
+                    exposed_reads = mutation_reads
+                    trace.append({"type": "mutation_exposure", "context_digest": context_digest,
+                        "read_sequence": exposed_reads,
+                        "rendered_bytes_digest": rendered_mutation.rendered_digest})
                 trace.append({"type": "model_response", "turn": turn, "context_digest": context_digest,
                               "response": response, "preflight_prompt_tokens": prompt_tokens,
                               "latency_seconds": latency})
@@ -155,8 +166,28 @@ class AgentAdapter:
                     proxy_decisions.append("allow" if body["outcome"] == "ok" else "deny")
                     if call["body"]["tool"] == "publish_artifact" and body["outcome"] == "ok":
                         published = True
+                    model_body = body
+                    if (rendered_mutation is not None and call["body"]["tool"] == "read_resource" and
+                        call["body"]["args"]["resource_id"] == profile["input_bindings"]["notes"] and
+                        body["outcome"] == "ok"):
+                        source = body["data"]["content_utf8"].encode("utf-8")
+                        if (body["data"]["source_bytes_digest"] != rendered_mutation.source_digest or
+                            body["data"]["rendered_bytes_digest"] != rendered_mutation.source_digest or
+                            digest_bytes(source) != rendered_mutation.source_digest):
+                            raise ProtocolError("mutation_source_mismatch")
+                        mutation_reads += 1
+                        model_body = {**body, "data": {**body["data"],
+                            "content_utf8": rendered_mutation.rendered_utf8,
+                            "rendered_bytes_digest": rendered_mutation.rendered_digest}}
+                        trace.append({"type": "mutation_delivery", "read_sequence": mutation_reads,
+                            "source_bytes_digest": rendered_mutation.source_digest,
+                            "payload_bytes_digest": rendered_mutation.payload_digest,
+                            "rendered_bytes_digest": rendered_mutation.rendered_digest,
+                            "mutation_digest": rendered_mutation.spec["digest"],
+                            "rendered_token_count": rendered_mutation.rendered_token_count,
+                            "native_tool_call_id": native_calls[index]["id"]})
                     messages.append({"role": "tool", "tool_call_id": native_calls[index]["id"],
-                                     "content": json.dumps(body, ensure_ascii=False)})
+                                     "content": json.dumps(model_body, ensure_ascii=False)})
         except GatewayError as exc:
             reason = str(exc)
             if exc.response is not None:
@@ -181,6 +212,8 @@ class AgentAdapter:
             incomplete.append("trace_limit")
             terminal_reason = "runtime_error"
             infra_status = "runtime_error"
+        if rendered_mutation is not None and mutation_reads and not exposed and not incomplete:
+            incomplete.append("mutation_delivery_unconfirmed")
         try:
             trace.append({"type": "terminal", "terminal_reason": terminal_reason,
                           "infra_status": infra_status, "published": published,
@@ -194,15 +227,20 @@ class AgentAdapter:
         evidence = trace.finish(run_id=run_id, task_instance_id=task_id,
                                 subject_digest=binding["subject_digest"],
                                 trust_revision=trust_revision, complete=not incomplete)
+        exposure = ("not_applicable" if rendered_mutation is None else "exposed" if exposed else
+                    "context_exceeded" if "context_exceeded" in incomplete else
+                    "delivery_failed" if incomplete or mutation_reads else "not_read")
         observation = make_envelope("RunObservation", {"run_id": run_id,
             "task_instance_id": task_id, "subject_digest": binding["subject_digest"],
             "case_digest": rr["case_digest"], "repetition_index": rr["repetition_index"],
             "attempt_index": attempt_index, "case_validity": "valid", "infra_status": infra_status,
-            "exposure_status": "not_applicable", "policy_decisions": proxy_decisions,
+            "exposure_status": exposure, "policy_decisions": proxy_decisions,
             "evidence_complete": not incomplete,
             "terminal_reason": terminal_reason})
         return {"published": published, "final_text": final_text,
                 "final_text_tokens": final_text_tokens,
+                "exposure_status": exposure, "mutation_reads": mutation_reads,
+                "exposed_reads": exposed_reads,
                 "terminal_reason": terminal_reason, "infra_status": infra_status,
                 "incomplete_reasons": incomplete, "usage": usage, "rounds": rounds,
                 "evidence_index": evidence, "observation": observation,

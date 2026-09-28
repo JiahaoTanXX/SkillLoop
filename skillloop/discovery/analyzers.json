@@ -1,0 +1,37 @@
+{
+  "api_major": 4,
+  "scanner_version": "2.11.2",
+  "profiles": ["orders_total", "refunds_total", "markdown_index"],
+  "required_static_analyzers": [
+    "artifact_integrity",
+    "behavioral_ast",
+    "behavioral_taint_tracking",
+    "bundled_execution_surface",
+    "mcp_least_privilege",
+    "mcp_rug_pull",
+    "mcp_tool_poisoning",
+    "static_patterns_agent_snooping",
+    "static_patterns_anti_refusal",
+    "static_patterns_data_exfiltration",
+    "static_patterns_deserialization",
+    "static_patterns_excessive_agency",
+    "static_patterns_harmful_content",
+    "static_patterns_memory_poisoning",
+    "static_patterns_output_handling",
+    "static_patterns_privilege_escalation",
+    "static_patterns_prompt_injection",
+    "static_patterns_rogue_agent",
+    "static_patterns_ssrf",
+    "static_patterns_supply_chain",
+    "static_patterns_system_prompt_leakage",
+    "static_patterns_tool_misuse",
+    "static_yara"
+  ],
+  "explicitly_disabled_semantic_analyzers": [
+    "meta_analyzer",
+    "semantic_developer_intent",
+    "semantic_quality_policy",
+    "semantic_security_discovery"
+  ],
+  "disabled_reason": "--no-llm; no network or unapproved scanner model"
+}

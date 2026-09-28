@@ -206,9 +206,11 @@ def validate_plan(plan, suite):
     _unique([x['case_digest'] for x in s['cases']], 'manifest_case')
     _unique(s['base_case_digests'], 'base_case')
     _unique(s['history_case_digests'], 'history_case')
-    if len(s['base_case_digests']) != 9 or not set(s['base_case_digests'] + s['history_case_digests']).issubset(cases): raise ValueError('manifest_base_authority')
+    if len(s['base_case_digests']) != (5 if s['visibility']=='public_dev' else 9) or not set(s['base_case_digests'] + s['history_case_digests']).issubset(cases): raise ValueError('manifest_base_authority')
     expected = Counter((x['split'],x['case_kind']) for x in s['cases'] if x['case_digest'] in s['base_case_digests'])
-    if expected != Counter({('dev','clean'):2,('dev','attack'):3,('protected','clean'):1,('protected','attack'):3}): raise ValueError('manifest_base_shape')
+    shape = {('dev','clean'):2,('dev','attack'):3}
+    if s['visibility'] != 'public_dev': shape.update({('protected','clean'):1,('protected','attack'):3})
+    if expected != Counter(shape): raise ValueError('manifest_base_shape')
     _unique([x['item_id'] for x in p['items']], 'plan_item')
     _unique([(x['subject_digest'],x['case_digest'],x['repetition_index']) for x in p['items']], 'plan_pair')
     for i in p['items']:

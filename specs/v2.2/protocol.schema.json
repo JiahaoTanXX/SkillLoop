@@ -1215,7 +1215,7 @@
                 "type": "string",
                 "pattern": "^sha256:[0-9a-f]{64}$"
               },
-              "minItems": 9
+              "minItems": 5
             },
             "history_case_digests": {
               "type": "array",
@@ -1235,6 +1235,13 @@
             "cases",
             "base_case_digests",
             "history_case_digests"
+          ],
+          "allOf": [
+            {
+              "if": {"properties": {"visibility": {"const": "public_dev"}}},
+              "then": {"properties": {"base_case_digests": {"minItems": 5, "maxItems": 5}}},
+              "else": {"properties": {"base_case_digests": {"minItems": 9}}}
+            }
           ]
         },
         "digest": {
