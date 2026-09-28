@@ -25,3 +25,14 @@ Runtime 的 `EvidenceIndex` 保留原始 trace 事件摘要；evaluator 另生�
 修正后的 DGX 秘密泄漏攻击预检完成 6 个真实模型轮次，结果为已暴露、业务正确、无禁止 effect、证据完整；独立门槛重算没有发现冲突。这是预检，不能代替完整 45 次矩阵。早期超时、身份与索引修正前的诊断证据分别保留，正式矩阵绑定新提交及固定配置。
 
 `scripts/dgx_m5_pipeline.py` 在 DGX 以独占锁连续执行 Linux 机制测试、9 个 exact-tokenizer 攻击计划、完整批次、每项最多一次预留重试和最终可信门槛。它保存源码文件摘要、提交/归档身份和阶段状态；连接中断不会终止远程验收。完整门槛通过后才更新本文件为完成。
+
+## 正式矩阵的部署身份
+
+- 实现提交：`ff2f8ac9abf8fba1049040c7fe43da577525d735`，已推送 GitHub，DGX 从该提交的不可变归档部署。
+- 归档 SHA-256：`0c7a7c07290fd992b54b191e3324d8ea548dde7dcc39d0e398093a649c982536`；传输后重新校验。
+- 源码索引：`sha256:7f6e5931cbf678430f5dbc62dde67bd81bb278e83a2ecf9718babe886d3a969c`；87 个文件逐一与该提交的 Git blob 对照一致。
+- 配置摘要：`sha256:0fa8086436254b77771ecfee331d599dfd5d643f70cb8d10cb6c2ed0d953c379`。
+- DGX 正式流水线的 56 项 Linux 实现测试全部通过，无跳过；9 个攻击计划的最终渲染内容为 48–51 tokens，均通过固定 tokenizer 的上限检查。
+- [证据清单](../milestones/M5/evidence-manifest.json)与[源码索引](../milestones/M5/source-index.json)记录正式执行身份。清单的 `status=pending` 和 `gate=null` 在完整门槛通过前保持待定；预检目录不参与正式 45 次计数。
+
+远程阶段状态保存在 `~/skillloop/platform/m5/pipeline-state.json`，日志为同目录 `pipeline.log`。正式运行使用 `~/skillloop/repo-ff2f8ac/`；各次运行的私有数据保存在 `runs/`，预留重试的原始数据保存在 `attempts/`，独立预检保存在 `pilot-corrected-evaluator-runs/`。

@@ -1,0 +1,49 @@
+{
+  "milestone": "M5",
+  "status": "pending",
+  "implementation_commit": "ff2f8ac9abf8fba1049040c7fe43da577525d735",
+  "source_archive_sha256": "0c7a7c07290fd992b54b191e3324d8ea548dde7dcc39d0e398093a649c982536",
+  "source_index_digest": "sha256:7f6e5931cbf678430f5dbc62dde67bd81bb278e83a2ecf9718babe886d3a969c",
+  "source_files_verified": 87,
+  "config_digest": "sha256:0fa8086436254b77771ecfee331d599dfd5d643f70cb8d10cb6c2ed0d953c379",
+  "profiles": {
+    "orders_total": {
+      "skill_digest": "sha256:f8ce5daf53aea7bd09648b1dd11654439088d8fbbd5529d875b2353b4e3a50d7",
+      "suite_digest": "sha256:f7c4478c82430c6600650da6bd3cfafaaab8104c6fd7180ab7827aaf50f1d482",
+      "execution_plan_digest": "sha256:0474074ca58a37f40616f8665e59a1cf79bbf66e36d3f4c1f45a6c6543085807",
+      "required_cases": 5,
+      "required_runs": 15,
+      "maximum_attempts": 30
+    },
+    "refunds_total": {
+      "skill_digest": "sha256:0a7c90d08c4e895dbdfdc5feaf60d6c95aadca83e665dcda30578ee66c057f7d",
+      "suite_digest": "sha256:3bbe4409024749962ec32d5b17c1eec577e1947efcde5ff62a4fb6878bc6a13d",
+      "execution_plan_digest": "sha256:bff5fc8d99cf8ebf4b71e5f52ee88735b45ce40b139109724d2c63f64c996751",
+      "required_cases": 5,
+      "required_runs": 15,
+      "maximum_attempts": 30
+    },
+    "markdown_index": {
+      "skill_digest": "sha256:658d280364a6aef6f094f84ddbaa38176ec0caa4f0722864b0ea070064328b76",
+      "suite_digest": "sha256:0c9c1513817e810685bdc53a45804c47928a5ad0c27a403f444c80f7db764a7e",
+      "execution_plan_digest": "sha256:555ae9f41ce3e481e9be9b353df558cef49e722a54d81b4176ae309736b420a2",
+      "required_cases": 5,
+      "required_runs": 15,
+      "maximum_attempts": 30
+    }
+  },
+  "required_case_count": 15,
+  "required_run_count": 45,
+  "normal_runs": 18,
+  "attack_runs": 27,
+  "verification": {
+    "reference_tests": 104,
+    "local_implementation_tests": 56,
+    "local_linux_only_skipped": 3,
+    "dgx_implementation_tests": 56,
+    "dgx_skipped": 0
+  },
+  "private_evidence_root": "~/skillloop/platform/m5/",
+  "gate": null,
+  "production_ready": false
+}
