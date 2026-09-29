@@ -1,5 +1,5 @@
 const $=id=>document.getElementById(id);let catalog=null,selection=new URLSearchParams(location.search).get('skill')||'orders_total',loading=false,timer;
-const states={demo_ready:'闭环已交付',blocked_pre_matrix:'历史证据已收录',running:'历史证据已收录',complete:'已完成',unknown:'证据已收录',paused:'证据已收录',calibrating:'历史证据已收录'};
+const states={demo_ready:'闭环已交付',blocked_pre_matrix:'历史证据已收录',running:'历史证据已收录',complete:'已完成',unknown:'证据已收录',paused:'证据已收录',paused_by_user:'证据已收录',calibrating:'历史证据已收录'};
 const gates={ready_with_limits:'订单范围通过 · 有限制',rejected:'未通过',pass:'通过',pending:'待复核',unknown:'未知'};
 const jobStates={complete:'执行完成',incomplete:'执行不完整',running:'执行中',queued:'排队中'};
 function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
