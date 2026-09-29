@@ -665,5 +665,16 @@
     "m9": "orders_web_demo_accepted",
     "global_acceptance": false,
     "review_ref": "milestones/M9/acceptance-review.json"
+  },
+  "user_pause_2026_09_29": {
+    "observed_at_utc": "2026-09-29 14:30 UTC",
+    "reason": "user_requested_stop_all_background_experiments_for_presentation",
+    "sequencer_pid_618290": "stopped",
+    "paused_refunds_child_pid_822568": "stopped",
+    "new_model_or_api_runs_allowed": false,
+    "clocks_reset": false,
+    "evidence_deleted": false,
+    "original_gate_claims_unchanged": true,
+    "web_demo_service": "presentation_only"
   }
 }

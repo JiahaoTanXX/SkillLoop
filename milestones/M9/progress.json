@@ -28,5 +28,11 @@
       "markdown_index"
     ],
     "formal_global_acceptance": false
+  },
+  "presentation_delivery": {
+    "status": "deployed_paused_experiments",
+    "review_ref": "milestones/M9/presentation-delivery-v6b.json",
+    "source_archive_sha256": "6146875e532393e12222a604484966b68cb04f5cd668f508c31cf55e2bbc075a",
+    "formal_global_acceptance": false
   }
 }

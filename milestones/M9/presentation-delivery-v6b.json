@@ -1,0 +1,55 @@
+{
+  "kind": "SkillLoopPresentationDelivery",
+  "observed_at_utc": "2026-09-29 14:30 UTC",
+  "status": "deployed",
+  "scope": "public_three_skill_showcase_and_private_skill_submission",
+  "public_home": "http://61.172.235.130:8019/",
+  "public_submit": "http://61.172.235.130:8019/custom",
+  "public_orders_history": "http://61.172.235.130:8019/orders",
+  "source_archive_sha256": "6146875e532393e12222a604484966b68cb04f5cd668f508c31cf55e2bbc075a",
+  "dgx_snapshot": "demo-web-presentation-v6b",
+  "tests": {
+    "mechanism_run": 33,
+    "mechanism_pass": 33,
+    "model_runs_started_for_delivery": 0
+  },
+  "http_validation": {
+    "local_authenticated_home": 200,
+    "local_authenticated_submit": 200,
+    "local_authenticated_profile_catalog": 200,
+    "local_authenticated_saved_submissions": 200,
+    "experiment_post": 423,
+    "public_login": 200,
+    "public_unauthenticated_submissions": 401,
+    "public_unauthenticated_submit_redirect": 303
+  },
+  "paused": {
+    "m6_sequencer_pid_stopped": 618290,
+    "refunds_child_pid_stopped": 822568,
+    "other_experiment_workers_running": false,
+    "web_server_remaining": true,
+    "new_api_requests_allowed": false
+  },
+  "submission": {
+    "dgx_private": true,
+    "max_skill_bytes": 8192,
+    "saves_draft_only": true,
+    "automatic_experiment": false,
+    "raw_skill_returned_publicly": false
+  },
+  "claims": {
+    "orders_demo_delivered": true,
+    "refunds_historical_evidence_available": true,
+    "markdown_historical_evidence_available": true,
+    "formal_global_m9_accepted": false,
+    "m7_accepted": false,
+    "production_ready": false
+  },
+  "git_commit_push_pr": false,
+  "limitations": [
+    "退款和 Markdown 只展示独立历史证据与暂停后的当前状态，专用 Demo 尚未运行。",
+    "自带 Skill 页在暂停期间仅保存待测文本；实验需之后重新授权。",
+    "外部工具 Skill 需要专门的工具契约和可信 oracle；现有文本实验代码未启用。",
+    "原始攻击与模型证据留在 DGX 私有目录。"
+  ]
+}
