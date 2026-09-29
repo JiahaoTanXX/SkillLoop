@@ -1,0 +1,9 @@
+{
+  "sha256": "284769233e1631fba154091c8e84d94547d6430cf5a2229d3b64f990a8662292",
+  "status": "sealed_unexecuted_runtime_boundary_changes",
+  "runtime_snapshots_on_dgx": [
+    "repo-m7-orders-v1",
+    "repo-m7-orders-v2"
+  ],
+  "formal_protected_evaluation": "not_started"
+}

@@ -1,0 +1,6 @@
+# Conservative limits for the pinned local SGLang deployment. Recalibrate if
+# the model/container/template changes; never infer limits from a mirror name.
+models:
+  "Qwen/Qwen3.8-27B-FP8":
+    context_length: 16384
+    max_output_tokens: 2048

@@ -23,6 +23,12 @@ def development_config() -> dict[str, Any]:
         "instruction_suffix": "", "concurrency": 1, "attempts_reserved": 2}
 
 
+def m5b_config() -> dict[str, Any]:
+    """Isolated diagnostic configuration; never replaces accepted M5."""
+    return {**development_config(), "config_id": "m5b-qwen-nonthinking-v1",
+            "thinking": False}
+
+
 def _objectives() -> list[dict[str, Any]]:
     raw = json.loads((FAMILY_SPEC / "objectives.json").read_text())
     result = []
@@ -44,7 +50,7 @@ def _projection(profile_id: str, inputs: dict[str, bytes]) -> str:
         slot: digest_bytes(value) for slot, value in inputs.items() if slot != "notes"}})
 
 
-def compile_dev_suite(profile_id: str) -> dict[str, Any]:
+def compile_dev_suite(profile_id: str, *, skill_root: Path = FAMILY_SPEC) -> dict[str, Any]:
     if profile_id not in PROFILE_IDS:
         raise ProtocolError("unknown_profile")
     source = json.loads((FAMILY_SPEC / "dev-suite.json").read_text())
@@ -108,12 +114,14 @@ def compile_dev_suite(profile_id: str) -> dict[str, Any]:
     validate_envelope(suite)
     if len(set(suite["body"]["base_case_digests"])) != 5:
         raise ProtocolError("duplicate_dev_case")
-    return {"profile_id": profile_id, "skill_digest": digest_bytes(load_example_skill(profile_id)),
+    return {"profile_id": profile_id,
+            "skill_digest": digest_bytes(load_example_skill(profile_id, root=skill_root)),
             "objectives": objectives, "cases": cases, "mutations": mutations,
             "suite": suite}
 
 
-def make_dev_plan(compiled: dict[str, Any], *, campaign_id: str) -> dict[str, Any]:
+def make_dev_plan(compiled: dict[str, Any], *, campaign_id: str,
+                  config: dict[str, Any] | None = None) -> dict[str, Any]:
     suite = compiled["suite"]
     items = []
     for case in compiled["cases"].values():
@@ -125,7 +133,7 @@ def make_dev_plan(compiled: dict[str, Any], *, campaign_id: str) -> dict[str, An
                 "attempts_reserved": 2, "timeout_ms": 360_000})
     return make_envelope("ExecutionPlan", {"campaign_id": campaign_id, "revision": 1,
         "parent_plan_digest": None, "suite_digest": suite["digest"],
-        "config_digest": digest_jcs(development_config()), "phase": "dev",
+        "config_digest": digest_jcs(config if config is not None else development_config()), "phase": "dev",
         "items": items, "reserved_rollouts": len(items) * 2,
         "reserved_execution_ms": len(items) * 2 * 360_000,
         "reserved_auxiliary_ms": 120_000, "terminal_reserve_ms": 120_000,

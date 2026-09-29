@@ -1,0 +1,62 @@
+{
+  "kind": "OrdersLocalCIReceipt",
+  "scope": "orders_total_local_ci_cd",
+  "created_at": "2026-09-29T13:39:02.579858+00:00",
+  "tests": {
+    "run": 24,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "checks": {
+    "trigger_deduplicated": true,
+    "configuration_advances_generation": true,
+    "stale_completion_rejected": true,
+    "verified_renewal_advances_generation": true,
+    "restart_preserves_deduplication": true,
+    "submitted_failure_preserved": true,
+    "m7_candidate_held": true,
+    "no_external_publication": true
+  },
+  "decision": {
+    "kind": "LocalCIDecision",
+    "submitted_decision": "fail",
+    "candidate_decision": "inconclusive",
+    "development_submitted_verdict": "fail",
+    "development_candidate_verdict": "pass",
+    "exit_code": 1,
+    "repair_required": true,
+    "publishable": false,
+    "blockers": [
+      "m7_not_accepted",
+      "adopted_git_commit_missing"
+    ],
+    "source_kind": "immutable_snapshot",
+    "source_head": null,
+    "github_check_published": false,
+    "production_ready": false,
+    "digest": "sha256:9d9749c256b31677b8d6c0100bfb9bf31ad94333b77070212d184b5038d94991"
+  },
+  "sources": {
+    "skillloop/ci/decision.py": "sha256:ebc1deb3fffbea463f97c0f3ffe93b7586ad51b109d0c05b6bfc89a29ba193b2",
+    "skillloop/ci/registry.py": "sha256:40e7bc765ce9b369cb65a87c2365827f979bf9f2e733e172e976e653eda88b4e",
+    "demo/server.py": "sha256:12422e89915095d0a7d1f5486b0d51da8405aa57b94b3bdb79ebec3a0cd1def0",
+    "demo/workflow.py": "sha256:d8f61066b5e373e27423853581d1dbc616f2333df889d99112fe16be336b19f5",
+    "demo/public-report.json": "sha256:132cbb4b3e370ecb8889ee3c10c9d61942dec7f6dc83db43816457eee91217c2",
+    "tests/implementation/test_m8_demo.py": "sha256:047e149bfadfca737037a67f405a0572f63cd00194e4424092aa66986b93c88d",
+    "scripts/local_orders_ci.py": "sha256:396b1a0b8d2ceb3f175f6bb7aa85db519d4ce030f27ce890221c8b8249203378",
+    "demo/web/app.js": "sha256:5990308d30841670bba24b8f87e5f607d8e98dcc01b9f1146c9fa7b364f00b1a",
+    "demo/web/index.html": "sha256:e81c947463849feab4b58228f8fb79a03c9460be1da78f5699d852644a060f6b",
+    "demo/web/login.html": "sha256:f134a11eeb67305c34b3d8d2c761daf6ec177c1433b194980644404c5c71f16a",
+    "demo/web/login.js": "sha256:684896ae10ef2403ba4421274a54b470ad82fb4a20b6af7e4daa2fd2732db984",
+    "demo/web/showcase.html": "sha256:3f68684d40e761144086e9cb2c8b5a982b03cd8d3ed0ef2a4ef1c630cc5a5f78",
+    "demo/web/showcase.js": "sha256:dd4cce62b2bf3636e2d24b53046ece775e4458bd8a726d1d2f2855ff97b8b93c",
+    "demo/web/style.css": "sha256:68f4c14e0c56d160ae59ec4d5644bb736931939656392c3f636983c19bce534c",
+    "demo/web/workbench.html": "sha256:c8f066eb4018299557e34775593fead55f82da3f85a49be952bfc3a9a208fa89",
+    "demo/web/workbench.js": "sha256:47dc56a82628ba2f4287fa24d1194abd76bf22e3863b649345a6184eb666e1fd"
+  },
+  "github_integration_required": false,
+  "m7_accepted": false,
+  "production_ready": false,
+  "digest": "sha256:ec4e9ceec62d24ad54b8e5a12503d1046f3f1142c55c7b05b50db56ce2cd509f"
+}

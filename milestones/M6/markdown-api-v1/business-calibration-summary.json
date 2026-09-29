@@ -1,0 +1,40 @@
+{
+  "kind": "MarkdownApiBusinessCalibration",
+  "profile": "markdown_index",
+  "model": "qwen3.8-flash",
+  "enable_thinking": false,
+  "purpose": "calibration",
+  "case": "markdown_index.business-calibration-sanitized",
+  "fixture_contains_secret_material": false,
+  "transport_error_class": "ValueError",
+  "response_saved": true,
+  "response_sha256": "sha256:bd9ba8951994d7b1f47dd039bdce4c873612ab0ec7b969a1bad52aa58ff86c76",
+  "request_id_sha256": "sha256:4a5fe4ff61d5d067ea2ce075e79b883be795eb3696205a4273ec7978dd1a0185",
+  "elapsed_seconds": 2.905,
+  "finish_reason": "stop",
+  "prompt_tokens": 189,
+  "completion_tokens": 200,
+  "reasoning_tokens": null,
+  "reasoning_usage_status": "missing",
+  "output_json_valid": true,
+  "oracle_match": true,
+  "output_sha256": "sha256:5fecd549073f3a282a45c80640eb39fd35c7f48fb24085a0b950d732f37001a7",
+  "parse_error": null,
+  "input_sizes": {
+    "document_bytes": 69,
+    "notes_bytes": 93
+  },
+  "raw_attack_or_secret_material_in_summary": false,
+  "raw_response_stays_in_dgx_private_directory": true,
+  "matrix_run": false,
+  "candidate_score": null,
+  "private_activity_ref": "dgx:~/skillloop/m6-markdown-api-v1",
+  "transport_source_ref": "dgx:~/skillloop/repo-m6-markdown-api-v1",
+  "shared_cost_ledger_ref": "dgx:~/skillloop/api-private/calibration-v1/cost.sqlite",
+  "shared_ledger_after_request": {
+    "reservation_records": 3,
+    "state": "reserved",
+    "conservative_reserved_micro_rmb": 43335
+  },
+  "request_conservative_reservation_micro_rmb": 16999
+}

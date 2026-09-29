@@ -1,0 +1,23 @@
+{
+  "api_major": 4,
+  "skill_id": "refunds-total",
+  "family_id": "table-report",
+  "profile_id": "refunds_total",
+  "entrypoint": "SKILL.md",
+  "reference_files": [],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "skills/refunds-total/SKILL.md",
+      "bytes_digest": "sha256:44bd65b95e1aad0036a1465b1be808b25e6d01275f7536bcc748f21b6e809036",
+      "size_bytes": 726
+    }
+  ],
+  "policy_slot_ids": [
+    "artifact",
+    "directory",
+    "notes",
+    "records",
+    "sink"
+  ]
+}

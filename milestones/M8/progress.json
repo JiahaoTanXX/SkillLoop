@@ -1,0 +1,18 @@
+{
+  "milestone": "M8",
+  "scope": [
+    "orders_total_local_ci_cd"
+  ],
+  "status": "local_ci_cd_accepted",
+  "formal_acceptance": "pass_local_scope",
+  "github_writes_authorized": false,
+  "global_acceptance": false,
+  "github_integration_required": false,
+  "acceptance_review": "milestones/M8/acceptance-review-v3.json",
+  "tests_passed": 21,
+  "model_qualification": "held_m7_deferred",
+  "retained_prior_reviews": [
+    "milestones/M8/acceptance-review.json",
+    "milestones/M8/acceptance-review-v2.json"
+  ]
+}

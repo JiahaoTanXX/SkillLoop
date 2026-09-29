@@ -1,0 +1,23 @@
+{
+  "status": "held",
+  "model": "qwen3.8-flash",
+  "base_url": "https://maas.qianwenaiapi.com/compatible-mode/v1",
+  "credential_stored_on_dgx_only": true,
+  "raw_reasoning_tokens": null,
+  "calibration_requests": 2,
+  "formal_protected_runs": 0,
+  "limit_rmb": 10,
+  "conservative_reserved_rmb": 0.026336,
+  "full_matrix_forecast_rmb": 17.950311,
+  "blockers": [
+    "raw_reasoning_tokens_missing",
+    "full_matrix_exceeds_cost_limit"
+  ],
+  "existing_activity_seal_preserved": true,
+  "stream_reasoning_tokens": null,
+  "requested_parallel_profiles": [
+    "orders_total",
+    "refunds_total",
+    "markdown_index"
+  ]
+}

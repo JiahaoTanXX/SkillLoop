@@ -1,0 +1,70 @@
+{
+  "kind": "APIParallelAdmissionReport",
+  "model": "qwen3.8-flash",
+  "enable_thinking": false,
+  "at_unix_ms": 1790685503517,
+  "shared_limit_micro_rmb": 10000000,
+  "calibration_charged_or_reserved_micro_rmb": 26336,
+  "profiles": {
+    "orders_total": {
+      "stage": "M7",
+      "required_new_development_runs": 42,
+      "protected_runs": 24,
+      "new_model_full_capacity_runs": 66,
+      "retry_reserve": 2,
+      "conservative_token_forecast_micro_rmb": 19251406,
+      "formal_admission": "rejected",
+      "reasons": [
+        "shared_cost_limit_exceeded",
+        "raw_reasoning_usage_unavailable",
+        "new_backend_calibration_not_accepted"
+      ],
+      "model_runs_started": 0
+    },
+    "refunds_total": {
+      "stage": "M6",
+      "required_development_runs": 66,
+      "protected_capacity_runs": 24,
+      "new_model_full_capacity_runs": 90,
+      "retry_reserve": 2,
+      "conservative_token_forecast_micro_rmb": 25778791,
+      "formal_admission": "rejected",
+      "reasons": [
+        "shared_cost_limit_exceeded",
+        "raw_reasoning_usage_unavailable",
+        "new_backend_calibration_not_accepted"
+      ],
+      "model_runs_started": 0
+    },
+    "markdown_index": {
+      "stage": "M6",
+      "required_development_runs": 48,
+      "protected_capacity_runs": 24,
+      "new_model_full_capacity_runs": 72,
+      "retry_reserve": 2,
+      "conservative_token_forecast_micro_rmb": 20883252,
+      "formal_admission": "rejected",
+      "reasons": [
+        "shared_cost_limit_exceeded",
+        "raw_reasoning_usage_unavailable",
+        "new_backend_calibration_not_accepted"
+      ],
+      "model_runs_started": 0
+    }
+  },
+  "minimum_requested_matrix_runs": 138,
+  "minimum_requested_matrix_forecast_micro_rmb": 37532468,
+  "full_capacity_forecast_micro_rmb": 65939785,
+  "admission": "rejected",
+  "raw_reasoning_tokens": null,
+  "existing_source_snapshots_unchanged": true,
+  "existing_clocks_reset": false,
+  "scores_merged_across_model_configuration": false,
+  "new_api_matrix_model_requests": 0,
+  "limitations": [
+    "matrix_counts_from_existing_requirements;new_discovery_may_add_cases",
+    "API calibration does not replace genuine family task calibration",
+    "shared cost limit remains 10 RMB;no per-profile duplicate allowance"
+  ],
+  "digest": "sha256:c1136c6c7562d876ee08b9d48ce313eaa672fcfd96d29b3e1c66a08feff68357"
+}

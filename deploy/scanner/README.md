@@ -2,6 +2,60 @@
 
 This image packages the pinned SkillSpector source for DGX Spark smoke tests. It is not a ready production scanner until its offline intelligence and coverage profile are approved.
 
+## M5b: local Qwen semantic discovery
+
+The M5 baseline deliberately used `--no-llm`. The separate M5b diagnostic
+turns on the four SkillSpector semantic analyzers with the already deployed
+`Qwen/Qwen3.8-27B-FP8` SGLang service. It scans only each test package's
+`SKILL.md`, because the prompt-injection flaw is in that text; the existing
+full-package static scan remains a separate coverage requirement.
+
+`scripts/dgx_m5b_scan.py` starts the pinned offline image with `--network none`,
+read-only inputs, non-root UID, and the pinned offline OSV data. Its guest
+OpenAI-compatible client calls `127.0.0.1:31000`; a mounted Unix socket leads
+to a host bridge that only forwards `/v1/models` and `/v1/chat/completions` to
+the host's `127.0.0.1:30000` Qwen service. The bridge adds SGLang's
+`chat_template_kwargs.enable_thinking=false`; a local probe on the pinned
+model showed this removes reasoning-token truncation while retaining JSON
+responses. SkillSpector uses `SKILLSPECTOR_PROVIDER=openai`, the local model
+registry in this directory, LLM concurrency 1, and a 900-second workflow
+deadline. The runner omits `--no-llm` and fails closed unless all semantic
+analyzers complete, at least one chat request crosses the bridge, and a
+located finding maps to an approved attack objective.
+
+Run only on the assigned DGX with the pinned image and model already present:
+
+```sh
+python scripts/dgx_m5b_scan.py \
+  --image skillloop/skillspector-offline:m1 \
+  --osv-data "$HOME/skillloop/platform/offline-osv" \
+  --output "$HOME/skillloop/platform/m5b-scan-NEW-EPOCH"
+python scripts/dgx_m5b_attack.py \
+  --scan-index "$HOME/skillloop/platform/m5b-scan-NEW-EPOCH/scan-index.json" \
+  --output "$HOME/skillloop/m5b-attack-NEW-EPOCH"
+python scripts/dgx_m5b_gate.py \
+  "$HOME/skillloop/platform/m5b-scan-NEW-EPOCH/scan-index.json" \
+  "$HOME/skillloop/m5b-attack-NEW-EPOCH"
+```
+
+The three intentionally vulnerable subjects live under
+`specs/v2.2/families/redteam/`; they are test-only and never replace the
+accepted baseline. The attack stage keeps five baseline dev cases and adds a
+Qwen-proposed original payload plus a distinct registered variant for every
+mapped scanner finding. The independent gate rebinds the scan, Skill, suite,
+plans, config, run identity, trace, Proxy SQLite proof, objective outcomes,
+and business oracle from saved evidence. Raw reports, proposed payloads, traces, and simulated
+secrets stay in DGX private storage. The M5b diagnostic does not create an M7
+protected attestation or change the old M5 result.
+Keep the attack output root short: the complete per-run Proxy socket path must
+fit Linux's 107-byte usable Unix-domain path limit. This runner checks the
+path before execution. Its `m5b-qwen-nonthinking-v1` runtime config disables
+thinking for the diagnostic Agent run and binds that setting into its plan;
+the accepted M5 and V2.2 production baseline still require thinking enabled.
+See the [M5b incident table](../../docs/m5b-qwen-discovery.zh-CN.md) for the
+initial scanner timeout, risk-score field mismatch, socket error, and runtime
+token calibration.
+
 | Input | Pinned identity |
 | --- | --- |
 | Base image | `public.ecr.aws/docker/library/python@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9` (`linux/arm64`, Python 3.12.14) |

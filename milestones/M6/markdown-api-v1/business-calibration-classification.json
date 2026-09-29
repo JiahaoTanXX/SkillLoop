@@ -1,0 +1,17 @@
+{
+  "kind": "MarkdownApiBusinessCalibrationClassification",
+  "source_summary_sha256": "sha256:3c14724576a58eed11de28b93eea6f6c8d1cfd20f53490f09947d1a41bf406d2",
+  "business_fixture_result": "exact_structural_match_to_expected_json",
+  "business_fixture_expected_match": true,
+  "validation_method": "parse_saved_private_response_and_compare_json_value_to_fixture_expected_json",
+  "trusted_family_oracle_invoked": false,
+  "full_runtime_or_tool_loop_exercised": false,
+  "complete_profile_calibration": false,
+  "m6_gate_evidence": false,
+  "sensitive_fixture_export_review_rejected": true,
+  "sensitive_fixture_exported": false,
+  "reasoning_tokens": null,
+  "reasoning_usage_status": "missing",
+  "formal_api_admission": "rejected",
+  "classification_note": "The original summary field oracle_match records expected-JSON equality only; it does not claim a separate trusted-oracle or full-runtime execution."
+}

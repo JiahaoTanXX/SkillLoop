@@ -1,0 +1,15 @@
+{
+  "kind": "M7SealReceipt",
+  "status": "sealed_by_user_request",
+  "at_unix_ms": 1790683663794,
+  "formal_protected_runs": 0,
+  "required_protected_runs": 24,
+  "m7_accepted": false,
+  "model_running": false,
+  "new_m7_model_requests": 0,
+  "mechanism_tests_passed": 13,
+  "test_failure_retained": true,
+  "private_evidence_ref": "dgx:~/skillloop/m7-model-private",
+  "profile_acceptance_digest": "sha256:be8275c0e709d916f32b7f251adcc91cbc13cef7c3b39a5378e95972c7e5cee4",
+  "production_ready": false
+}

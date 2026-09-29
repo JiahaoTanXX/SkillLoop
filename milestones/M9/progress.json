@@ -1,0 +1,32 @@
+{
+  "milestone": "M9",
+  "scope": [
+    "orders_total"
+  ],
+  "status": "orders_demo_accepted",
+  "formal_acceptance": "pass_orders_demo_scope_only",
+  "github_writes_authorized": false,
+  "global_acceptance": false,
+  "m7": "deferred_by_user",
+  "public_url": "http://61.172.235.130:8019/login",
+  "web_workbench": "http://61.172.235.130:8019/workbench",
+  "production_ready": false,
+  "review_refs": [
+    "milestones/M9/demo-api-review.json",
+    "milestones/M9/demo-browser-review.json"
+  ],
+  "web_hub_delivery": {
+    "status": "deployed_with_review_pending",
+    "source_archive_sha256": "939736a4bb3aa8c566cc041a0dceb1af24f6ab7c2a9456e864fd943e3d2032fe",
+    "review_ref": "milestones/M9/hub-delivery-v5.json",
+    "interactive_profiles": [
+      "orders_total"
+    ],
+    "status_profiles": [
+      "orders_total",
+      "refunds_total",
+      "markdown_index"
+    ],
+    "formal_global_acceptance": false
+  }
+}

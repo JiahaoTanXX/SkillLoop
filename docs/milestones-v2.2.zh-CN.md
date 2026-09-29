@@ -1,8 +1,10 @@
 # SkillLoop V2.2 开发 Milestones
 
-状态：2026-09-28。以 [系统设计](system-design-v2.2.zh-CN.md)为实施蓝图，以 [PRD V2.2](../SkillLoop-PRD-v2.2.zh-CN.md)、[API 4 规范](../specs/v2.2/README.md)和 [验收索引](../specs/v2.2/operations/acceptance.json)为验收依据。M0 规范与线协议基线、M2 离线业务合同已实现并在本地与 DGX 复跑；[实现记录](implementation-status-m0-m2.zh-CN.md)界定了尚待后续里程碑验证的生产部分。M1 [平台验收](m1-platform-acceptance.zh-CN.md)、M3 [可信事务底座验收](m3-proxy-acceptance.zh-CN.md)和 M4 [真实模型 Runtime 验收](m4-runtime-acceptance.zh-CN.md)通过，生产 ready 仍 pending。M5 完整 DGX 开发矩阵已验收通过：15 案例、45 次必需运行完整，4 次原始不完整尝试保留，实际共 49 次；见 [M5 记录](m5-development-acceptance.zh-CN.md)与[证据清单](../milestones/M5/evidence-manifest.json)。M6–M8 的修补、保护评估与 GitHub 服务尚未实施。
+状态：2026-09-28。以 [系统设计](system-design-v2.2.zh-CN.md)为实施蓝图，以 [PRD V2.2](../SkillLoop-PRD-v2.2.zh-CN.md)、[API 4 规范](../specs/v2.2/README.md)和 [验收索引](../specs/v2.2/operations/acceptance.json)为验收依据。M0 规范与线协议基线、M2 离线业务合同已实现并在本地与 DGX 复跑；[实现记录](implementation-status-m0-m2.zh-CN.md)界定了尚待后续里程碑验证的生产部分。M1 [平台验收](m1-platform-acceptance.zh-CN.md)、M3 [可信事务底座验收](m3-proxy-acceptance.zh-CN.md)和 M4 [真实模型 Runtime 验收](m4-runtime-acceptance.zh-CN.md)通过，生产 ready 仍 pending。M5 完整 DGX 开发矩阵已验收通过：15 案例、45 次必需运行完整，4 次原始不完整尝试保留，实际共 49 次；见 [M5 记录](m5-development-acceptance.zh-CN.md)与[证据清单](../milestones/M5/evidence-manifest.json)。M6 有界修补实施中；M7–M8 的保护评估与 GitHub 服务尚未实施。
 
 ## 使用方法
+
+2026-09-29 更新：[M5b 全发现诊断](m5b-qwen-discovery.zh-CN.md)已完成并冻结验收。用户授权后开始 [M6 有界修补](m6-repair-progress.zh-CN.md)，已完成当前配置的独立预算校准，正在执行配对开发回归；M6 尚未验收。
 
 按依赖顺序开发，每个 milestone 留下可重跑的命令、配置摘要、测试报告及证据目录。当前 milestone 完成阶段验证验收后，再开始下一阶段开发；每次转换都记录实际门槛结果。不要以参考测试代替真实 Linux/模型/CI 验收。Milestone 编号表示依赖顺序，不表示日程或工作量承诺。
 

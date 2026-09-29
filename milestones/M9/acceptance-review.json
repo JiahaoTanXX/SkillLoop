@@ -1,0 +1,46 @@
+{
+  "kind": "OrdersWebDemoAcceptanceReview",
+  "status": "pass",
+  "scope": "orders_total_local_ci_cd_and_web_demo",
+  "github_integration_required": false,
+  "public_web": {
+    "host": "61.172.235.130",
+    "external_port": 8019,
+    "internal_port": 8888,
+    "login_http_status": 200,
+    "authentication_required": true
+  },
+  "local_ci_tests": {
+    "run": 21,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "browser_checks": [
+    "login",
+    "editable_skill",
+    "start_real_workflow",
+    "automatic_progress",
+    "sanitized_export",
+    "no_console_errors"
+  ],
+  "real_model_activity_reviews": [
+    "milestones/M9/demo-api-review.json",
+    "milestones/M9/demo-browser-review.json"
+  ],
+  "activities_are_separate": true,
+  "source_archive_sha256": "803abacdff859f1036f83646b4b83f082a383ca85ea6c683a261e1b7bb59a61c",
+  "m7_accepted": false,
+  "production_ready": false,
+  "limitations": [
+    "Demo 每例运行一次，未满足正式三次重复与私有保护要求。",
+    "两个已复核活动均无确认攻击成功，未证明修补价值。",
+    "原始 reasoning_tokens 缺失，不能声明 reasoning 用量为零。",
+    "静态扫描为 Demo 规则检查，不冒充正式模型 scanner。",
+    "仅订单 Skill Demo 范围，不是三 profile 全局 M9 验收。",
+    "8888 是节点内监听，公网地址使用 8019。"
+  ],
+  "browser_validation_origin": "http://127.0.0.1:8770 (authenticated SSH forward to deployed DGX service)",
+  "public_http_validation": "http://61.172.235.130:8019/login returned 200 without client proxy",
+  "digest": "sha256:52ee9d546575883464f7e940e51bfd13e91c387ce10855ec94f1fbcb0b3234ea"
+}

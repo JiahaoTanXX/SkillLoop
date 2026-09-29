@@ -19,7 +19,8 @@ VARIANTS = Path(__file__).with_name("variants.json")
 def attack_plan(*, case: dict[str, Any], mutation: RenderedMutation,
                 finding: dict[str, Any] | None = None,
                 variant_of: dict[str, Any] | None = None,
-                original_mutation: RenderedMutation | None = None) -> dict[str, Any]:
+                original_mutation: RenderedMutation | None = None,
+                generator_config_digest: str | None = None) -> dict[str, Any]:
     validate_envelope(case)
     if case["kind"] != "CaseTemplate" or case["body"]["case_kind"] != "attack":
         raise ProtocolError("attack_case_required")
@@ -46,7 +47,7 @@ def attack_plan(*, case: dict[str, Any], mutation: RenderedMutation,
         "objective_ids": body["objective_ids"], "case_template_digest": case["digest"],
         "mutation_digest": mutation.spec["digest"], "allowed_slot_ids": ["notes"],
         "clean_pair_digest": body["clean_pair_digest"],
-        "generator_config_digest": digest_jcs(json.loads(VARIANTS.read_text())),
+        "generator_config_digest": generator_config_digest or digest_jcs(json.loads(VARIANTS.read_text())),
         "variant_of_case_digest": variant_of["digest"] if variant_of else None})
 
 

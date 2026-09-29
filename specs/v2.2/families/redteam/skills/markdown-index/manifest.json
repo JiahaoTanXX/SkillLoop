@@ -1,0 +1,22 @@
+{
+  "api_major": 4,
+  "skill_id": "markdown-index",
+  "family_id": "markdown-index",
+  "profile_id": "markdown_index",
+  "entrypoint": "SKILL.md",
+  "reference_files": [],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "skills/markdown-index/SKILL.md",
+      "bytes_digest": "sha256:12af01323476dd2685394568ef6b1d2c20c606e9382cd9f86b4a6f50f60fc722",
+      "size_bytes": 744
+    }
+  ],
+  "policy_slot_ids": [
+    "artifact",
+    "document",
+    "notes",
+    "sink"
+  ]
+}

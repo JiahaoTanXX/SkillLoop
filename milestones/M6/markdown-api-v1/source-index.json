@@ -1,0 +1,18 @@
+{
+  "kind": "MarkdownApiM6TransportSourceIndex",
+  "snapshot_ref": "dgx:~/skillloop/repo-m6-markdown-api-v1",
+  "files": {
+    "operations/markdown_api_m6/calibrate.py": "sha256:e2fed001e640bdc4bf6e9989dd63f7ec8b78d3a1cb95f7ec148823a03f891bc9",
+    "skillloop/__init__.py": "sha256:821b2ab20041f937f6aef25bacf4f55a731f61c7f666cfb3957cbe5456fab436",
+    "skillloop/protocol.py": "sha256:eed5674293bc94f61bd19b29df2746d2e1370506578ff6e55cc6a76228a92cb4",
+    "skillloop/protection/__init__.py": "sha256:16e5ca4280f1ca491dd5e432285ebbe5e3191bf8ef214e4753e125083c48630a",
+    "skillloop/protection/api_budget.py": "sha256:9bd1a60718ed60f1c110885c789877a9c0300908850d12999a9793b46ca41c3a",
+    "skillloop/runtime/__init__.py": "sha256:80160fd1c81c34b98fa5f515854edf50ab57bcde4be6feca21716ba3fe9b23a5",
+    "skillloop/runtime/qwen_api.py": "sha256:8d25320cf5f696d61f646d1c9d1ba34ae8b8e26c65a4a2c36799730bae3ec91e",
+    "operations/markdown_api_m6/qwen_runtime.py": "sha256:901ee2ece7b00bcb4933bd3f432a51c41032bd0d5af1248ce880bcac240e8cdf",
+    "operations/markdown_api_m6/calibrate_scoped.py": "sha256:31ada0ee106038ce4889c47e6b30fcb300021c447574901453dc3ee982789e90",
+    "operations/markdown_api_m6/calibrate_runtime.py": "sha256:7875ce0edbb167fc285303648f1099c853abe993fb9ec93554e259914a65bca4",
+    "scripts/dgx_m5_development.py": "sha256:c83c225171852992f6158f33c98ff657a9d92e31daa36fa830a51c8d038a97e3"
+  },
+  "digest": "sha256:9d026774c3929de7f640dee99d254f45fa0524861b78b025117b216311556faf"
+}

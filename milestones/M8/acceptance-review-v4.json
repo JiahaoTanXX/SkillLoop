@@ -1,0 +1,22 @@
+{
+  "kind": "OrdersLocalCIAcceptanceReview",
+  "status": "pass",
+  "scope": "orders_total_local_ci_cd",
+  "receipt_digest": "sha256:ec4e9ceec62d24ad54b8e5a12503d1046f3f1142c55c7b05b50db56ce2cd509f",
+  "tests": {
+    "run": 24,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "workflow_reconstructed": true,
+  "github_integration_required": false,
+  "m7_accepted": false,
+  "production_ready": false,
+  "limitations": [
+    "local_ci_cd_only",
+    "no_model_evaluation_in_this_receipt",
+    "m7_qualification_pending"
+  ],
+  "digest": "sha256:840b0c038e4d71f9ab16f0104187400eff0adad12ba0dca969003b03bbe6a345"
+}

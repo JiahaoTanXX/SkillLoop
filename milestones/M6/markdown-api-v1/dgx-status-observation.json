@@ -1,0 +1,17 @@
+{
+  "kind": "MarkdownApiM6DgxStatusObservation",
+  "observed_at_utc": "2026-09-29 12:59 UTC",
+  "transport": "authorized_ssh_existing_controlpath",
+  "scope": "read_only_process_names_and_profile_directory_listing",
+  "observed_processes": [
+    "containerd",
+    "dockerd"
+  ],
+  "skillloop_or_api_model_process_seen": false,
+  "m6_n11m_directory_seen": false,
+  "markdown_calibration_worker_running": false,
+  "markdown_private_activity_mode": "0700",
+  "calibration_summary_mode": "0600",
+  "raw_response_files_in_shared_private_calibration_root": 3,
+  "raw_responses_or_credentials_read": false
+}

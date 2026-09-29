@@ -1,0 +1,53 @@
+{
+  "kind": "ThreeSkillWebHubDelivery",
+  "observed_at_utc": "2026-09-29 14:14 UTC",
+  "status": "deployed_with_review_pending",
+  "scope": "three_profile_status_and_orders_interactive_demo",
+  "public_url": "http://61.172.235.130:8019/",
+  "source_archive_sha256": "939736a4bb3aa8c566cc041a0dceb1af24f6ab7c2a9456e864fd943e3d2032fe",
+  "dgx_snapshot": "demo-web-hub-v5",
+  "local_tests": {
+    "run": 29,
+    "passed": 29,
+    "errors": 0,
+    "failures": 0
+  },
+  "authenticated_dgx_http": {
+    "home": 200,
+    "orders_history": 200,
+    "orders_workbench": 200,
+    "profile_catalog": 200,
+    "catalog_count": 3
+  },
+  "public_http": {
+    "login": 200,
+    "unauthenticated_profile_catalog": 401
+  },
+  "profiles": {
+    "orders_total": "M6 frozen; interactive orders Demo; M7 deferred",
+    "refunds_total": "task published sanitized pre-matrix status; Gate rejected",
+    "markdown_index": "task published sanitized calibration status; Gate rejected"
+  },
+  "upload": {
+    "scope": "orders_tool_contract_only",
+    "file_types": [
+      "Markdown",
+      "UTF-8 plain text"
+    ],
+    "max_bytes": 8192,
+    "automatic_submission": false,
+    "untrusted_code_executed": false
+  },
+  "refresh_seconds": 5,
+  "stale_after_seconds": 300,
+  "formal_m7_accepted": false,
+  "formal_m9_accepted": false,
+  "production_ready": false,
+  "git_published": false,
+  "limitations": [
+    "Refunds and Markdown show progress and separate historical evidence, not interactive workflow execution.",
+    "General arbitrary Skill execution is not supported without a trusted tool and oracle adapter.",
+    "Profile status changes are published by their owning tasks; the page labels observations stale after five minutes.",
+    "Independent v5 CI receipt was not generated because automatic approval review disconnected; prior 29 local tests passed."
+  ]
+}
